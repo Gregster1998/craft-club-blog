@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Craft Club | Learn. Create. Connect.</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --terracotta: #A0695F;
+            --dark-brown: #3C2F2F;
+            --cream: #F5F1E8;
+            --light-beige: #EDE8DC;
+            --text-dark: #3C2F2F;
+            --text-muted: #8B7E74;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-weight: 400;
+        }
+
+        .section-label {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 1rem;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.125rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--terracotta);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><rect fill="%23C4A68A"/></svg>');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            color: white;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero h1 .accent {
+            color: var(--terracotta);
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #8D5A4F;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--text-dark);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Craft Diaries Section */
+        .diaries {
+            background: var(--light-beige);
+        }
+
+        .diaries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .diary-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .diary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .diary-card-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #C4A68A, #A0695F);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .diary-card-content {
+            padding: 1.5rem;
+        }
+
+        .diary-card-handle {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.875rem;
+            color: var(--terracotta);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .diary-card-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .diary-card-desc {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Makers Section */
+        .makers {
+            background: var(--cream);
+        }
+
+        .makers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .maker-card {
+            text-align: center;
+        }
+
+        .maker-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #E8D5C4, #C4A68A);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .maker-name {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .maker-craft {
+            color: var(--terracotta);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .maker-location {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .maker-quote {
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        /* Coming Soon Section */
+        .coming-soon {
+            background: var(--dark-brown);
+            color: white;
+            text-align: center;
+        }
+
+        .coming-soon-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(160, 105, 95, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.875rem;
+            color: var(--terracotta);
+        }
+
+        .coming-soon h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .coming-soon p {
+            font-size: 1.125rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 600px;
+            margin: 0 auto 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 1rem;
+            border-radius: 4px;
+        }
+
+        .email-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .email-disclaimer {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.875rem;
+            opacity: 0.7;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--cream);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .footer-section h4 {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--terracotta);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(0,0,0,0.1);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-bottom p {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .footer-bottom .tagline {
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .email-form {
+                flex-direction: column;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Icons (simple emoji/unicode alternatives) */
+        .icon-instagram::before {
+            content: "📷";
+            margin-right: 0.25rem;
+        }
+
+        .icon-location::before {
+            content: "📍";
+            margin-right: 0.25rem;
+        }
+
+        .icon-sparkles::before {
+            content: "✨";
+            margin-right: 0.25rem;
+        }
+
+        .icon-community::before {
+            content: "👥";
+            margin-right: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">International Craft Club</a>
+        <nav>
+            <a href="journal.html">Journal</a>
+            <a href="#makers">Makers</a>
+            <a href="#meetups">Meetups</a>
+            <a href="cms.html" style="color: var(--terracotta);">CMS</a>
+            <a href="#join">Join</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <p class="section-label">A COMMUNITY FOR MAKERS</p>
+            <h1>
+                Learn. Create.<br>
+                <span class="accent">Connect.</span>
+            </h1>
+            <p>Rediscover the joy of slow creativity. Join a global community celebrating traditional crafts, authentic skills, and the makers who keep them alive.</p>
+            <div class="hero-buttons">
+                <a href="#join" class="btn btn-primary">Join the Club</a>
+                <a href="#about" class="btn btn-secondary">Our Story</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Craft Learning Diaries Section -->
+    <section class="diaries" id="journal">
+        <div class="section-header">
+            <p class="section-label">FOLLOW THE JOURNEY</p>
+            <h2>Craft Learning <span class="italic">Diaries</span></h2>
+            <p>Real makers documenting their learning journey. No filters, no shortcuts—just honest progress and the beautiful imperfections along the way.</p>
+        </div>
+        <div class="diaries-grid">
+            <a href="#" class="diary-card">
+                <div class="diary-card-image">🪡</div>
+                <div class="diary-card-content">
+                    <div class="diary-card-handle icon-instagram">@sewingdiaries</div>
+                    <h3 class="diary-card-title">Sewing Journey</h3>
+                    <p class="diary-card-desc">From first stitch to final seam</p>
+                </div>
+            </a>
+            <a href="#" class="diary-card">
+                <div class="diary-card-image">🧶</div>
+                <div class="diary-card-content">
+                    <div class="diary-card-handle icon-instagram">@crochetdiaries</div>
+                    <h3 class="diary-card-title">Crochet Diaries</h3>
+                    <p class="diary-card-desc">Loops, knots, and cozy creations</p>
+                </div>
+            </a>
+            <a href="#" class="diary-card">
+                <div class="diary-card-image">👜</div>
+                <div class="diary-card-content">
+                    <div class="diary-card-handle icon-instagram">@leathercraft</div>
+                    <h3 class="diary-card-title">Leather Craft</h3>
+                    <p class="diary-card-desc">Timeless craft, modern makers</p>
+                </div>
+            </a>
+            <a href="#" class="diary-card">
+                <div class="diary-card-image icon-community"></div>
+                <div class="diary-card-content">
+                    <div class="diary-card-handle">Community</div>
+                    <h3 class="diary-card-title">Meet the Makers</h3>
+                    <p class="diary-card-desc">Stories from our global community</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Meet the Makers Section -->
+    <section class="makers" id="makers">
+        <div class="section-header">
+            <p class="section-label">THE HEART OF THE CLUB</p>
+            <h2>Meet the <span class="italic">Makers</span></h2>
+            <p>The artisans, teachers, and passionate hobbyists who inspire us to slow down and create with intention.</p>
+        </div>
+        <div class="makers-grid">
+            <div class="maker-card">
+                <div class="maker-image"></div>
+                <h3 class="maker-name">Elena Rosetti</h3>
+                <p class="maker-craft">Traditional Embroidery</p>
+                <p class="maker-location icon-location">Tuscany, Italy</p>
+                <p class="maker-quote">"Every stitch carries the memory of hands that came before mine."</p>
+            </div>
+            <div class="maker-card">
+                <div class="maker-image"></div>
+                <h3 class="maker-name">Hans Müller</h3>
+                <p class="maker-craft">Wood Carving</p>
+                <p class="maker-location icon-location">Black Forest, Germany</p>
+                <p class="maker-quote">"The wood teaches you patience. You cannot rush what takes a tree decades to grow."</p>
+            </div>
+            <div class="maker-card">
+                <div class="maker-image"></div>
+                <h3 class="maker-name">Maya Chen</h3>
+                <p class="maker-craft">Natural Dyeing</p>
+                <p class="maker-location icon-location">Portland, Oregon</p>
+                <p class="maker-quote">"Color is a conversation between the maker and the earth."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coming Soon Section -->
+    <section class="coming-soon" id="join">
+        <div class="coming-soon-badge icon-sparkles">Coming Soon</div>
+        <h2>Building Something <span class="italic">Special</span></h2>
+        <p>A curated shop of artisan-made tools and materials. Learning retreats in beautiful places. We're crafting these with the same care and intention we bring to everything we do.</p>
+        <form class="email-form" onsubmit="handleSubmit(event)">
+            <input type="email" class="email-input" placeholder="your@email.com" required>
+            <button type="submit" class="btn btn-primary">Get Notified</button>
+        </form>
+        <p class="email-disclaimer">No spam, ever. Just quiet updates when we have something worth sharing.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>International<br>Craft Club</h3>
+                <p>A global community celebrating slow creativity, traditional skills, and the makers who keep them alive.</p>
+            </div>
+            <div class="footer-section">
+                <h4>FOLLOW ALONG</h4>
+                <ul class="footer-links">
+                    <li><a href="#" class="icon-instagram">@sewingdiaries</a></li>
+                    <li><a href="#" class="icon-instagram">@crochetdiaries</a></li>
+                    <li><a href="#" class="icon-instagram">@leathercraft</a></li>
+                    <li><a href="#" class="icon-instagram">@intlcraftclub</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>EXPLORE</h4>
+                <ul class="footer-links">
+                    <li><a href="#about">About the Club</a></li>
+                    <li><a href="#makers">Meet the Makers</a></li>
+                    <li><a href="#meetups">Local Meetups</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 International Craft Club. Made with care.</p>
+            <p class="tagline">"Part of International Craft Club"</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Email form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            const email = event.target.querySelector('input').value;
+            alert(`Thank you! We'll notify you at ${email} when we launch.`);
+            event.target.reset();
+        }
+
+        // Header scroll effect
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>

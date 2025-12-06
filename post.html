@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Post | International Craft Club</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --terracotta: #A0695F;
+            --dark-brown: #3C2F2F;
+            --cream: #F5F1E8;
+            --light-beige: #EDE8DC;
+            --text-dark: #3C2F2F;
+            --text-muted: #8B7E74;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            color: var(--text-dark);
+            line-height: 1.8;
+            background: var(--cream);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.125rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--terracotta);
+        }
+
+        /* Post Container */
+        article {
+            max-width: 800px;
+            margin: 120px auto 4rem;
+            padding: 0 2rem;
+        }
+
+        /* Post Header */
+        .post-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .post-category {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        .post-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Featured Image */
+        .featured-image {
+            width: 100%;
+            max-width: 1200px;
+            height: 500px;
+            margin: 0 auto 4rem;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #C4A68A, #A0695F);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-style: italic;
+            font-size: 1.25rem;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* Post Content */
+        .post-content {
+            font-size: 1.125rem;
+            line-height: 1.9;
+        }
+
+        .post-content h2 {
+            font-size: 2rem;
+            margin: 3rem 0 1.5rem;
+            font-weight: 400;
+        }
+
+        .post-content h3 {
+            font-size: 1.5rem;
+            margin: 2.5rem 0 1rem;
+            font-weight: 400;
+        }
+
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .post-content ul,
+        .post-content ol {
+            margin: 1.5rem 0 1.5rem 2rem;
+        }
+
+        .post-content li {
+            margin-bottom: 0.75rem;
+        }
+
+        .post-content blockquote {
+            border-left: 4px solid var(--terracotta);
+            padding-left: 2rem;
+            margin: 2rem 0;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .post-content code {
+            background: var(--light-beige);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .post-content pre {
+            background: var(--light-beige);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        .post-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .post-content img {
+            width: 100%;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+
+        /* Back Link */
+        .back-link {
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .back-link a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .back-link a:hover {
+            color: var(--terracotta);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--light-beige);
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        footer p {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        /* Error State */
+        .error {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .error h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .error a {
+            color: var(--terracotta);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+            }
+
+            article {
+                margin-top: 100px;
+                padding: 0 1.5rem;
+            }
+
+            .featured-image {
+                height: 300px;
+            }
+
+            .post-content {
+                font-size: 1rem;
+            }
+
+            .post-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .post-content h3 {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Share buttons */
+        .share-buttons {
+            margin: 4rem 0;
+            padding: 2rem 0;
+            border-top: 1px solid var(--light-beige);
+            border-bottom: 1px solid var(--light-beige);
+            text-align: center;
+        }
+
+        .share-buttons h3 {
+            font-size: 1rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .share-buttons-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid var(--light-beige);
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .share-btn:hover {
+            border-color: var(--terracotta);
+            color: var(--terracotta);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo">International Craft Club</a>
+        <nav>
+            <a href="journal.html">Journal</a>
+            <a href="index.html#makers">Makers</a>
+            <a href="index.html#meetups">Meetups</a>
+            <a href="cms.html" style="color: var(--terracotta);">CMS</a>
+            <a href="index.html#join">Join</a>
+        </nav>
+    </header>
+
+    <!-- Post Content (will be dynamically loaded) -->
+    <div id="postContainer">
+        <div class="loading">
+            <h2>Loading post...</h2>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 International Craft Club. Made with care.</p>
+    </footer>
+
+    <!-- Load Supabase client FIRST -->
+    <script src="supabase-client.js"></script>
+    
+    <script>
+        // Marked.js for Markdown parsing (using CDN)
+        const markedScript = document.createElement('script');
+        markedScript.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+        document.head.appendChild(markedScript);
+
+        markedScript.onload = async () => {
+            // Check if Supabase is configured
+            if (!isSupabaseConfigured()) {
+                showError('Supabase not configured. Please edit supabase-client.js');
+                return;
+            }
+
+            try {
+                await initSupabase();
+                await loadPost();
+            } catch (error) {
+                console.error('Failed to initialize:', error);
+                showError('Failed to load post. Please try again later.');
+            }
+        };
+
+        async function loadPost() {
+            // Get post ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+
+            if (!postId) {
+                showError('No post specified');
+                return;
+            }
+
+            try {
+                const post = await PostsDB.getById(postId);
+                
+                if (!post) {
+                    showError('Post not found');
+                    return;
+                }
+
+                // Don't show drafts unless in preview mode
+                if (post.status === 'draft' && !urlParams.get('preview')) {
+                    showError('This post is not published yet');
+                    return;
+                }
+
+                renderPost(post);
+            } catch (error) {
+                console.error('Failed to load post:', error);
+                showError('Failed to load post from database');
+            }
+        }
+
+        function renderPost(post) {
+            // Update page title
+            document.getElementById('pageTitle').textContent = `${post.title} | International Craft Club`;
+
+            // Convert markdown to HTML
+            const contentHTML = marked.parse(post.content);
+
+            // Render post
+            const container = document.getElementById('postContainer');
+            container.innerHTML = `
+                <article>
+                    <div class="back-link">
+                        <a href="journal.html">← Back to Journal</a>
+                    </div>
+
+                    <div class="post-header">
+                        <span class="post-category">${getCategoryLabel(post.category)}</span>
+                        <h1>${post.title}</h1>
+                        <div class="post-meta">
+                            <span>👤 ${post.author}</span>
+                            <span>📅 ${formatDate(post.created_at)}</span>
+                            <span>🕐 ${post.read_time} min read</span>
+                        </div>
+                    </div>
+
+                    ${post.image ? `
+                        <div class="featured-image">
+                            <img src="${post.image}" alt="${post.title}">
+                        </div>
+                    ` : ''}
+
+                    <div class="post-content">
+                        ${contentHTML}
+                    </div>
+
+                    <div class="share-buttons">
+                        <h3>Share this post</h3>
+                        <div class="share-buttons-container">
+                            <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(window.location.href)}" 
+                               target="_blank" 
+                               class="share-btn">
+                                Share on Twitter
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" 
+                               target="_blank" 
+                               class="share-btn">
+                                Share on Facebook
+                            </a>
+                            <a href="mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(window.location.href)}" 
+                               class="share-btn">
+                                Share via Email
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        function showError(message) {
+            const container = document.getElementById('postContainer');
+            container.innerHTML = `
+                <div class="error">
+                    <h2>Oops!</h2>
+                    <p>${message}</p>
+                    <p><a href="journal.html">← Back to Journal</a></p>
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'slow-living': 'SLOW LIVING',
+                'techniques': 'TECHNIQUES',
+                'tutorials': 'TUTORIALS',
+                'community': 'COMMUNITY',
+                'leather-craft': 'LEATHER CRAFT'
+            };
+            return labels[category] || category.toUpperCase();
+        }
+    </script>
+</body>
+</html>

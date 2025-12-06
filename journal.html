@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Journal | International Craft Club</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --terracotta: #A0695F;
+            --dark-brown: #3C2F2F;
+            --cream: #F5F1E8;
+            --light-beige: #EDE8DC;
+            --text-dark: #3C2F2F;
+            --text-muted: #8B7E74;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--cream);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.125rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--terracotta);
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .journal-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 1rem;
+        }
+
+        .journal-header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .journal-header h1 .italic {
+            font-style: italic;
+        }
+
+        .journal-header p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: none;
+            border-radius: 4px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-dark);
+        }
+
+        .filter-tab:hover {
+            background: var(--light-beige);
+        }
+
+        .filter-tab.active {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        /* Featured Post */
+        .featured-post {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 5rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .featured-image {
+            background: linear-gradient(135deg, #C4A68A, #A0695F);
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-style: italic;
+            font-size: 1.25rem;
+        }
+
+        .featured-content {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .post-category {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 1rem;
+        }
+
+        .featured-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            line-height: 1.3;
+        }
+
+        .featured-content p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .post-meta .author::before {
+            content: "👤";
+            margin-right: 0.25rem;
+        }
+
+        .post-meta .read-time::before {
+            content: "🕐";
+            margin-right: 0.25rem;
+        }
+
+        /* Blog Grid */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .blog-card {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-card-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #D4C4B0, #C4A68A);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.7);
+            font-style: italic;
+            font-size: 1.125rem;
+        }
+
+        .blog-card-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        .blog-card-content p {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Footer (simplified version) */
+        footer {
+            background: var(--light-beige);
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        footer p {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            nav a {
+                font-size: 0.85rem;
+            }
+
+            main {
+                padding: 3rem 1.5rem;
+            }
+
+            .featured-post {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-content {
+                padding: 2rem;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-tabs {
+                justify-content: flex-start;
+            }
+        }
+
+        /* Hidden class for filtering */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="index.html" class="logo">International Craft Club</a>
+        <nav>
+            <a href="journal.html" class="active">Journal</a>
+            <a href="index.html#makers">Makers</a>
+            <a href="index.html#meetups">Meetups</a>
+            <a href="cms.html" style="color: var(--terracotta);">CMS</a>
+            <a href="index.html#join">Join</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Journal Header -->
+        <div class="journal-header">
+            <p class="section-label">STORIES & GUIDES</p>
+            <h1>The <span class="italic">Journal</span></h1>
+            <p>Thoughts on slow creativity, traditional techniques, and the makers who inspire us. No algorithms, no hot takes—just thoughtful writing for thoughtful makers.</p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-category="all">All</button>
+            <button class="filter-tab" data-category="slow-living">Slow Living</button>
+            <button class="filter-tab" data-category="techniques">Techniques</button>
+            <button class="filter-tab" data-category="tutorials">Tutorials</button>
+            <button class="filter-tab" data-category="community">Community</button>
+            <button class="filter-tab" data-category="leather-craft">Leather Craft</button>
+        </div>
+
+        <!-- Featured Post (dynamically loaded) -->
+        <div id="featuredPost"></div>
+
+        <!-- Blog Grid (dynamically loaded) -->
+        <div class="blog-grid" id="blogGrid"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 International Craft Club. Made with care.</p>
+    </footer>
+
+    <!-- Load Supabase client -->
+    <script src="supabase-client.js"></script>
+
+    <script>
+        // Filter functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        let allPosts = [];
+        let currentFilter = 'all';
+
+        // Initialize and load posts
+        async function init() {
+            // Check if Supabase is configured
+            if (!isSupabaseConfigured()) {
+                showError('Supabase not configured. Please edit supabase-client.js');
+                return;
+            }
+
+            try {
+                await initSupabase();
+                await loadPosts();
+            } catch (error) {
+                console.error('Failed to initialize:', error);
+                showError('Failed to load posts. Please try again later.');
+            }
+        }
+
+        // Load posts from Supabase
+        async function loadPosts() {
+            try {
+                allPosts = await PostsDB.getPublished();
+                renderPosts();
+            } catch (error) {
+                console.error('Failed to load posts:', error);
+                showError('Failed to load posts from database.');
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('featuredPost').innerHTML = '';
+            document.getElementById('blogGrid').innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem; color: var(--text-muted);">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Oops!</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        function renderPosts() {
+            // Filter posts if needed
+            const filteredPosts = currentFilter === 'all' 
+                ? allPosts 
+                : allPosts.filter(p => p.category === currentFilter);
+
+            if (filteredPosts.length === 0) {
+                document.getElementById('featuredPost').innerHTML = '';
+                document.getElementById('blogGrid').innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 4rem 2rem; color: var(--text-muted);">
+                        <p>No posts in this category yet. Check back soon!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Featured post (first one)
+            const featured = filteredPosts[0];
+            document.getElementById('featuredPost').innerHTML = `
+                <article class="featured-post" data-category="${featured.category}">
+                    <div class="featured-image">
+                        ${featured.image ? `<img src="${featured.image}" alt="${featured.title}" style="width:100%;height:100%;object-fit:cover;">` : 'Featured Image'}
+                    </div>
+                    <div class="featured-content">
+                        <p class="post-category">${getCategoryLabel(featured.category)}</p>
+                        <h2>${featured.title}</h2>
+                        <p>${featured.excerpt}</p>
+                        <div class="post-meta">
+                            <span class="author">${featured.author}</span>
+                            <span class="read-time">${featured.read_time} min read</span>
+                        </div>
+                    </div>
+                </article>
+            `;
+
+            // Make featured post clickable
+            document.querySelector('.featured-post').onclick = () => {
+                window.location.href = `post.html?id=${featured.id}`;
+            };
+            document.querySelector('.featured-post').style.cursor = 'pointer';
+
+            // Rest of posts in grid
+            const gridPosts = filteredPosts.slice(1);
+            const gridHTML = gridPosts.map(post => `
+                <a href="post.html?id=${post.id}" class="blog-card" data-category="${post.category}">
+                    <div class="blog-card-image">
+                        ${post.image ? `<img src="${post.image}" alt="${post.title}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">` : 'Image'}
+                    </div>
+                    <div class="blog-card-content">
+                        <div class="diary-card-handle icon-instagram">${getCategoryLabel(post.category)}</div>
+                        <h3 class="diary-card-title">${post.title}</h3>
+                        <p class="diary-card-desc">${post.excerpt}</p>
+                        <div class="post-meta">
+                            <span class="author">${post.author}</span>
+                            <span class="read-time">${post.read_time} min read</span>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+
+            document.getElementById('blogGrid').innerHTML = gridHTML;
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'slow-living': 'SLOW LIVING',
+                'techniques': 'TECHNIQUES',
+                'tutorials': 'TUTORIALS',
+                'community': 'COMMUNITY',
+                'leather-craft': 'LEATHER CRAFT'
+            };
+            return labels[category] || category.toUpperCase();
+        }
+
+        // Filter tabs
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentFilter = tab.dataset.category;
+                renderPosts();
+            });
+        });
+
+        // Initialize on page load
+        init();
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
