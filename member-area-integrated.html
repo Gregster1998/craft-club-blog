@@ -61,36 +61,6 @@
             gap: 2rem;
         }
 
-        .notifications {
-            position: relative;
-            cursor: pointer;
-            font-size: 1.25rem;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--terracotta);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: -apple-system, sans-serif;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            position: relative;
-        }
-
         .avatar {
             width: 40px;
             height: 40px;
@@ -101,6 +71,14 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            position: relative;
         }
 
         .user-menu {
@@ -138,7 +116,7 @@
 
         .user-menu-item:last-child {
             border-radius: 0 0 8px 8px;
-            color: var(--error);
+            color: #C75B5B;
         }
 
         /* Main Layout */
@@ -159,12 +137,6 @@
             overflow-y: auto;
         }
 
-        .sidebar nav {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
         .nav-item {
             padding: 0.75rem 1rem;
             color: var(--text-dark);
@@ -177,6 +149,7 @@
             align-items: center;
             gap: 0.75rem;
             cursor: pointer;
+            margin-bottom: 0.5rem;
         }
 
         .nav-item:hover,
@@ -200,27 +173,28 @@
             font-family: -apple-system, sans-serif;
         }
 
-        /* Main Content */
+        /* Content */
         .content {
             margin-left: 280px;
             flex: 1;
             padding: 2rem 3rem;
         }
 
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+        .content-section {
+            display: none;
         }
 
-        /* Card Styles */
+        .content-section.active {
+            display: block;
+        }
+
+        /* Cards */
         .card {
             background: white;
             padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
         }
 
         .card h3 {
@@ -229,13 +203,12 @@
             font-size: 1.25rem;
         }
 
-        .card-label {
-            font-family: -apple-system, sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--terracotta);
-            margin-bottom: 0.5rem;
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
         /* Profile Card */
@@ -312,23 +285,6 @@
             height: 100%;
             background: linear-gradient(90deg, var(--terracotta), var(--gold));
             transition: width 0.5s ease;
-            position: relative;
-        }
-
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
 
         .progress-info {
@@ -339,41 +295,176 @@
             font-family: -apple-system, sans-serif;
         }
 
-        /* Badges */
-        .badges-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 1rem;
-        }
-
-        .badge {
-            text-align: center;
-            padding: 1rem;
-            border-radius: 8px;
-            background: var(--light-beige);
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .badge:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .badge.locked {
-            opacity: 0.5;
-            filter: grayscale(1);
-        }
-
-        .badge-icon {
-            font-size: 2.5rem;
+        .card-label {
+            font-family: -apple-system, sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--terracotta);
             margin-bottom: 0.5rem;
         }
 
-        .badge-name {
-            font-size: 0.75rem;
-            color: var(--text-dark);
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 1.25rem;
+            color: var(--dark-brown);
+            margin-bottom: 0.5rem;
             font-family: -apple-system, sans-serif;
+        }
+
+        .empty-state-text {
+            font-family: -apple-system, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-secondary {
+            background: var(--light-beige);
+            color: var(--dark-brown);
+        }
+
+        .btn-secondary:hover {
+            background: var(--highlight);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.9rem;
+            color: var(--dark-brown);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--light-beige);
+            border-radius: 8px;
+            font-family: -apple-system, sans-serif;
+            font-size: 1rem;
+            color: var(--text-dark);
+            transition: all 0.3s;
+            background: var(--cream);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--terracotta);
+            background: white;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Georgia', serif;
+        }
+
+        /* Project Grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--light-beige), var(--highlight));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--terracotta);
+        }
+
+        .project-info {
+            padding: 1.25rem;
+        }
+
+        .project-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-brown);
+        }
+
+        .project-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+            font-family: -apple-system, sans-serif;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: -apple-system, sans-serif;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--light-beige);
+        }
+
+        .project-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
         /* Activity Feed */
@@ -417,111 +508,61 @@
             font-family: -apple-system, sans-serif;
         }
 
-        /* Leaderboard */
-        .leaderboard-list {
-            list-style: none;
-        }
-
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid var(--light-beige);
-            transition: background 0.3s;
-        }
-
-        .leaderboard-item:hover {
-            background: var(--cream);
-        }
-
-        .rank {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
             justify-content: center;
-            border-radius: 50%;
-            font-weight: bold;
-            margin-right: 1rem;
-            font-family: -apple-system, sans-serif;
+            align-items: center;
+            padding: 2rem;
         }
 
-        .rank.gold {
-            background: var(--gold);
-            color: white;
+        .modal.show {
+            display: flex;
         }
 
-        .rank.silver {
-            background: var(--silver);
-            color: white;
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
         }
 
-        .rank.bronze {
-            background: var(--bronze);
-            color: white;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
-        .rank.other {
-            background: var(--light-beige);
-            color: var(--text-dark);
-        }
-
-        .leaderboard-user {
-            flex: 1;
-        }
-
-        .leaderboard-name {
-            font-weight: 600;
+        .modal-title {
+            font-size: 1.5rem;
             color: var(--dark-brown);
         }
 
-        .leaderboard-subtitle {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-family: -apple-system, sans-serif;
-        }
-
-        .leaderboard-score {
-            font-size: 1.25rem;
-            color: var(--terracotta);
-            font-weight: bold;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.75rem 2rem;
+        .modal-close {
+            background: none;
             border: none;
-            border-radius: 8px;
+            font-size: 2rem;
             cursor: pointer;
-            font-family: -apple-system, sans-serif;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
+            color: var(--text-muted);
+            line-height: 1;
         }
 
-        .btn-primary {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--dark-brown);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .btn-secondary {
-            background: var(--light-beige);
+        .modal-close:hover {
             color: var(--dark-brown);
         }
 
-        .btn-secondary:hover {
-            background: var(--highlight);
-        }
-
-        /* Loading State */
+        /* Loading */
         .loading {
             display: flex;
             align-items: center;
@@ -545,18 +586,32 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 240px;
-            }
-            
-            .content {
-                margin-left: 240px;
-                padding: 2rem;
-            }
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-family: -apple-system, sans-serif;
+            display: none;
         }
 
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #E8F5E9;
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .alert-error {
+            background: #FCEAEA;
+            color: #C75B5B;
+            border: 1px solid #C75B5B;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 position: static;
@@ -574,6 +629,10 @@
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
+
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -582,16 +641,11 @@
     <header>
         <div class="logo">International Craft Club</div>
         <div class="user-nav">
-            <div class="notifications" onclick="toggleNotifications()">
-                🔔
-                <span class="notification-badge" id="notif-count">0</span>
-            </div>
             <div class="user-profile" onclick="toggleUserMenu()">
                 <div class="avatar" id="header-avatar">...</div>
                 <span id="header-name">Loading...</span>
                 <div class="user-menu" id="user-menu">
-                    <div class="user-menu-item" onclick="alert('Profile settings coming soon!')">👤 View Profile</div>
-                    <div class="user-menu-item" onclick="alert('Settings coming soon!')">⚙️ Settings</div>
+                    <div class="user-menu-item" onclick="showSection('dashboard')">👤 Dashboard</div>
                     <div class="user-menu-item" onclick="handleLogout()">🚪 Logout</div>
                 </div>
             </div>
@@ -605,35 +659,25 @@
                 <a class="nav-item active" onclick="showSection('dashboard')">
                     📊 Dashboard
                 </a>
-                <a class="nav-item" onclick="showSection('projects')">
+                <a class="nav-item" onclick="showSection('my-projects')">
                     🎨 My Projects
                 </a>
                 <a class="nav-item" onclick="showSection('community')">
                     👥 Community Feed
                 </a>
-                <a class="nav-item" onclick="showSection('members')">
-                    🌍 Member Directory
+                <a class="nav-item" onclick="showSection('leaderboard')">
+                    📈 Leaderboard
                 </a>
-
-                <div class="nav-section">
-                    <div class="nav-section-title">Engagement</div>
-                    <a class="nav-item" onclick="showSection('challenges')">
-                        🏆 Challenges
-                    </a>
-                    <a class="nav-item" onclick="showSection('leaderboard')">
-                        📈 Leaderboard
-                    </a>
-                    <a class="nav-item" onclick="showSection('achievements')">
-                        ⭐ Achievements
-                    </a>
-                </div>
+                <a class="nav-item" onclick="showSection('achievements')">
+                    ⭐ Achievements
+                </a>
             </nav>
         </aside>
 
         <!-- Main Content -->
         <main class="content">
             <!-- Dashboard Section -->
-            <section id="dashboard" class="content-section">
+            <section id="dashboard" class="content-section active">
                 <h1 style="margin-bottom: 2rem;" id="welcome-text">Loading...</h1>
 
                 <div class="dashboard-grid">
@@ -643,9 +687,8 @@
                         <h2 class="profile-name" id="profile-name">Loading...</h2>
                         <p class="profile-level" id="profile-level">Loading...</p>
 
-                        <!-- XP Progress -->
                         <div class="progress-section">
-                            <div class="card-label" id="level-label">Loading...</div>
+                            <div class="card-label" id="level-label">Level Progress</div>
                             <div class="progress-bar">
                                 <div class="progress-fill" id="xp-progress" style="width: 0%;"></div>
                             </div>
@@ -669,10 +712,6 @@
                                 <span class="stat-label">Badges</span>
                             </div>
                         </div>
-
-                        <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;">
-                            Edit Profile
-                        </button>
                     </div>
 
                     <!-- Streak Card -->
@@ -680,20 +719,31 @@
                         <h3>🔥 Your Streak</h3>
                         <div style="text-align: center; margin: 2rem 0;">
                             <div style="font-size: 4rem; color: var(--terracotta); font-weight: bold;" id="streak-days">0</div>
-                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif;">
-                                Days in a row! Keep it going!
+                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif;" id="streak-text">
+                                Start your crafting journey!
                             </p>
                         </div>
                     </div>
 
-                    <!-- Recent Badges -->
+                    <!-- Quick Actions -->
                     <div class="card">
-                        <h3>⭐ Recent Achievements</h3>
-                        <div class="badges-grid" id="recent-badges">
-                            <div class="loading">
-                                <div class="spinner"></div>
-                                Loading...
-                            </div>
+                        <h3>✨ Quick Actions</h3>
+                        <button class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="showAddProject()">
+                            + Add New Project
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%;" onclick="showSection('community')">
+                            View Community
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Badges -->
+                <div class="card">
+                    <h3>⭐ Your Achievements</h3>
+                    <div id="dashboard-badges">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            Loading...
                         </div>
                     </div>
                 </div>
@@ -701,51 +751,124 @@
                 <!-- Activity Feed -->
                 <div class="card">
                     <h3>🌊 Community Activity</h3>
-                    <ul class="activity-feed" id="activity-feed">
+                    <ul class="activity-feed" id="dashboard-activity">
                         <li class="loading">
                             <div class="spinner"></div>
-                            Loading activities...
+                            Loading...
                         </li>
                     </ul>
+                </div>
+            </section>
+
+            <!-- My Projects Section -->
+            <section id="my-projects" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h1>🎨 My Projects</h1>
+                    <button class="btn btn-primary" onclick="showAddProject()">+ Add Project</button>
+                </div>
+
+                <div id="my-projects-container">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading your projects...
+                    </div>
+                </div>
+            </section>
+
+            <!-- Community Feed Section -->
+            <section id="community" class="content-section">
+                <h1 style="margin-bottom: 2rem;">👥 Community Feed</h1>
+
+                <div id="community-feed">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading community activity...
+                    </div>
                 </div>
             </section>
 
             <!-- Leaderboard Section -->
-            <section id="leaderboard" class="content-section" style="display: none;">
+            <section id="leaderboard" class="content-section">
                 <h1 style="margin-bottom: 2rem;">🏆 Leaderboard</h1>
 
                 <div class="card">
-                    <h3>Monthly Rankings</h3>
-                    <ul class="leaderboard-list" id="leaderboard-list">
-                        <li class="loading">
+                    <h3>Top Crafters</h3>
+                    <div id="leaderboard-container">
+                        <div class="loading">
                             <div class="spinner"></div>
                             Loading leaderboard...
-                        </li>
-                    </ul>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- Achievements Section -->
-            <section id="achievements" class="content-section" style="display: none;">
+            <section id="achievements" class="content-section">
                 <h1 style="margin-bottom: 2rem;">⭐ Your Achievements</h1>
 
                 <div class="card">
-                    <div style="text-align: center; margin-bottom: 3rem;">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
-                        <h2 id="badges-count">Loading...</h2>
-                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Keep crafting to unlock more!</p>
-                    </div>
-
-                    <div class="card-label">Your Badges</div>
-                    <div class="badges-grid" id="all-badges">
+                    <div id="achievements-container">
                         <div class="loading">
                             <div class="spinner"></div>
-                            Loading badges...
+                            Loading achievements...
                         </div>
                     </div>
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- Add Project Modal -->
+    <div class="modal" id="add-project-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Project</h2>
+                <button class="modal-close" onclick="closeAddProject()">&times;</button>
+            </div>
+
+            <div id="project-alert" class="alert"></div>
+
+            <form onsubmit="handleAddProject(event)">
+                <div class="form-group">
+                    <label for="project-title">Project Title *</label>
+                    <input type="text" id="project-title" required placeholder="e.g., Hand-woven Scarf">
+                </div>
+
+                <div class="form-group">
+                    <label for="project-description">Description</label>
+                    <textarea id="project-description" placeholder="Tell us about your project..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="project-craft-type">Craft Type *</label>
+                    <select id="project-craft-type" required>
+                        <option value="">Select a craft type</option>
+                        <option value="Sewing">Sewing</option>
+                        <option value="Knitting">Knitting</option>
+                        <option value="Crochet">Crochet</option>
+                        <option value="Weaving">Weaving</option>
+                        <option value="Embroidery">Embroidery</option>
+                        <option value="Quilting">Quilting</option>
+                        <option value="Leather Work">Leather Work</option>
+                        <option value="Ceramics">Ceramics</option>
+                        <option value="Woodworking">Woodworking</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="project-status">Status *</label>
+                    <select id="project-status" required>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="add-project-btn">
+                    Add Project
+                </button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -779,7 +902,6 @@
         // ============================================
         async function loadUserData() {
             try {
-                // Get user profile
                 const { data: profile, error } = await supabase
                     .from('profiles')
                     .select('*')
@@ -790,22 +912,19 @@
 
                 userProfile = profile;
                 updateUI(profile);
-                await loadDashboardData();
+                await loadAllData();
             } catch (error) {
                 console.error('Error loading user data:', error);
                 alert('Failed to load user data');
             }
         }
 
-        // ============================================
-        // UPDATE UI WITH USER DATA
-        // ============================================
         function updateUI(profile) {
             // Header
             document.getElementById('header-avatar').textContent = profile.avatar_initials;
             document.getElementById('header-name').textContent = profile.full_name.split(' ')[0];
 
-            // Welcome message
+            // Welcome
             document.getElementById('welcome-text').textContent = `Welcome back, ${profile.full_name.split(' ')[0]}! 👋`;
 
             // Profile card
@@ -813,7 +932,7 @@
             document.getElementById('profile-name').textContent = profile.full_name;
             document.getElementById('profile-level').textContent = `⚡ ${profile.rank}`;
 
-            // Level progress
+            // XP Progress
             const xpInLevel = profile.xp % 1000;
             const xpProgress = (xpInLevel / 1000) * 100;
             document.getElementById('level-label').textContent = `Level ${profile.level} Progress`;
@@ -822,107 +941,269 @@
             document.getElementById('xp-remaining').textContent = `${1000 - xpInLevel} XP to Level ${profile.level + 1}`;
 
             // Stats
-            document.getElementById('stat-projects').textContent = profile.projects_count;
-            document.getElementById('stat-followers').textContent = profile.followers_count;
-            document.getElementById('stat-badges').textContent = profile.badges_count;
+            document.getElementById('stat-projects').textContent = profile.projects_count || 0;
+            document.getElementById('stat-followers').textContent = profile.followers_count || 0;
+            document.getElementById('stat-badges').textContent = profile.badges_count || 0;
 
             // Streak
-            document.getElementById('streak-days').textContent = profile.streak_days;
+            const streakDays = profile.streak_days || 0;
+            document.getElementById('streak-days').textContent = streakDays;
+            document.getElementById('streak-text').textContent = streakDays === 0 
+                ? 'Start your crafting journey!' 
+                : streakDays === 1
+                ? 'Great start! Keep it going!'
+                : `Days in a row! Keep it going!`;
         }
 
         // ============================================
-        // LOAD DASHBOARD DATA
+        // LOAD ALL DATA
         // ============================================
-        async function loadDashboardData() {
+        async function loadAllData() {
             await Promise.all([
-                loadRecentBadges(),
-                loadActivityFeed(),
-                loadLeaderboard()
+                loadDashboardBadges(),
+                loadDashboardActivity(),
+                loadMyProjects(),
+                loadCommunityFeed(),
+                loadLeaderboard(),
+                loadAchievements()
             ]);
         }
 
-        async function loadRecentBadges() {
+        // ============================================
+        // DASHBOARD BADGES
+        // ============================================
+        async function loadDashboardBadges() {
             try {
-                const { data: userBadges, error: badgesError } = await supabase
+                const { data: userBadges, error } = await supabase
                     .from('user_badges')
                     .select(`
                         earned_at,
-                        badges (
-                            name,
-                            icon,
-                            description
-                        )
+                        badges (name, icon, description)
                     `)
                     .eq('user_id', currentUser.id)
                     .order('earned_at', { ascending: false })
                     .limit(4);
 
-                if (badgesError) throw badgesError;
+                if (error) throw error;
 
-                const container = document.getElementById('recent-badges');
+                const container = document.getElementById('dashboard-badges');
                 
                 if (!userBadges || userBadges.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-family: -apple-system, sans-serif;">No badges earned yet. Start crafting!</p>';
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏆</div>
+                            <div class="empty-state-title">No badges yet</div>
+                            <div class="empty-state-text">Complete projects and participate in the community to earn badges!</div>
+                        </div>
+                    `;
                     return;
                 }
 
-                container.innerHTML = userBadges.map(ub => `
-                    <div class="badge">
-                        <div class="badge-icon">${ub.badges.icon}</div>
-                        <div class="badge-name">${ub.badges.name}</div>
+                container.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+                        ${userBadges.map(ub => `
+                            <div style="text-align: center; padding: 1rem; background: var(--light-beige); border-radius: 8px;">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${ub.badges.icon}</div>
+                                <div style="font-size: 0.9rem; font-family: -apple-system, sans-serif; color: var(--dark-brown);">${ub.badges.name}</div>
+                            </div>
+                        `).join('')}
                     </div>
-                `).join('');
-
+                `;
             } catch (error) {
                 console.error('Error loading badges:', error);
-                document.getElementById('recent-badges').innerHTML = '<p style="text-align: center; color: var(--error);">Failed to load badges</p>';
+                document.getElementById('dashboard-badges').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text" style="color: #C75B5B;">Failed to load badges</div>
+                    </div>
+                `;
             }
         }
 
-        async function loadActivityFeed() {
+        // ============================================
+        // DASHBOARD ACTIVITY
+        // ============================================
+        async function loadDashboardActivity() {
             try {
                 const { data: activities, error } = await supabase
                     .from('activities')
                     .select(`
                         *,
-                        profiles (
-                            full_name,
-                            avatar_initials
-                        )
+                        profiles (full_name, avatar_initials)
                     `)
                     .order('created_at', { ascending: false })
                     .limit(5);
 
                 if (error) throw error;
 
-                const container = document.getElementById('activity-feed');
+                const container = document.getElementById('dashboard-activity');
                 
                 if (!activities || activities.length === 0) {
-                    container.innerHTML = '<li style="text-align: center; padding: 2rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">No recent activity yet</li>';
+                    container.innerHTML = `
+                        <li class="empty-state">
+                            <div class="empty-state-icon">🌊</div>
+                            <div class="empty-state-title">No activity yet</div>
+                            <div class="empty-state-text">Be the first to share a project!</div>
+                        </li>
+                    `;
                     return;
                 }
 
-                container.innerHTML = activities.map(activity => {
-                    const timeAgo = getTimeAgo(activity.created_at);
-                    return `
-                        <li class="activity-item">
-                            <div class="activity-avatar">${activity.profiles.avatar_initials}</div>
-                            <div class="activity-content">
-                                <p class="activity-text">
-                                    <strong>${activity.profiles.full_name}</strong> ${getActivityText(activity)}
-                                </p>
-                                <p class="activity-time">${timeAgo}</p>
-                            </div>
-                        </li>
-                    `;
-                }).join('');
-
+                container.innerHTML = activities.map(activity => `
+                    <li class="activity-item">
+                        <div class="activity-avatar">${activity.profiles.avatar_initials}</div>
+                        <div class="activity-content">
+                            <p class="activity-text">
+                                <strong>${activity.profiles.full_name}</strong> ${getActivityText(activity)}
+                            </p>
+                            <p class="activity-time">${getTimeAgo(activity.created_at)}</p>
+                        </div>
+                    </li>
+                `).join('');
             } catch (error) {
-                console.error('Error loading activity feed:', error);
-                document.getElementById('activity-feed').innerHTML = '<li style="text-align: center; padding: 2rem; color: var(--error);">Failed to load activities</li>';
+                console.error('Error loading activity:', error);
+                document.getElementById('dashboard-activity').innerHTML = `
+                    <li class="empty-state">
+                        <div class="empty-state-text" style="color: #C75B5B;">Failed to load activity</div>
+                    </li>
+                `;
             }
         }
 
+        // ============================================
+        // MY PROJECTS
+        // ============================================
+        async function loadMyProjects() {
+            try {
+                const { data: projects, error } = await supabase
+                    .from('projects')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const container = document.getElementById('my-projects-container');
+                
+                if (!projects || projects.length === 0) {
+                    container.innerHTML = `
+                        <div class="card">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🎨</div>
+                                <div class="empty-state-title">No projects yet</div>
+                                <div class="empty-state-text">Start by adding your first craft project!</div>
+                                <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="showAddProject()">
+                                    + Add Your First Project
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="project-grid">
+                        ${projects.map(project => `
+                            <div class="project-card">
+                                <div class="project-image">${getCraftIcon(project.craft_type)}</div>
+                                <div class="project-info">
+                                    <h3 class="project-title">${project.title}</h3>
+                                    <p class="project-description">${project.description || 'No description'}</p>
+                                    <div class="project-meta">
+                                        <span class="project-meta-item">📁 ${project.craft_type}</span>
+                                        <span class="project-meta-item">${project.status === 'completed' ? '✅ Done' : '🔨 In Progress'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                document.getElementById('my-projects-container').innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-text" style="color: #C75B5B;">Failed to load projects</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // COMMUNITY FEED
+        // ============================================
+        async function loadCommunityFeed() {
+            try {
+                const { data: projects, error } = await supabase
+                    .from('projects')
+                    .select(`
+                        *,
+                        profiles (full_name, avatar_initials)
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                if (error) throw error;
+
+                const container = document.getElementById('community-feed');
+                
+                if (!projects || projects.length === 0) {
+                    container.innerHTML = `
+                        <div class="card">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">👥</div>
+                                <div class="empty-state-title">No community projects yet</div>
+                                <div class="empty-state-text">Be the first to share something amazing!</div>
+                                <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="showAddProject()">
+                                    + Share Your First Project
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="project-grid">
+                        ${projects.map(project => `
+                            <div class="project-card">
+                                <div class="project-image">${getCraftIcon(project.craft_type)}</div>
+                                <div class="project-info">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold;">
+                                            ${project.profiles.avatar_initials}
+                                        </div>
+                                        <span style="font-size: 0.9rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">
+                                            ${project.profiles.full_name}
+                                        </span>
+                                    </div>
+                                    <h3 class="project-title">${project.title}</h3>
+                                    <p class="project-description">${project.description || 'No description'}</p>
+                                    <div class="project-meta">
+                                        <span class="project-meta-item">📁 ${project.craft_type}</span>
+                                        <span class="project-meta-item">👁️ ${project.views_count || 0}</span>
+                                        <span class="project-meta-item">❤️ ${project.likes_count || 0}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading community feed:', error);
+                document.getElementById('community-feed').innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-text" style="color: #C75B5B;">Failed to load community feed</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // LEADERBOARD
+        // ============================================
         async function loadLeaderboard() {
             try {
                 const { data: leaders, error } = await supabase
@@ -933,52 +1214,248 @@
 
                 if (error) throw error;
 
-                const container = document.getElementById('leaderboard-list');
+                const container = document.getElementById('leaderboard-container');
                 
                 if (!leaders || leaders.length === 0) {
-                    container.innerHTML = '<li style="text-align: center; padding: 2rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">No leaderboard data yet</li>';
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏆</div>
+                            <div class="empty-state-title">Leaderboard coming soon</div>
+                            <div class="empty-state-text">Keep crafting to climb the ranks!</div>
+                        </div>
+                    `;
                     return;
                 }
 
-                container.innerHTML = leaders.map((user, index) => {
-                    const position = index + 1;
-                    let rankClass = 'other';
-                    if (position === 1) rankClass = 'gold';
-                    else if (position === 2) rankClass = 'silver';
-                    else if (position === 3) rankClass = 'bronze';
+                container.innerHTML = `
+                    <div style="list-style: none;">
+                        ${leaders.map((user, index) => {
+                            const position = index + 1;
+                            let medal = '';
+                            if (position === 1) medal = '🥇';
+                            else if (position === 2) medal = '🥈';
+                            else if (position === 3) medal = '🥉';
+                            
+                            const isCurrentUser = user.id === currentUser.id;
+                            const highlightStyle = isCurrentUser ? 'background: var(--highlight); border-radius: 8px;' : '';
 
-                    const isCurrentUser = user.id === currentUser.id;
-                    const highlightClass = isCurrentUser ? 'style="background: var(--highlight);"' : '';
-
-                    return `
-                        <li class="leaderboard-item" ${highlightClass}>
-                            <div class="rank ${rankClass}">${position}</div>
-                            <div class="leaderboard-user">
-                                <div class="leaderboard-name">${user.full_name}${isCurrentUser ? ' (You)' : ''}</div>
-                                <div class="leaderboard-subtitle">${user.location || 'Location not set'} · Level ${user.level}</div>
-                            </div>
-                            <div class="leaderboard-score">${user.xp.toLocaleString()} XP</div>
-                        </li>
-                    `;
-                }).join('');
-
+                            return `
+                                <div style="display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--light-beige); ${highlightStyle}">
+                                    <div style="width: 40px; font-size: 1.5rem; text-align: center; margin-right: 1rem;">
+                                        ${medal || position}
+                                    </div>
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem;">
+                                        ${user.avatar_initials}
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; color: var(--dark-brown);">
+                                            ${user.full_name}${isCurrentUser ? ' (You)' : ''}
+                                        </div>
+                                        <div style="font-size: 0.85rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">
+                                            ${user.location || 'Location not set'} · Level ${user.level}
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 1.25rem; color: var(--terracotta); font-weight: bold;">
+                                        ${user.xp} XP
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
             } catch (error) {
                 console.error('Error loading leaderboard:', error);
-                document.getElementById('leaderboard-list').innerHTML = '<li style="text-align: center; padding: 2rem; color: var(--error);">Failed to load leaderboard</li>';
+                document.getElementById('leaderboard-container').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text" style="color: #C75B5B;">Failed to load leaderboard</div>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // ACHIEVEMENTS
+        // ============================================
+        async function loadAchievements() {
+            try {
+                // Get all badges
+                const { data: allBadges, error: badgesError } = await supabase
+                    .from('badges')
+                    .select('*')
+                    .order('rarity', { ascending: true });
+
+                if (badgesError) throw badgesError;
+
+                // Get user's badges
+                const { data: userBadges, error: userBadgesError } = await supabase
+                    .from('user_badges')
+                    .select('badge_id')
+                    .eq('user_id', currentUser.id);
+
+                if (userBadgesError) throw userBadgesError;
+
+                const userBadgeIds = userBadges.map(ub => ub.badge_id);
+                const earnedCount = userBadges.length;
+                const totalCount = allBadges.length;
+
+                const container = document.getElementById('achievements-container');
+                
+                container.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 3rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+                        <h2>${earnedCount} / ${totalCount} Badges Earned</h2>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Keep crafting to unlock more!</p>
+                    </div>
+
+                    ${earnedCount > 0 ? `
+                        <div class="card-label">Earned Badges</div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+                            ${allBadges.filter(badge => userBadgeIds.includes(badge.id)).map(badge => `
+                                <div style="text-align: center; padding: 1rem; background: var(--light-beige); border-radius: 8px;">
+                                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${badge.icon}</div>
+                                    <div style="font-size: 0.85rem; font-family: -apple-system, sans-serif; color: var(--dark-brown); font-weight: 600;">${badge.name}</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">${badge.description}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    <div class="card-label">Locked Badges</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem;">
+                        ${allBadges.filter(badge => !userBadgeIds.includes(badge.id)).map(badge => `
+                            <div style="text-align: center; padding: 1rem; background: var(--light-beige); border-radius: 8px; opacity: 0.5; filter: grayscale(1);">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${badge.icon}</div>
+                                <div style="font-size: 0.85rem; font-family: -apple-system, sans-serif; color: var(--dark-brown); font-weight: 600;">${badge.name}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">${badge.description}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+                document.getElementById('achievements-container').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text" style="color: #C75B5B;">Failed to load achievements</div>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // ADD PROJECT
+        // ============================================
+        function showAddProject() {
+            document.getElementById('add-project-modal').classList.add('show');
+            document.getElementById('project-alert').classList.remove('show');
+        }
+
+        function closeAddProject() {
+            document.getElementById('add-project-modal').classList.remove('show');
+            document.getElementById('add-project-btn').disabled = false;
+            document.getElementById('add-project-btn').textContent = 'Add Project';
+        }
+
+        async function handleAddProject(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('project-title').value;
+            const description = document.getElementById('project-description').value;
+            const craftType = document.getElementById('project-craft-type').value;
+            const status = document.getElementById('project-status').value;
+
+            const btn = document.getElementById('add-project-btn');
+            btn.disabled = true;
+            btn.textContent = 'Adding...';
+
+            try {
+                // Insert project
+                const { data: project, error: projectError } = await supabase
+                    .from('projects')
+                    .insert({
+                        user_id: currentUser.id,
+                        title: title,
+                        description: description,
+                        craft_type: craftType,
+                        status: status
+                    })
+                    .select()
+                    .single();
+
+                if (projectError) throw projectError;
+
+                // Update user's project count
+                await supabase
+                    .from('profiles')
+                    .update({ projects_count: userProfile.projects_count + 1 })
+                    .eq('id', currentUser.id);
+
+                // Award XP
+                await supabase.rpc('award_xp', {
+                    user_uuid: currentUser.id,
+                    xp_amount: status === 'completed' ? 100 : 50
+                });
+
+                // Create activity
+                await supabase
+                    .from('activities')
+                    .insert({
+                        user_id: currentUser.id,
+                        activity_type: status === 'completed' ? 'project_completed' : 'project_started',
+                        activity_data: { project_title: title }
+                    });
+
+                // Show success
+                const alert = document.getElementById('project-alert');
+                alert.textContent = 'Project added successfully!';
+                alert.className = 'alert alert-success show';
+
+                // Reset form
+                event.target.reset();
+
+                // Reload data
+                setTimeout(async () => {
+                    closeAddProject();
+                    await loadUserData();
+                }, 1500);
+
+            } catch (error) {
+                console.error('Error adding project:', error);
+                const alert = document.getElementById('project-alert');
+                alert.textContent = error.message || 'Failed to add project';
+                alert.className = 'alert alert-error show';
+                btn.disabled = false;
+                btn.textContent = 'Add Project';
             }
         }
 
         // ============================================
         // UTILITY FUNCTIONS
         // ============================================
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function toggleUserMenu() {
+            document.getElementById('user-menu').classList.toggle('show');
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        }
+
         function getActivityText(activity) {
             switch (activity.activity_type) {
                 case 'project_completed':
-                    return 'completed a new project';
+                    return 'completed a project';
+                case 'project_started':
+                    return 'started a new project';
                 case 'badge_earned':
                     return `earned the ${activity.activity_data?.badge_name} badge`;
-                case 'challenge_joined':
-                    return 'joined a challenge';
                 case 'level_up':
                     return `reached level ${activity.activity_data?.level}`;
                 default:
@@ -995,48 +1472,33 @@
             const diffDays = Math.floor(diffMs / 86400000);
 
             if (diffMins < 1) return 'Just now';
-            if (diffMins < 60) return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
-            if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
-            return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            return `${diffDays}d ago`;
         }
 
-        // ============================================
-        // UI INTERACTION FUNCTIONS
-        // ============================================
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.style.display = 'none';
-            });
+        function getCraftIcon(craftType) {
+            const icons = {
+                'Sewing': '🧵',
+                'Knitting': '🧶',
+                'Crochet': '🪡',
+                'Weaving': '🧵',
+                'Embroidery': '🪡',
+                'Quilting': '🧵',
+                'Leather Work': '👜',
+                'Ceramics': '🏺',
+                'Woodworking': '🪵',
+                'Other': '🎨'
+            };
+            return icons[craftType] || '🎨';
+        }
 
-            const selectedSection = document.getElementById(sectionId);
-            if (selectedSection) {
-                selectedSection.style.display = 'block';
+        // Close modals when clicking outside
+        document.getElementById('add-project-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddProject();
             }
-
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
-
-        function toggleNotifications() {
-            alert('Notifications:\n\n✅ New activity from your followers\n✅ Challenge deadline approaching\n✅ You earned a new badge!');
-        }
-
-        function toggleUserMenu() {
-            const menu = document.getElementById('user-menu');
-            menu.classList.toggle('show');
-        }
-
-        async function handleLogout() {
-            const { error } = await supabase.auth.signOut();
-            if (error) {
-                console.error('Logout error:', error);
-                alert('Failed to logout');
-            } else {
-                window.location.href = 'login.html';
-            }
-        }
+        });
 
         // Close user menu when clicking outside
         document.addEventListener('click', function(event) {
