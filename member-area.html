@@ -32,7 +32,6 @@
             background: var(--cream);
         }
 
-        /* Header */
         header {
             position: fixed;
             top: 0;
@@ -113,7 +112,7 @@
             justify-content: center;
             color: white;
             font-weight: bold;
-            object-fit: cover;
+            cursor: pointer;
         }
 
         .avatar img {
@@ -131,7 +130,6 @@
             position: relative;
         }
 
-        /* Dropdowns */
         .dropdown {
             position: absolute;
             top: 100%;
@@ -191,7 +189,6 @@
             background: #E8F5E9;
         }
 
-        /* Layout */
         .main-container {
             margin-top: 80px;
             display: flex;
@@ -242,7 +239,6 @@
             display: block;
         }
 
-        /* Cards */
         .card {
             background: white;
             padding: 2rem;
@@ -257,7 +253,6 @@
             font-size: 1.25rem;
         }
 
-        /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -265,7 +260,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Quick Stats */
         .quick-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -301,7 +295,6 @@
             font-family: -apple-system, sans-serif;
         }
 
-        /* Project Grid */
         .project-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -429,7 +422,6 @@
             justify-content: center;
             font-size: 0.7rem;
             font-weight: bold;
-            object-fit: cover;
         }
 
         .user-mini-avatar img {
@@ -439,7 +431,6 @@
             object-fit: cover;
         }
 
-        /* Feed Items */
         .feed-item {
             background: white;
             padding: 1.5rem;
@@ -465,7 +456,7 @@
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            object-fit: cover;
+            cursor: pointer;
         }
 
         .feed-avatar img {
@@ -496,7 +487,6 @@
             text-decoration: underline;
         }
 
-        /* Buttons */
         .btn {
             padding: 0.75rem 2rem;
             border: none;
@@ -534,7 +524,6 @@
             font-size: 0.85rem;
         }
 
-        /* Forms */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -568,7 +557,6 @@
             resize: vertical;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -589,7 +577,7 @@
         .modal-content {
             background: white;
             border-radius: 16px;
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -613,7 +601,6 @@
             color: var(--text-muted);
         }
 
-        /* Profile Picture Upload */
         .profile-picture-upload {
             text-align: center;
             margin-bottom: 2rem;
@@ -631,7 +618,6 @@
             color: white;
             font-size: 3rem;
             font-weight: bold;
-            object-fit: cover;
             overflow: hidden;
         }
 
@@ -641,32 +627,10 @@
             object-fit: cover;
         }
 
-        .tag-input {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            padding: 0.5rem;
-            border: 2px solid var(--light-beige);
-            border-radius: 8px;
-            min-height: 50px;
+        .craft-specific-fields {
+            display: none;
         }
 
-        .tag {
-            padding: 0.4rem 0.8rem;
-            background: var(--light-beige);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .tag-remove {
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 3rem 2rem;
@@ -679,7 +643,6 @@
             opacity: 0.5;
         }
 
-        /* Loading */
         .loading {
             display: flex;
             align-items: center;
@@ -700,7 +663,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 position: static;
@@ -735,7 +697,6 @@
                 <div class="avatar" id="header-avatar">...</div>
             </div>
 
-            <!-- Notifications Dropdown -->
             <div class="dropdown" id="notifications-dropdown">
                 <div class="dropdown-header">
                     Notifications
@@ -746,7 +707,6 @@
                 </div>
             </div>
 
-            <!-- Messages Dropdown -->
             <div class="dropdown" id="messages-dropdown">
                 <div class="dropdown-header">Messages</div>
                 <div id="conversations-list">
@@ -754,9 +714,8 @@
                 </div>
             </div>
 
-            <!-- User Menu -->
             <div class="dropdown" id="user-menu" style="min-width: 200px;">
-                <div class="dropdown-item" onclick="showSection('dashboard')">👤 Dashboard</div>
+                <div class="dropdown-item" onclick="showSection('dashboard'); hideAllDropdowns();">👤 Dashboard</div>
                 <div class="dropdown-item" onclick="showEditProfile()">✏️ Edit Profile</div>
                 <div class="dropdown-item" onclick="showSettings()">⚙️ Settings</div>
                 <div class="dropdown-item" onclick="handleLogout()">🚪 Logout</div>
@@ -777,7 +736,6 @@
         </aside>
 
         <main class="content">
-            <!-- Dashboard -->
             <section id="dashboard" class="content-section active">
                 <h1 style="margin-bottom: 2rem;" id="welcome-text">Welcome! 👋</h1>
 
@@ -812,7 +770,6 @@
                 <button class="btn btn-primary" onclick="showAddProject()">+ Add New Project</button>
             </section>
 
-            <!-- My Projects -->
             <section id="my-projects" class="content-section">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
                     <h1>🎨 My Projects</h1>
@@ -821,29 +778,22 @@
                 <div id="my-projects-container"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
-            <!-- Community Feed -->
             <section id="community" class="content-section">
                 <h1 style="margin-bottom: 2rem;">🌊 Community Feed</h1>
-                <p style="color: var(--text-muted); margin-bottom: 2rem; font-family: -apple-system, sans-serif;">
-                    Updates from projects you follow and friends you follow
-                </p>
                 <div id="community-feed"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
-            <!-- Friends -->
             <section id="friends" class="content-section">
                 <h1 style="margin-bottom: 2rem;">💫 Your Friends</h1>
                 <div id="friends-container"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
-            <!-- Find Members -->
             <section id="members" class="content-section">
                 <h1 style="margin-bottom: 2rem;">🔍 Find Makers</h1>
                 <input type="text" id="member-search" placeholder="Search by name or username..." style="margin-bottom: 2rem;" oninput="searchMembers()">
                 <div id="members-container"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
-            <!-- Chat -->
             <section id="chat" class="content-section">
                 <h1 style="margin-bottom: 2rem;">💬 Messages</h1>
                 <div id="chat-area"></div>
@@ -932,7 +882,7 @@
 
     <!-- Profile View Modal -->
     <div class="modal" id="profile-view-modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 800px;">
             <div class="modal-header">
                 <h2>Profile</h2>
                 <button class="modal-close" onclick="closeProfileView()">&times;</button>
@@ -943,7 +893,7 @@
 
     <!-- Add Project Modal -->
     <div class="modal" id="add-project-modal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
                 <h2>Add New Project</h2>
                 <button class="modal-close" onclick="closeAddProject()">&times;</button>
@@ -959,27 +909,263 @@
                 </div>
                 <div class="form-group">
                     <label>Craft Type *</label>
-                    <select id="project-craft-type" required>
+                    <select id="project-craft-type" required onchange="showCraftFields()">
                         <option value="">Select...</option>
                         <option value="Sewing">Sewing</option>
                         <option value="Knitting">Knitting</option>
                         <option value="Crochet">Crochet</option>
+                        <option value="Embroidery">Embroidery</option>
+                        <option value="Weaving">Weaving</option>
+                        <option value="Quilting">Quilting</option>
+                        <option value="Leather Work">Leather Work</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Project</button>
+
+                <!-- Crochet Fields -->
+                <div id="crochet-fields" class="craft-specific-fields">
+                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧶 Crochet Details</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Hook Size</label>
+                            <input type="text" id="crochet-hook-size" placeholder="e.g., 5mm, H/8">
+                        </div>
+                        <div class="form-group">
+                            <label>Yarn Weight</label>
+                            <input type="text" id="crochet-yarn-weight" placeholder="e.g., Worsted (4)">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Yarn Brand</label>
+                            <input type="text" id="crochet-yarn-brand" placeholder="e.g., Lion Brand">
+                        </div>
+                        <div class="form-group">
+                            <label>Yarn Color</label>
+                            <input type="text" id="crochet-yarn-color" placeholder="e.g., Terracotta">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Yardage Needed</label>
+                        <input type="text" id="crochet-yardage" placeholder="e.g., 300 yards">
+                    </div>
+                    <div class="form-group">
+                        <label>Gauge</label>
+                        <input type="text" id="crochet-gauge" placeholder="e.g., 16 sts x 20 rows = 4 inches">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Where to Buy Yarn</label>
+                        <input type="url" id="crochet-yarn-link" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Pattern Link (Optional)</label>
+                        <input type="url" id="crochet-pattern-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Knitting Fields -->
+                <div id="knitting-fields" class="craft-specific-fields">
+                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧶 Knitting Details</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Needle Size</label>
+                            <input type="text" id="knitting-needle-size" placeholder="e.g., US 8, 5mm">
+                        </div>
+                        <div class="form-group">
+                            <label>Needle Type</label>
+                            <input type="text" id="knitting-needle-type" placeholder="e.g., Circular, DPN">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Yarn Weight</label>
+                            <input type="text" id="knitting-yarn-weight" placeholder="e.g., DK (3)">
+                        </div>
+                        <div class="form-group">
+                            <label>Yarn Brand</label>
+                            <input type="text" id="knitting-yarn-brand" placeholder="e.g., Malabrigo">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Yardage Needed</label>
+                        <input type="text" id="knitting-yardage" placeholder="e.g., 400 yards">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Where to Buy Yarn</label>
+                        <input type="url" id="knitting-yarn-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Sewing Fields -->
+                <div id="sewing-fields" class="craft-specific-fields">
+                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧵 Sewing Details</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Needle Type</label>
+                            <input type="text" id="sewing-needle-type" placeholder="e.g., Universal 80/12">
+                        </div>
+                        <div class="form-group">
+                            <label>Fabric Type</label>
+                            <input type="text" id="sewing-fabric-type" placeholder="e.g., Cotton, Linen">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Fabric Amount</label>
+                            <input type="text" id="sewing-fabric-amount" placeholder="e.g., 2 yards">
+                        </div>
+                        <div class="form-group">
+                            <label>Fabric Brand</label>
+                            <input type="text" id="sewing-fabric-brand" placeholder="e.g., Riley Blake">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Notions Needed</label>
+                        <input type="text" id="sewing-notions" placeholder="e.g., Buttons, zipper, interfacing">
+                    </div>
+                    <div class="form-group">
+                        <label>Pattern Size</label>
+                        <input type="text" id="sewing-pattern-size" placeholder="e.g., Medium, 10">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Where to Buy Fabric</label>
+                        <input type="url" id="sewing-fabric-link" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Pattern Link (Optional)</label>
+                        <input type="url" id="sewing-pattern-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Embroidery Fields -->
+                <div id="embroidery-fields" class="craft-specific-fields">
+                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🪡 Embroidery Details</h3>
+                    <div class="form-group">
+                        <label>Thread Type</label>
+                        <input type="text" id="embroidery-thread-type" placeholder="e.g., DMC Floss">
+                    </div>
+                    <div class="form-group">
+                        <label>Thread Colors</label>
+                        <input type="text" id="embroidery-thread-colors" placeholder="e.g., 310, 666, 972">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Fabric Type</label>
+                            <input type="text" id="embroidery-fabric-type" placeholder="e.g., Aida 14 count">
+                        </div>
+                        <div class="form-group">
+                            <label>Hoop Size</label>
+                            <input type="text" id="embroidery-hoop-size" placeholder="e.g., 6 inches">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="embroidery-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Weaving Fields -->
+                <div id="weaving-fields" class="craft-specific-fields">
+                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧵 Weaving Details</h3>
+                    <div class="form-group">
+                        <label>Loom Type</label>
+                        <input type="text" id="weaving-loom-type" placeholder="e.g., Rigid heddle">
+                    </div>
+                    <div class="form-group">
+                        <label>Yarn/Fiber Type</label>
+                        <input type="text" id="weaving-yarn-type" placeholder="e.g., Cotton warp, wool weft">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Reed Size</label>
+                            <input type="text" id="weaving-reed-size" placeholder="e.g., 12 dent">
+                        </div>
+                        <div class="form-group">
+                            <label>Width</label>
+                            <input type="text" id="weaving-width" placeholder="e.g., 10 inches">
+                        </div>
+                        <div class="form-group">
+                            <label>Length</label>
+                            <input type="text" id="weaving-length" placeholder="e.g., 2 yards">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="weaving-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Quilting Fields -->
+                <div id="quilting-fields" class="craft-specific-fields">
+                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧵 Quilting Details</h3>
+                    <div class="form-group">
+                        <label>Quilt Size</label>
+                        <input type="text" id="quilting-quilt-size" placeholder="e.g., Throw (60x72)">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Fabric Collection</label>
+                            <input type="text" id="quilting-fabric-collection" placeholder="e.g., Modern Solids">
+                        </div>
+                        <div class="form-group">
+                            <label>Batting Type</label>
+                            <input type="text" id="quilting-batting-type" placeholder="e.g., Cotton 80/20">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Fabric Link</label>
+                        <input type="url" id="quilting-fabric-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Leather Work Fields -->
+                <div id="leather-fields" class="craft-specific-fields">
+                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">👜 Leather Work Details</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Leather Type</label>
+                            <input type="text" id="leather-leather-type" placeholder="e.g., Vegetable tanned">
+                        </div>
+                        <div class="form-group">
+                            <label>Leather Weight</label>
+                            <input type="text" id="leather-leather-weight" placeholder="e.g., 5-6 oz">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Thread Type</label>
+                            <input type="text" id="leather-thread-type" placeholder="e.g., Waxed polyester">
+                        </div>
+                        <div class="form-group">
+                            <label>Needle Size</label>
+                            <input type="text" id="leather-needle-size" placeholder="e.g., Size 2">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Hardware</label>
+                        <input type="text" id="leather-hardware" placeholder="e.g., Brass rivets, D-rings">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="leather-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Create Project</button>
             </form>
         </div>
     </div>
 
     <script>
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
         let userProfile = null;
         let allMembers = [];
+        let currentChatUser = null;
+        let chatRealtimeChannel = null;
 
         async function checkAuth() {
             const { data: { session } } = await supabase.auth.getSession();
@@ -1000,7 +1186,6 @@
 
             userProfile = profile;
             
-            // Update header avatar
             const headerAvatar = document.getElementById('header-avatar');
             if (profile.profile_picture_url) {
                 headerAvatar.innerHTML = `<img src="${profile.profile_picture_url}" alt="${profile.full_name}">`;
@@ -1114,7 +1299,6 @@
         }
 
         async function loadFriends() {
-            // Get all friendships where current user is involved
             const { data: friendships } = await supabase
                 .from('friends')
                 .select('user1_id, user2_id')
@@ -1135,12 +1319,10 @@
                 return;
             }
 
-            // Extract friend IDs
             const friendIds = friendships.map(f => 
                 f.user1_id === currentUser.id ? f.user2_id : f.user1_id
             );
 
-            // Get friend profiles
             const { data: friends } = await supabase
                 .from('profiles')
                 .select('*')
@@ -1255,7 +1437,144 @@
             loadQuickStats();
         }
 
+        function showCraftFields() {
+            const craftType = document.getElementById('project-craft-type').value;
+            
+            document.querySelectorAll('.craft-specific-fields').forEach(el => {
+                el.style.display = 'none';
+            });
+
+            const fieldMap = {
+                'Crochet': 'crochet-fields',
+                'Knitting': 'knitting-fields',
+                'Sewing': 'sewing-fields',
+                'Embroidery': 'embroidery-fields',
+                'Weaving': 'weaving-fields',
+                'Quilting': 'quilting-fields',
+                'Leather Work': 'leather-fields'
+            };
+
+            const fieldId = fieldMap[craftType];
+            if (fieldId) {
+                document.getElementById(fieldId).style.display = 'block';
+            }
+        }
+
+        function getCraftDetails(craftType) {
+            const details = {};
+
+            if (craftType === 'Crochet') {
+                details.hook_size = document.getElementById('crochet-hook-size')?.value || '';
+                details.yarn_weight = document.getElementById('crochet-yarn-weight')?.value || '';
+                details.yarn_brand = document.getElementById('crochet-yarn-brand')?.value || '';
+                details.yarn_color = document.getElementById('crochet-yarn-color')?.value || '';
+                details.yardage = document.getElementById('crochet-yardage')?.value || '';
+                details.gauge = document.getElementById('crochet-gauge')?.value || '';
+                details.yarn_link = document.getElementById('crochet-yarn-link')?.value || '';
+                details.pattern_link = document.getElementById('crochet-pattern-link')?.value || '';
+            } else if (craftType === 'Knitting') {
+                details.needle_size = document.getElementById('knitting-needle-size')?.value || '';
+                details.needle_type = document.getElementById('knitting-needle-type')?.value || '';
+                details.yarn_weight = document.getElementById('knitting-yarn-weight')?.value || '';
+                details.yarn_brand = document.getElementById('knitting-yarn-brand')?.value || '';
+                details.yardage = document.getElementById('knitting-yardage')?.value || '';
+                details.yarn_link = document.getElementById('knitting-yarn-link')?.value || '';
+            } else if (craftType === 'Sewing') {
+                details.needle_type = document.getElementById('sewing-needle-type')?.value || '';
+                details.fabric_type = document.getElementById('sewing-fabric-type')?.value || '';
+                details.fabric_amount = document.getElementById('sewing-fabric-amount')?.value || '';
+                details.fabric_brand = document.getElementById('sewing-fabric-brand')?.value || '';
+                details.notions = document.getElementById('sewing-notions')?.value || '';
+                details.pattern_size = document.getElementById('sewing-pattern-size')?.value || '';
+                details.fabric_link = document.getElementById('sewing-fabric-link')?.value || '';
+                details.pattern_link = document.getElementById('sewing-pattern-link')?.value || '';
+            } else if (craftType === 'Embroidery') {
+                details.thread_type = document.getElementById('embroidery-thread-type')?.value || '';
+                details.thread_colors = document.getElementById('embroidery-thread-colors')?.value || '';
+                details.fabric_type = document.getElementById('embroidery-fabric-type')?.value || '';
+                details.hoop_size = document.getElementById('embroidery-hoop-size')?.value || '';
+                details.supplies_link = document.getElementById('embroidery-supplies-link')?.value || '';
+            } else if (craftType === 'Weaving') {
+                details.loom_type = document.getElementById('weaving-loom-type')?.value || '';
+                details.yarn_type = document.getElementById('weaving-yarn-type')?.value || '';
+                details.reed_size = document.getElementById('weaving-reed-size')?.value || '';
+                details.width = document.getElementById('weaving-width')?.value || '';
+                details.length = document.getElementById('weaving-length')?.value || '';
+                details.supplies_link = document.getElementById('weaving-supplies-link')?.value || '';
+            } else if (craftType === 'Quilting') {
+                details.quilt_size = document.getElementById('quilting-quilt-size')?.value || '';
+                details.fabric_collection = document.getElementById('quilting-fabric-collection')?.value || '';
+                details.batting_type = document.getElementById('quilting-batting-type')?.value || '';
+                details.fabric_link = document.getElementById('quilting-fabric-link')?.value || '';
+            } else if (craftType === 'Leather Work') {
+                details.leather_type = document.getElementById('leather-leather-type')?.value || '';
+                details.leather_weight = document.getElementById('leather-leather-weight')?.value || '';
+                details.thread_type = document.getElementById('leather-thread-type')?.value || '';
+                details.needle_size = document.getElementById('leather-needle-size')?.value || '';
+                details.hardware = document.getElementById('leather-hardware')?.value || '';
+                details.supplies_link = document.getElementById('leather-supplies-link')?.value || '';
+            }
+
+            Object.keys(details).forEach(key => {
+                if (!details[key]) delete details[key];
+            });
+
+            return details;
+        }
+
+        function displayCraftDetails(craftType, craftDetails) {
+            if (!craftDetails || Object.keys(craftDetails).length === 0) {
+                return '';
+            }
+
+            let html = '<div style="background: var(--cream); padding: 1.5rem; border-radius: 12px; margin-top: 2rem;"><h3 style="margin-bottom: 1rem; color: var(--terracotta);">📝 Project Details</h3>';
+
+            const formatLabel = (key) => {
+                return key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            };
+
+            const renderField = (label, value) => {
+                if (!value) return '';
+                
+                if (value.startsWith('http://') || value.startsWith('https://')) {
+                    return `
+                        <div style="margin-bottom: 0.75rem;">
+                            <strong style="color: var(--dark-brown); font-family: -apple-system, sans-serif; font-size: 0.9rem;">${label}:</strong>
+                            <a href="${value}" target="_blank" style="color: var(--terracotta); text-decoration: none; font-family: -apple-system, sans-serif; margin-left: 0.5rem;">🔗 View Link</a>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div style="margin-bottom: 0.75rem;">
+                        <strong style="color: var(--dark-brown); font-family: -apple-system, sans-serif; font-size: 0.9rem;">${label}:</strong>
+                        <span style="font-family: -apple-system, sans-serif; margin-left: 0.5rem;">${value}</span>
+                    </div>
+                `;
+            };
+
+            Object.keys(craftDetails).forEach(key => {
+                const label = formatLabel(key);
+                html += renderField(label, craftDetails[key]);
+            });
+
+            html += '</div>';
+            return html;
+        }
+
         function createProjectCard(project, isOwner) {
+            let craftPreview = '';
+            if (project.craft_details && Object.keys(project.craft_details).length > 0) {
+                const details = project.craft_details;
+                if (project.craft_type === 'Crochet' && details.hook_size) {
+                    craftPreview = ` • Hook: ${details.hook_size}`;
+                } else if (project.craft_type === 'Knitting' && details.needle_size) {
+                    craftPreview = ` • Needles: ${details.needle_size}`;
+                } else if (project.craft_type === 'Sewing' && details.fabric_type) {
+                    craftPreview = ` • ${details.fabric_type}`;
+                }
+            }
+
             return `
                 <div class="project-card">
                     <div class="project-image" onclick="showProjectDetail('${project.id}')">
@@ -1267,6 +1586,7 @@
                     </div>
                     <div class="project-info" onclick="showProjectDetail('${project.id}')">
                         <h3 class="project-title">${project.title}</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); font-family: -apple-system, sans-serif; margin-bottom: 0.5rem;">${project.craft_type}${craftPreview}</p>
                         <div class="project-meta">
                             <span>❤️ ${project.likes_count || 0}</span>
                             <span>💬 ${project.comments_count || 0}</span>
@@ -1279,6 +1599,84 @@
                     </div>
                 </div>
             `;
+        }
+
+        async function showProjectDetail(projectId) {
+            const { data: project } = await supabase
+                .from('projects')
+                .select('*, profiles(full_name, username, avatar_initials, profile_picture_url)')
+                .eq('id', projectId)
+                .single();
+
+            if (!project) return;
+
+            const isOwner = project.user_id === currentUser.id;
+            const craftDetailsHTML = displayCraftDetails(project.craft_type, project.craft_details);
+
+            const modalHTML = `
+                <div class="modal show" id="project-detail-temp" onclick="if(event.target === this) this.remove()" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>${project.title}</h2>
+                            <button class="modal-close" onclick="document.getElementById('project-detail-temp').remove()">&times;</button>
+                        </div>
+                        
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: inline-block; padding: 0.5rem 1rem; background: var(--light-beige); border-radius: 20px; font-family: -apple-system, sans-serif; font-size: 0.9rem;">
+                                ${getCraftIcon(project.craft_type)} ${project.craft_type}
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--light-beige); cursor: pointer;" onclick="document.getElementById('project-detail-temp').remove(); showUserProfile('${project.profiles.id || project.user_id}')">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: bold; overflow: hidden;">
+                                ${project.profiles.profile_picture_url ? 
+                                    `<img src="${project.profiles.profile_picture_url}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                                    project.profiles.avatar_initials
+                                }
+                            </div>
+                            <div>
+                                <div style="font-weight: 600;">@${project.profiles.username}</div>
+                                <div style="font-size: 0.85rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">Posted ${getTimeAgo(project.created_at)}</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="margin-bottom: 0.75rem;">About This Project</h3>
+                            <p style="font-family: -apple-system, sans-serif; line-height: 1.6;">${project.description || 'No description provided.'}</p>
+                        </div>
+
+                        ${craftDetailsHTML}
+
+                        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--light-beige); display: flex; gap: 2rem; font-family: -apple-system, sans-serif; color: var(--text-muted);">
+                            <span>❤️ ${project.likes_count || 0} likes</span>
+                            <span>💬 ${project.comments_count || 0} comments</span>
+                            <span>👁️ ${project.views_count || 0} views</span>
+                        </div>
+
+                        ${!isOwner ? `
+                            <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="toggleLike(event, '${project.id}'); setTimeout(() => document.getElementById('project-detail-temp').remove(), 500);" id="detail-like-btn-${project.id}">
+                                Like This Project ❤️
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            if (!isOwner) {
+                const { data } = await supabase
+                    .from('likes')
+                    .select('id')
+                    .eq('project_id', projectId)
+                    .eq('user_id', currentUser.id)
+                    .single();
+
+                const btn = document.getElementById(`detail-like-btn-${project.id}`);
+                if (btn && data) {
+                    btn.textContent = 'Unlike ❤️';
+                }
+            }
         }
 
         async function toggleProjectFollow(projectId) {
@@ -1307,6 +1705,8 @@
 
         async function toggleLike(event, projectId) {
             const btn = document.getElementById(`like-btn-${projectId}`);
+            if (!btn) return;
+            
             const isLiked = btn.classList.contains('liked');
 
             if (isLiked) {
@@ -1343,27 +1743,28 @@
             }
         }
 
-        async function showProjectDetail(projectId) {
-            alert('Project detail view - coming in next update!');
-        }
-
         function showAddProject() {
             document.getElementById('add-project-modal').classList.add('show');
         }
 
         function closeAddProject() {
             document.getElementById('add-project-modal').classList.remove('show');
+            document.querySelectorAll('.craft-specific-fields').forEach(el => el.style.display = 'none');
         }
 
         async function handleAddProject(event) {
             event.preventDefault();
             
+            const craftType = document.getElementById('project-craft-type').value;
+            const craftDetails = getCraftDetails(craftType);
+
             await supabase.from('projects').insert({
                 user_id: currentUser.id,
                 title: document.getElementById('project-title').value,
                 description: document.getElementById('project-description').value,
-                craft_type: document.getElementById('project-craft-type').value,
-                status: 'in_progress'
+                craft_type: craftType,
+                status: 'in_progress',
+                craft_details: craftDetails
             });
 
             await supabase.from('profiles').update({ 
@@ -1477,7 +1878,6 @@
             const user = profile[0];
             const isOwnProfile = userId === currentUser.id;
 
-            // Get user's projects
             const { data: userProjects } = await supabase
                 .from('projects')
                 .select('*')
@@ -1485,15 +1885,12 @@
                 .order('created_at', { ascending: false })
                 .limit(6);
 
-            // Get friend count
             const { data: friendCount } = await supabase.rpc('get_friends_count', { user_uuid: userId });
 
-            // Check if we're friends
             const { data: friendship } = await supabase
                 .from('friends')
                 .select('user1_id')
-                .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
-                .or(`user1_id.eq.${currentUser.id},user2_id.eq.${currentUser.id}`)
+                .or(`and(user1_id.eq.${userId},user2_id.eq.${currentUser.id}),and(user1_id.eq.${currentUser.id},user2_id.eq.${userId})`)
                 .limit(1)
                 .single();
 
@@ -1581,7 +1978,6 @@
             document.getElementById('profile-view-content').innerHTML = content;
             document.getElementById('profile-view-modal').classList.add('show');
 
-            // Update follow button state
             if (!isOwnProfile) {
                 checkFollowStatusForProfile(userId);
             }
@@ -1611,7 +2007,7 @@
                 .from('notifications')
                 .select('*')
                 .eq('user_id', currentUser.id)
-                .order('created_at', { ascending: false})
+                .order('created_at', { ascending: false })
                 .limit(20);
 
             const unreadCount = notifs?.filter(n => !n.is_read).length || 0;
@@ -1644,7 +2040,6 @@
         }
 
         async function loadConversations() {
-            // Get all friends first
             const { data: friendships } = await supabase
                 .from('friends')
                 .select('user1_id, user2_id')
@@ -1668,14 +2063,12 @@
                 f.user1_id === currentUser.id ? f.user2_id : f.user1_id
             );
 
-            // Get messages with these friends
             const { data: messages } = await supabase
                 .from('messages')
                 .select('*, sender:profiles!messages_sender_id_fkey(username, avatar_initials, profile_picture_url), receiver:profiles!messages_receiver_id_fkey(username, avatar_initials, profile_picture_url)')
                 .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
                 .order('created_at', { ascending: false });
 
-            // Get unread count
             const unreadCount = messages?.filter(m => m.receiver_id === currentUser.id && !m.is_read).length || 0;
             const badge = document.getElementById('message-count');
             if (unreadCount > 0) {
@@ -1685,7 +2078,6 @@
                 badge.style.display = 'none';
             }
 
-            // Group messages by conversation
             const conversations = {};
             messages?.forEach(msg => {
                 const otherId = msg.sender_id === currentUser.id ? msg.receiver_id : msg.sender_id;
@@ -1703,9 +2095,17 @@
 
             const conversationList = Object.keys(conversations);
 
-            // Messages dropdown
             if (conversationList.length === 0) {
                 document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">No messages yet</div>';
+                document.getElementById('chat-area').innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💬</div>
+                            <p>No conversations yet!</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Go to the Friends tab to start chatting</p>
+                        </div>
+                    </div>
+                `;
             } else {
                 document.getElementById('conversations-list').innerHTML = conversationList.map(userId => {
                     const conv = conversations[userId];
@@ -1727,20 +2127,7 @@
                         </div>
                     `;
                 }).join('');
-            }
 
-            // Chat area - show conversation list
-            if (conversationList.length === 0) {
-                document.getElementById('chat-area').innerHTML = `
-                    <div class="card">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">💬</div>
-                            <p>No conversations yet!</p>
-                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Go to the Friends tab to start chatting</p>
-                        </div>
-                    </div>
-                `;
-            } else {
                 document.getElementById('chat-area').innerHTML = `
                     <div class="card">
                         <h3 style="margin-bottom: 1.5rem;">Your Conversations</h3>
@@ -1776,16 +2163,11 @@
             }
         }
 
-        let currentChatUser = null;
-        let chatRealtimeChannel = null;
-
         async function openChat(friendId, friendUsername, friendPicture, friendInitials) {
             currentChatUser = { id: friendId, username: friendUsername, picture: friendPicture, initials: friendInitials };
             
-            // Switch to chat section
             showSection('chat');
             
-            // Mark messages as read
             await supabase
                 .from('messages')
                 .update({ is_read: true })
@@ -1793,10 +2175,8 @@
                 .eq('receiver_id', currentUser.id)
                 .eq('is_read', false);
             
-            // Load messages
             await loadChatMessages(friendId);
             
-            // Setup realtime for this conversation
             if (chatRealtimeChannel) {
                 supabase.removeChannel(chatRealtimeChannel);
             }
@@ -1827,7 +2207,6 @@
             
             chatArea.innerHTML = `
                 <div class="card" style="height: calc(100vh - 250px); display: flex; flex-direction: column;">
-                    <!-- Chat Header -->
                     <div style="display: flex; align-items: center; gap: 1rem; padding-bottom: 1rem; border-bottom: 2px solid var(--light-beige); margin-bottom: 1rem;">
                         <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--terracotta); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; overflow: hidden; cursor: pointer;" onclick="showUserProfile('${currentChatUser.id}')">
                             ${currentChatUser.picture ? 
@@ -1841,7 +2220,6 @@
                         <button onclick="showSection('chat'); currentChatUser = null; loadConversations();" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);">✕</button>
                     </div>
                     
-                    <!-- Messages -->
                     <div id="chat-messages" style="flex: 1; overflow-y: auto; padding: 1rem 0; display: flex; flex-direction: column; gap: 1rem;">
                         ${messages.length === 0 ? `
                             <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
@@ -1860,7 +2238,6 @@
                         }).join('')}
                     </div>
                     
-                    <!-- Message Input -->
                     <form onsubmit="sendMessage(event, '${friendId}')" style="display: flex; gap: 0.75rem; padding-top: 1rem; border-top: 2px solid var(--light-beige);">
                         <input type="text" id="message-input" placeholder="Type a message..." style="flex: 1; border: 2px solid var(--light-beige); padding: 0.75rem 1rem; border-radius: 24px; font-family: -apple-system, sans-serif;" required>
                         <button type="submit" class="btn btn-primary" style="border-radius: 24px; padding: 0.75rem 2rem;">Send</button>
@@ -1868,7 +2245,6 @@
                 </div>
             `;
             
-            // Scroll to bottom
             setTimeout(() => {
                 const messagesDiv = document.getElementById('chat-messages');
                 if (messagesDiv) {
@@ -1935,7 +2311,6 @@
             document.getElementById(sectionId).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             
-            // Find and activate the nav item that corresponds to this section
             const navItems = document.querySelectorAll('.nav-item');
             navItems.forEach(item => {
                 const onclickAttr = item.getAttribute('onclick');
@@ -1944,7 +2319,6 @@
                 }
             });
             
-            // Load section-specific data if needed
             if (sectionId === 'chat' && !currentChatUser) {
                 loadConversations();
             }
@@ -1956,7 +2330,7 @@
         }
 
         function getCraftIcon(craftType) {
-            const icons = { 'Sewing': '🧵', 'Knitting': '🧶', 'Crochet': '🪡', 'Weaving': '🧵', 'Other': '🎨' };
+            const icons = { 'Sewing': '🧵', 'Knitting': '🧶', 'Crochet': '🪡', 'Weaving': '🧵', 'Embroidery': '🪡', 'Quilting': '🧵', 'Leather Work': '👜', 'Other': '🎨' };
             return icons[craftType] || '🎨';
         }
 
