@@ -149,7 +149,7 @@
         .dropdown.show { display: block; }
 
         .dropdown-header {
-            padding: 1.25rem;
+            padding: 1.2500001rem;
             border-bottom: 2px solid var(--light-beige);
             font-family: -apple-system, sans-serif;
             font-weight: 600;
@@ -663,6 +663,178 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Floating Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 380px;
+            max-height: 600px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 2001;
+            overflow: hidden;
+        }
+
+        .chat-widget.show {
+            display: flex;
+        }
+
+        .chat-widget-header {
+            background: var(--terracotta);
+            color: white;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: move;
+        }
+
+        .chat-widget-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            color: var(--terracotta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .chat-widget-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chat-widget-info {
+            flex: 1;
+        }
+
+        .chat-widget-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .chat-widget-status {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .chat-widget-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .chat-widget-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .chat-widget-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background: var(--cream);
+            max-height: 400px;
+        }
+
+        .chat-widget-input-area {
+            padding: 1rem;
+            border-top: 2px solid var(--light-beige);
+            background: white;
+        }
+
+        .chat-widget-input-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-widget-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-beige);
+            border-radius: 24px;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .chat-widget-send {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .chat-widget-send:hover {
+            background: var(--dark-brown);
+            transform: scale(1.05);
+        }
+
+        .chat-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            word-wrap: break-word;
+            animation: slideIn 0.3s ease;
+        }
+
+        .chat-bubble-sent {
+            align-self: flex-end;
+            background: var(--terracotta);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-bubble-received {
+            align-self: flex-start;
+            background: white;
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-bubble-time {
+            font-size: 0.7rem;
+            margin-top: 0.25rem;
+            opacity: 0.7;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 position: static;
@@ -677,6 +849,13 @@
 
             .dashboard-grid, .project-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .chat-widget {
+                width: calc(100vw - 20px);
+                right: 10px;
+                bottom: 10px;
+                max-height: 500px;
             }
         }
     </style>
@@ -1154,6 +1333,29 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Create Project</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Chat Widget -->
+    <div class="chat-widget" id="chat-widget">
+        <div class="chat-widget-header">
+            <div class="chat-widget-avatar" id="chat-widget-avatar">...</div>
+            <div class="chat-widget-info">
+                <div class="chat-widget-name" id="chat-widget-name">Chat</div>
+                <div class="chat-widget-status">Online</div>
+            </div>
+            <button class="chat-widget-close" onclick="closeChatWidget()">×</button>
+        </div>
+        <div class="chat-widget-messages" id="chat-widget-messages">
+            <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                Start your conversation! 👋
+            </div>
+        </div>
+        <div class="chat-widget-input-area">
+            <form class="chat-widget-input-form" onsubmit="sendWidgetMessage(event)">
+                <input type="text" class="chat-widget-input" id="chat-widget-input" placeholder="Type a message..." required>
+                <button type="submit" class="chat-widget-send">➤</button>
             </form>
         </div>
     </div>
@@ -1931,11 +2133,19 @@
         }
 
         async function showUserProfile(userId) {
-            const { data: profile } = await supabase.rpc('get_user_profile', { user_uuid: userId });
+            // Fetch profile directly from profiles table
+            const { data: user, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
             
-            if (!profile || profile.length === 0) return;
+            if (error || !user) {
+                console.error('Error loading profile:', error);
+                alert('Could not load user profile');
+                return;
+            }
             
-            const user = profile[0];
             const isOwnProfile = userId === currentUser.id;
 
             // Get user's projects
@@ -2120,8 +2330,15 @@
         }
 
         async function markAllRead() {
-            await supabase.rpc('mark_notifications_read', { user_uuid: currentUser.id });
-            loadNotifications();
+            // Update all unread notifications to read
+            await supabase
+                .from('notifications')
+                .update({ is_read: true })
+                .eq('user_id', currentUser.id)
+                .eq('is_read', false);
+            
+            // Reload notifications to update UI
+            await loadNotifications();
         }
 
         async function loadConversations() {
@@ -2285,8 +2502,19 @@
 
             currentChatUser = { id: friendId, username: friendUsername, picture: friendPicture, initials: friendInitials };
             
-            showSection('chat');
+            // Update widget header
+            const widgetAvatar = document.getElementById('chat-widget-avatar');
+            if (friendPicture) {
+                widgetAvatar.innerHTML = `<img src="${friendPicture}" alt="${friendUsername}">`;
+            } else {
+                widgetAvatar.textContent = friendInitials;
+            }
+            document.getElementById('chat-widget-name').textContent = `@${friendUsername}`;
             
+            // Show widget
+            document.getElementById('chat-widget').classList.add('show');
+            
+            // Mark messages as read
             await supabase
                 .from('messages')
                 .update({ is_read: true })
@@ -2294,8 +2522,10 @@
                 .eq('receiver_id', currentUser.id)
                 .eq('is_read', false);
             
-            await loadChatMessages(friendId);
+            // Load messages
+            await loadWidgetMessages(friendId);
             
+            // Setup real-time
             if (chatRealtimeChannel) {
                 supabase.removeChannel(chatRealtimeChannel);
             }
@@ -2308,11 +2538,73 @@
                     table: 'messages',
                     filter: `sender_id=eq.${friendId}`
                 }, () => {
-                    loadChatMessages(friendId);
+                    loadWidgetMessages(friendId);
                 })
                 .subscribe();
             
             loadConversations();
+        }
+
+        function closeChatWidget() {
+            document.getElementById('chat-widget').classList.remove('show');
+            if (chatRealtimeChannel) {
+                supabase.removeChannel(chatRealtimeChannel);
+            }
+            currentChatUser = null;
+        }
+
+        async function loadWidgetMessages(friendId) {
+            const { data: messages } = await supabase
+                .from('messages')
+                .select('*')
+                .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${currentUser.id})`)
+                .order('created_at', { ascending: true });
+
+            const container = document.getElementById('chat-widget-messages');
+            
+            if (!messages || messages.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                        <p>No messages yet. Start the conversation! 👋</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = messages.map(msg => {
+                const isSent = msg.sender_id === currentUser.id;
+                return `
+                    <div class="chat-bubble ${isSent ? 'chat-bubble-sent' : 'chat-bubble-received'}">
+                        <div>${msg.content}</div>
+                        <div class="chat-bubble-time">${getTimeAgo(msg.created_at)}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                container.scrollTop = container.scrollHeight;
+            }, 100);
+        }
+
+        async function sendWidgetMessage(event) {
+            event.preventDefault();
+            
+            if (!currentChatUser) return;
+            
+            const input = document.getElementById('chat-widget-input');
+            const content = input.value.trim();
+            
+            if (!content) return;
+            
+            await supabase.from('messages').insert({
+                sender_id: currentUser.id,
+                receiver_id: currentChatUser.id,
+                content: content
+            });
+            
+            input.value = '';
+            await loadWidgetMessages(currentChatUser.id);
         }
 
         async function loadChatMessages(friendId) {
@@ -2480,4 +2772,4 @@
         checkAuth();
     </script>
 </body>
-</html>
+</html> 
