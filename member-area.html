@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Member Area | International Craft Club</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -60,34 +61,6 @@
             gap: 2rem;
         }
 
-        .notifications {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--terracotta);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: -apple-system, sans-serif;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-        }
-
         .avatar {
             width: 40px;
             height: 40px;
@@ -98,6 +71,52 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 200px;
+            display: none;
+            z-index: 1001;
+        }
+
+        .user-menu.show {
+            display: block;
+        }
+
+        .user-menu-item {
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .user-menu-item:hover {
+            background: var(--cream);
+        }
+
+        .user-menu-item:first-child {
+            border-radius: 8px 8px 0 0;
+        }
+
+        .user-menu-item:last-child {
+            border-radius: 0 0 8px 8px;
+            color: #C75B5B;
         }
 
         /* Main Layout */
@@ -118,12 +137,6 @@
             overflow-y: auto;
         }
 
-        .sidebar nav {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
         .nav-item {
             padding: 0.75rem 1rem;
             color: var(--text-dark);
@@ -135,6 +148,8 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
         }
 
         .nav-item:hover,
@@ -158,27 +173,28 @@
             font-family: -apple-system, sans-serif;
         }
 
-        /* Main Content */
+        /* Content */
         .content {
             margin-left: 280px;
             flex: 1;
             padding: 2rem 3rem;
         }
 
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+        .content-section {
+            display: none;
         }
 
-        /* Card Styles */
+        .content-section.active {
+            display: block;
+        }
+
+        /* Cards */
         .card {
             background: white;
             padding: 2rem;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
         }
 
         .card h3 {
@@ -187,13 +203,12 @@
             font-size: 1.25rem;
         }
 
-        .card-label {
-            font-family: -apple-system, sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--terracotta);
-            margin-bottom: 0.5rem;
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
         }
 
         /* Profile Card */
@@ -270,23 +285,6 @@
             height: 100%;
             background: linear-gradient(90deg, var(--terracotta), var(--gold));
             transition: width 0.5s ease;
-            position: relative;
-        }
-
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
         }
 
         .progress-info {
@@ -297,117 +295,176 @@
             font-family: -apple-system, sans-serif;
         }
 
-        /* Achievements/Badges */
-        .badges-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 1rem;
-        }
-
-        .badge {
-            text-align: center;
-            padding: 1rem;
-            border-radius: 8px;
-            background: var(--light-beige);
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .badge:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .badge.locked {
-            opacity: 0.5;
-            filter: grayscale(1);
-        }
-
-        .badge-icon {
-            font-size: 2.5rem;
+        .card-label {
+            font-family: -apple-system, sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--terracotta);
             margin-bottom: 0.5rem;
         }
 
-        .badge-name {
-            font-size: 0.75rem;
-            color: var(--text-dark);
-            font-family: -apple-system, sans-serif;
-        }
-
-        .badge-description {
-            font-size: 0.7rem;
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
             color: var(--text-muted);
-            margin-top: 0.25rem;
         }
 
-        /* Leaderboard */
-        .leaderboard-list {
-            list-style: none;
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
 
-        .leaderboard-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid var(--light-beige);
-            transition: background 0.3s;
-        }
-
-        .leaderboard-item:hover {
-            background: var(--cream);
-        }
-
-        .rank {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-weight: bold;
-            margin-right: 1rem;
+        .empty-state-title {
+            font-size: 1.25rem;
+            color: var(--dark-brown);
+            margin-bottom: 0.5rem;
             font-family: -apple-system, sans-serif;
         }
 
-        .rank.gold {
-            background: var(--gold);
+        .empty-state-text {
+            font-family: -apple-system, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--terracotta);
             color: white;
         }
 
-        .rank.silver {
-            background: var(--silver);
-            color: white;
+        .btn-primary:hover {
+            background: var(--dark-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        .rank.bronze {
-            background: var(--bronze);
-            color: white;
-        }
-
-        .rank.other {
+        .btn-secondary {
             background: var(--light-beige);
-            color: var(--text-dark);
-        }
-
-        .leaderboard-user {
-            flex: 1;
-        }
-
-        .leaderboard-name {
-            font-weight: 600;
             color: var(--dark-brown);
         }
 
-        .leaderboard-subtitle {
-            font-size: 0.85rem;
+        .btn-secondary:hover {
+            background: var(--highlight);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.9rem;
+            color: var(--dark-brown);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--light-beige);
+            border-radius: 8px;
+            font-family: -apple-system, sans-serif;
+            font-size: 1rem;
+            color: var(--text-dark);
+            transition: all 0.3s;
+            background: var(--cream);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--terracotta);
+            background: white;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: 'Georgia', serif;
+        }
+
+        /* Project Grid */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--light-beige), var(--highlight));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--terracotta);
+        }
+
+        .project-info {
+            padding: 1.25rem;
+        }
+
+        .project-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-brown);
+        }
+
+        .project-description {
+            font-size: 0.9rem;
             color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
             font-family: -apple-system, sans-serif;
         }
 
-        .leaderboard-score {
-            font-size: 1.25rem;
-            color: var(--terracotta);
-            font-weight: bold;
+        .project-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: -apple-system, sans-serif;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--light-beige);
+        }
+
+        .project-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
         /* Activity Feed */
@@ -451,309 +508,110 @@
             font-family: -apple-system, sans-serif;
         }
 
-        .activity-preview {
-            margin-top: 0.75rem;
-            padding: 1rem;
-            background: var(--light-beige);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .activity-preview:hover {
-            background: var(--highlight);
-        }
-
-        /* Project Gallery */
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .project-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .project-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-        }
-
-        .project-image {
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, var(--light-beige), var(--highlight));
-            display: flex;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
             align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-        }
-
-        .project-info {
-            padding: 1.25rem;
-        }
-
-        .project-title {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: var(--dark-brown);
-        }
-
-        .project-author {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-            font-family: -apple-system, sans-serif;
-        }
-
-        .project-stats {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-family: -apple-system, sans-serif;
-        }
-
-        .project-stat {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        /* Member Directory */
-        .member-filters {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1.5rem;
-            border: 1px solid var(--light-beige);
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: -apple-system, sans-serif;
-            transition: all 0.3s;
-        }
-
-        .filter-btn:hover,
-        .filter-btn.active {
-            background: var(--terracotta);
-            color: white;
-            border-color: var(--terracotta);
-        }
-
-        .member-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .member-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-        }
-
-        .member-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-        }
-
-        .member-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .member-name {
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
-            color: var(--dark-brown);
-        }
-
-        .member-location {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            font-family: -apple-system, sans-serif;
-        }
-
-        .member-badges {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-
-        .mini-badge {
-            font-size: 1.25rem;
-        }
-
-        .member-skills {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .skill-tag {
-            padding: 0.25rem 0.75rem;
-            background: var(--light-beige);
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-family: -apple-system, sans-serif;
-        }
-
-        /* Action Buttons */
-        .btn {
-            padding: 0.75rem 2rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: -apple-system, sans-serif;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--dark-brown);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .btn-secondary {
-            background: var(--light-beige);
-            color: var(--dark-brown);
-        }
-
-        .btn-secondary:hover {
-            background: var(--highlight);
-        }
-
-        /* Streak Calendar */
-        .streak-calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .day-cell {
-            aspect-ratio: 1;
-            border-radius: 6px;
-            background: var(--light-beige);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-family: -apple-system, sans-serif;
-            transition: all 0.3s;
-        }
-
-        .day-cell.active {
-            background: var(--success);
-            color: white;
-            transform: scale(1.1);
-        }
-
-        .day-cell.today {
-            border: 2px solid var(--terracotta);
-        }
-
-        /* Challenge Section */
-        .challenge-card {
-            background: linear-gradient(135deg, var(--terracotta), var(--dark-brown));
-            color: white;
             padding: 2rem;
-            border-radius: 12px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 2rem;
         }
 
-        .challenge-title {
+        .modal-title {
             font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .challenge-description {
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-        }
-
-        .challenge-deadline {
-            font-family: -apple-system, sans-serif;
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-
-        .challenge-participants {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .participant-avatars {
-            display: flex;
-            margin-left: -8px;
-        }
-
-        .participant-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid white;
-            background: var(--highlight);
             color: var(--dark-brown);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--dark-brown);
+        }
+
+        /* Loading */
+        .loading {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
-            font-weight: bold;
-            margin-left: -8px;
+            padding: 3rem;
+            font-family: -apple-system, sans-serif;
+            color: var(--text-muted);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--light-beige);
+            border-top-color: var(--terracotta);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-family: -apple-system, sans-serif;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #E8F5E9;
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .alert-error {
+            background: #FCEAEA;
+            color: #C75B5B;
+            border: 1px solid #C75B5B;
         }
 
         /* Responsive */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 240px;
-            }
-            
-            .content {
-                margin-left: 240px;
-                padding: 2rem;
-            }
-        }
-
         @media (max-width: 768px) {
             .sidebar {
                 position: static;
@@ -772,31 +630,9 @@
                 grid-template-columns: 1fr;
             }
 
-            .profile-stats {
-                grid-template-columns: repeat(3, 1fr);
+            .project-grid {
+                grid-template-columns: 1fr;
             }
-
-            .member-filters {
-                justify-content: center;
-            }
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--light-beige);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--terracotta);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--dark-brown);
         }
     </style>
 </head>
@@ -805,13 +641,13 @@
     <header>
         <div class="logo">International Craft Club</div>
         <div class="user-nav">
-            <div class="notifications" onclick="toggleNotifications()">
-                🔔
-                <span class="notification-badge">3</span>
-            </div>
             <div class="user-profile" onclick="toggleUserMenu()">
-                <div class="avatar">GS</div>
-                <span>Gregor</span>
+                <div class="avatar" id="header-avatar">...</div>
+                <span id="header-name">Loading...</span>
+                <div class="user-menu" id="user-menu">
+                    <div class="user-menu-item" onclick="showSection('dashboard')">👤 Dashboard</div>
+                    <div class="user-menu-item" onclick="handleLogout()">🚪 Logout</div>
+                </div>
             </div>
         </div>
     </header>
@@ -820,506 +656,161 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <nav>
-                <a href="#dashboard" class="nav-item active" onclick="showSection('dashboard')">
+                <a class="nav-item active" onclick="showSection('dashboard')">
                     📊 Dashboard
                 </a>
-                <a href="#projects" class="nav-item" onclick="showSection('projects')">
+                <a class="nav-item" onclick="showSection('my-projects')">
                     🎨 My Projects
                 </a>
-                <a href="#community" class="nav-item" onclick="showSection('community')">
+                <a class="nav-item" onclick="showSection('community')">
                     👥 Community Feed
                 </a>
-                <a href="#members" class="nav-item" onclick="showSection('members')">
-                    🌍 Member Directory
+                <a class="nav-item" onclick="showSection('leaderboard')">
+                    📈 Leaderboard
                 </a>
-
-                <div class="nav-section">
-                    <div class="nav-section-title">Engagement</div>
-                    <a href="#challenges" class="nav-item" onclick="showSection('challenges')">
-                        🏆 Challenges
-                    </a>
-                    <a href="#leaderboard" class="nav-item" onclick="showSection('leaderboard')">
-                        📈 Leaderboard
-                    </a>
-                    <a href="#achievements" class="nav-item" onclick="showSection('achievements')">
-                        ⭐ Achievements
-                    </a>
-                </div>
-
-                <div class="nav-section">
-                    <div class="nav-section-title">Resources</div>
-                    <a href="#library" class="nav-item" onclick="showSection('library')">
-                        📚 Resource Library
-                    </a>
-                    <a href="#events" class="nav-item" onclick="showSection('events')">
-                        📅 Events Calendar
-                    </a>
-                    <a href="#mentorship" class="nav-item" onclick="showSection('mentorship')">
-                        🎓 Find a Mentor
-                    </a>
-                </div>
-
-                <div class="nav-section">
-                    <div class="nav-section-title">Practical</div>
-                    <a href="#supply-swap" class="nav-item" onclick="showSection('supply-swap')">
-                        🔄 Supply Swap
-                    </a>
-                    <a href="#tool-library" class="nav-item" onclick="showSection('tool-library')">
-                        🔧 Tool Library
-                    </a>
-                    <a href="#retreats" class="nav-item" onclick="showSection('retreats')">
-                        ✈️ Retreat Waitlist
-                    </a>
-                </div>
+                <a class="nav-item" onclick="showSection('achievements')">
+                    ⭐ Achievements
+                </a>
             </nav>
         </aside>
 
         <!-- Main Content -->
         <main class="content">
             <!-- Dashboard Section -->
-            <section id="dashboard" class="content-section">
-                <h1 style="margin-bottom: 2rem;">Welcome back, Gregor! 👋</h1>
+            <section id="dashboard" class="content-section active">
+                <h1 style="margin-bottom: 2rem;" id="welcome-text">Loading...</h1>
 
                 <div class="dashboard-grid">
                     <!-- Profile Card -->
                     <div class="card profile-card">
-                        <div class="profile-avatar">GS</div>
-                        <h2 class="profile-name">Gregor Sparrow</h2>
-                        <p class="profile-level">⚡ Apprentice Artisan</p>
+                        <div class="profile-avatar" id="profile-avatar">...</div>
+                        <h2 class="profile-name" id="profile-name">Loading...</h2>
+                        <p class="profile-level" id="profile-level">Loading...</p>
 
-                        <!-- XP Progress -->
                         <div class="progress-section">
-                            <div class="card-label">Level 7 Progress</div>
+                            <div class="card-label" id="level-label">Level Progress</div>
                             <div class="progress-bar">
-                                <div class="progress-fill" style="width: 65%;"></div>
+                                <div class="progress-fill" id="xp-progress" style="width: 0%;"></div>
                             </div>
                             <div class="progress-info">
-                                <span>650 / 1000 XP</span>
-                                <span>350 XP to Level 8</span>
+                                <span id="xp-current">0 / 1000 XP</span>
+                                <span id="xp-remaining">1000 XP to next level</span>
                             </div>
                         </div>
 
                         <div class="profile-stats">
                             <div class="stat">
-                                <span class="stat-value">23</span>
+                                <span class="stat-value" id="stat-projects">0</span>
                                 <span class="stat-label">Projects</span>
                             </div>
                             <div class="stat">
-                                <span class="stat-value">487</span>
+                                <span class="stat-value" id="stat-followers">0</span>
                                 <span class="stat-label">Followers</span>
                             </div>
                             <div class="stat">
-                                <span class="stat-value">12</span>
+                                <span class="stat-value" id="stat-badges">0</span>
                                 <span class="stat-label">Badges</span>
                             </div>
                         </div>
-
-                        <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;">
-                            Edit Profile
-                        </button>
                     </div>
 
-                    <!-- Current Streak -->
+                    <!-- Streak Card -->
                     <div class="card">
                         <h3>🔥 Your Streak</h3>
                         <div style="text-align: center; margin: 2rem 0;">
-                            <div style="font-size: 4rem; color: var(--terracotta); font-weight: bold;">7</div>
-                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif;">
-                                Days in a row! Keep it going!
+                            <div style="font-size: 4rem; color: var(--terracotta); font-weight: bold;" id="streak-days">0</div>
+                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif;" id="streak-text">
+                                Start your crafting journey!
                             </p>
-                        </div>
-                        <div class="streak-calendar">
-                            <div class="day-cell active">M</div>
-                            <div class="day-cell active">T</div>
-                            <div class="day-cell active">W</div>
-                            <div class="day-cell active">T</div>
-                            <div class="day-cell active">F</div>
-                            <div class="day-cell active">S</div>
-                            <div class="day-cell active today">S</div>
                         </div>
                     </div>
 
-                    <!-- Recent Badges -->
+                    <!-- Quick Actions -->
                     <div class="card">
-                        <h3>⭐ Recent Achievements</h3>
-                        <div class="badges-grid">
-                            <div class="badge">
-                                <div class="badge-icon">🔥</div>
-                                <div class="badge-name">Streak Master</div>
-                            </div>
-                            <div class="badge">
-                                <div class="badge-icon">👥</div>
-                                <div class="badge-name">Community Champion</div>
-                            </div>
-                            <div class="badge">
-                                <div class="badge-icon">🎨</div>
-                                <div class="badge-name">Material Wizard</div>
-                            </div>
-                            <div class="badge locked">
-                                <div class="badge-icon">🏆</div>
-                                <div class="badge-name">Challenge Winner</div>
-                            </div>
-                        </div>
-                        <button class="btn btn-secondary" style="margin-top: 1.5rem; width: 100%;">
-                            View All Badges
+                        <h3>✨ Quick Actions</h3>
+                        <button class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="showAddProject()">
+                            + Add New Project
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%;" onclick="showSection('community')">
+                            View Community
                         </button>
                     </div>
                 </div>
 
-                <!-- Current Challenge -->
-                <div class="challenge-card">
-                    <div class="card-label" style="color: white; opacity: 0.8;">December Challenge</div>
-                    <h2 class="challenge-title">Winter Warmth: Create a Cozy Textile</h2>
-                    <p class="challenge-description">
-                        Design and create any textile piece that brings warmth this winter - scarves, blankets, 
-                        wall hangings, or anything that makes a space cozier!
-                    </p>
-                    <p class="challenge-deadline">⏰ Ends in 24 days</p>
-                    <div class="challenge-participants">
-                        <div class="participant-avatars">
-                            <div class="participant-avatar">A</div>
-                            <div class="participant-avatar">B</div>
-                            <div class="participant-avatar">C</div>
-                            <div class="participant-avatar">D</div>
-                            <div class="participant-avatar">+</div>
+                <!-- Recent Badges -->
+                <div class="card">
+                    <h3>⭐ Your Achievements</h3>
+                    <div id="dashboard-badges">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            Loading...
                         </div>
-                        <span style="font-size: 0.9rem; opacity: 0.9;">127 members participating</span>
                     </div>
-                    <button class="btn btn-primary" style="margin-top: 1.5rem; background: white; color: var(--terracotta);">
-                        Join Challenge
-                    </button>
                 </div>
 
-                <!-- Activity Feed Preview -->
+                <!-- Activity Feed -->
                 <div class="card">
                     <h3>🌊 Community Activity</h3>
-                    <ul class="activity-feed">
-                        <li class="activity-item">
-                            <div class="activity-avatar">MR</div>
-                            <div class="activity-content">
-                                <p class="activity-text">
-                                    <strong>Maria Rossi</strong> completed a new project: 
-                                    <em>"Hand-woven Table Runner"</em>
-                                </p>
-                                <p class="activity-time">2 hours ago</p>
-                                <div class="activity-preview">
-                                    <div style="display: flex; gap: 1rem; align-items: center;">
-                                        <div style="font-size: 3rem;">🧵</div>
-                                        <div>
-                                            <strong>Hand-woven Table Runner</strong>
-                                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
-                                                Traditional Italian weaving technique with modern patterns
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-avatar">LC</div>
-                            <div class="activity-content">
-                                <p class="activity-text">
-                                    <strong>Luca Conti</strong> earned a new badge: 
-                                    <span style="font-size: 1.25rem;">🌟</span> First Steps
-                                </p>
-                                <p class="activity-time">5 hours ago</p>
-                            </div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-avatar">SB</div>
-                            <div class="activity-content">
-                                <p class="activity-text">
-                                    <strong>Sofia Bianchi</strong> started following you
-                                </p>
-                                <p class="activity-time">1 day ago</p>
-                            </div>
+                    <ul class="activity-feed" id="dashboard-activity">
+                        <li class="loading">
+                            <div class="spinner"></div>
+                            Loading...
                         </li>
                     </ul>
-                    <button class="btn btn-secondary" style="margin-top: 1rem; width: 100%;">
-                        View All Activity
-                    </button>
+                </div>
+            </section>
+
+            <!-- My Projects Section -->
+            <section id="my-projects" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h1>🎨 My Projects</h1>
+                    <button class="btn btn-primary" onclick="showAddProject()">+ Add Project</button>
+                </div>
+
+                <div id="my-projects-container">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading your projects...
+                    </div>
+                </div>
+            </section>
+
+            <!-- Community Feed Section -->
+            <section id="community" class="content-section">
+                <h1 style="margin-bottom: 2rem;">👥 Community Feed</h1>
+
+                <div id="community-feed">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Loading community activity...
+                    </div>
                 </div>
             </section>
 
             <!-- Leaderboard Section -->
-            <section id="leaderboard" class="content-section" style="display: none;">
+            <section id="leaderboard" class="content-section">
                 <h1 style="margin-bottom: 2rem;">🏆 Leaderboard</h1>
 
                 <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h3>Monthly Rankings</h3>
-                        <select class="filter-btn" style="padding: 0.5rem 1rem;">
-                            <option>This Month</option>
-                            <option>All Time</option>
-                            <option>This Week</option>
-                        </select>
-                    </div>
-
-                    <ul class="leaderboard-list">
-                        <li class="leaderboard-item">
-                            <div class="rank gold">1</div>
-                            <div class="leaderboard-user">
-                                <div class="leaderboard-name">Maria Rossi</div>
-                                <div class="leaderboard-subtitle">Milan Chapter · Level 12</div>
-                            </div>
-                            <div class="leaderboard-score">2,450 XP</div>
-                        </li>
-                        <li class="leaderboard-item">
-                            <div class="rank silver">2</div>
-                            <div class="leaderboard-user">
-                                <div class="leaderboard-name">Alessandro Moretti</div>
-                                <div class="leaderboard-subtitle">Rome Chapter · Level 11</div>
-                            </div>
-                            <div class="leaderboard-score">2,180 XP</div>
-                        </li>
-                        <li class="leaderboard-item">
-                            <div class="rank bronze">3</div>
-                            <div class="leaderboard-user">
-                                <div class="leaderboard-name">Sofia Bianchi</div>
-                                <div class="leaderboard-subtitle">Florence Chapter · Level 10</div>
-                            </div>
-                            <div class="leaderboard-score">1,920 XP</div>
-                        </li>
-                        <li class="leaderboard-item">
-                            <div class="rank other">4</div>
-                            <div class="leaderboard-user">
-                                <div class="leaderboard-name">Luca Conti</div>
-                                <div class="leaderboard-subtitle">Turin Chapter · Level 9</div>
-                            </div>
-                            <div class="leaderboard-score">1,675 XP</div>
-                        </li>
-                        <li class="leaderboard-item" style="background: var(--highlight);">
-                            <div class="rank other">7</div>
-                            <div class="leaderboard-user">
-                                <div class="leaderboard-name">Gregor Sparrow (You)</div>
-                                <div class="leaderboard-subtitle">Milan Chapter · Level 7</div>
-                            </div>
-                            <div class="leaderboard-score">1,230 XP</div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div style="margin-top: 2rem;" class="card">
-                    <h3>📊 Leaderboard Categories</h3>
-                    <div class="member-filters" style="margin-top: 1.5rem;">
-                        <button class="filter-btn active">Overall XP</button>
-                        <button class="filter-btn">Most Helpful</button>
-                        <button class="filter-btn">Projects Completed</button>
-                        <button class="filter-btn">Community Engagement</button>
-                        <button class="filter-btn">Longest Streak</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Members Directory Section -->
-            <section id="members" class="content-section" style="display: none;">
-                <h1 style="margin-bottom: 2rem;">🌍 Member Directory</h1>
-
-                <div class="member-filters">
-                    <button class="filter-btn active">All Members</button>
-                    <button class="filter-btn">Milan</button>
-                    <button class="filter-btn">Rome</button>
-                    <button class="filter-btn">Florence</button>
-                    <button class="filter-btn">Sewing</button>
-                    <button class="filter-btn">Crochet</button>
-                    <button class="filter-btn">Weaving</button>
-                    <button class="filter-btn">Beginner</button>
-                    <button class="filter-btn">Intermediate</button>
-                    <button class="filter-btn">Expert</button>
-                </div>
-
-                <div class="member-grid">
-                    <div class="member-card">
-                        <div class="member-avatar">MR</div>
-                        <h3 class="member-name">Maria Rossi</h3>
-                        <p class="member-location">📍 Milan, Italy</p>
-                        <div class="member-badges">
-                            <span class="mini-badge" title="Community Champion">👥</span>
-                            <span class="mini-badge" title="Expert Level">⭐</span>
-                            <span class="mini-badge" title="Challenge Winner">🏆</span>
+                    <h3>Top Crafters</h3>
+                    <div id="leaderboard-container">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            Loading leaderboard...
                         </div>
-                        <div class="member-skills">
-                            <span class="skill-tag">Sewing</span>
-                            <span class="skill-tag">Pattern Making</span>
-                            <span class="skill-tag">Expert</span>
-                        </div>
-                        <button class="btn btn-secondary" style="margin-top: 1rem; width: 100%;">
-                            Connect
-                        </button>
-                    </div>
-
-                    <div class="member-card">
-                        <div class="member-avatar">AM</div>
-                        <h3 class="member-name">Alessandro Moretti</h3>
-                        <p class="member-location">📍 Rome, Italy</p>
-                        <div class="member-badges">
-                            <span class="mini-badge" title="Streak Master">🔥</span>
-                            <span class="mini-badge" title="Material Wizard">🎨</span>
-                        </div>
-                        <div class="member-skills">
-                            <span class="skill-tag">Leather Work</span>
-                            <span class="skill-tag">Intermediate</span>
-                        </div>
-                        <button class="btn btn-secondary" style="margin-top: 1rem; width: 100%;">
-                            Connect
-                        </button>
-                    </div>
-
-                    <div class="member-card">
-                        <div class="member-avatar">SB</div>
-                        <h3 class="member-name">Sofia Bianchi</h3>
-                        <p class="member-location">📍 Florence, Italy</p>
-                        <div class="member-badges">
-                            <span class="mini-badge" title="First Steps">🌟</span>
-                        </div>
-                        <div class="member-skills">
-                            <span class="skill-tag">Crochet</span>
-                            <span class="skill-tag">Weaving</span>
-                            <span class="skill-tag">Beginner</span>
-                        </div>
-                        <button class="btn btn-secondary" style="margin-top: 1rem; width: 100%;">
-                            Connect
-                        </button>
-                    </div>
-
-                    <div class="member-card">
-                        <div class="member-avatar">LC</div>
-                        <h3 class="member-name">Luca Conti</h3>
-                        <p class="member-location">📍 Turin, Italy</p>
-                        <div class="member-badges">
-                            <span class="mini-badge" title="Knowledge Seeker">📚</span>
-                            <span class="mini-badge" title="Local Legend">🌍</span>
-                        </div>
-                        <div class="member-skills">
-                            <span class="skill-tag">Embroidery</span>
-                            <span class="skill-tag">Intermediate</span>
-                        </div>
-                        <button class="btn btn-secondary" style="margin-top: 1rem; width: 100%;">
-                            Connect
-                        </button>
-                    </div>
-
-                    <div class="member-card">
-                        <div class="member-avatar">GV</div>
-                        <h3 class="member-name">Giulia Valentini</h3>
-                        <p class="member-location">📍 Milan, Italy</p>
-                        <div class="member-badges">
-                            <span class="mini-badge" title="Conversation Starter">💬</span>
-                        </div>
-                        <div class="member-skills">
-                            <span class="skill-tag">Knitting</span>
-                            <span class="skill-tag">Beginner</span>
-                        </div>
-                        <button class="btn btn-secondary" style="margin-top: 1rem; width: 100%;">
-                            Connect
-                        </button>
-                    </div>
-
-                    <div class="member-card">
-                        <div class="member-avatar">FM</div>
-                        <h3 class="member-name">Francesco Marchetti</h3>
-                        <p class="member-location">📍 Naples, Italy</p>
-                        <div class="member-badges">
-                            <span class="mini-badge" title="Material Wizard">🎨</span>
-                            <span class="mini-badge" title="Expert Level">⭐</span>
-                        </div>
-                        <div class="member-skills">
-                            <span class="skill-tag">Ceramics</span>
-                            <span class="skill-tag">Expert</span>
-                        </div>
-                        <button class="btn btn-secondary" style="margin-top: 1rem; width: 100%;">
-                            Connect
-                        </button>
                     </div>
                 </div>
             </section>
 
             <!-- Achievements Section -->
-            <section id="achievements" class="content-section" style="display: none;">
+            <section id="achievements" class="content-section">
                 <h1 style="margin-bottom: 2rem;">⭐ Your Achievements</h1>
 
                 <div class="card">
-                    <div style="text-align: center; margin-bottom: 3rem;">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
-                        <h2>12 / 45 Badges Earned</h2>
-                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Keep crafting to unlock more!</p>
-                    </div>
-
-                    <div class="card-label">Unlocked Badges</div>
-                    <div class="badges-grid" style="margin-bottom: 3rem;">
-                        <div class="badge">
-                            <div class="badge-icon">🔥</div>
-                            <div class="badge-name">Streak Master</div>
-                            <div class="badge-description">7-day streak</div>
-                        </div>
-                        <div class="badge">
-                            <div class="badge-icon">🌟</div>
-                            <div class="badge-name">First Steps</div>
-                            <div class="badge-description">First project</div>
-                        </div>
-                        <div class="badge">
-                            <div class="badge-icon">👥</div>
-                            <div class="badge-name">Community Champion</div>
-                            <div class="badge-description">Helped 10+ members</div>
-                        </div>
-                        <div class="badge">
-                            <div class="badge-icon">🎨</div>
-                            <div class="badge-name">Material Wizard</div>
-                            <div class="badge-description">Used 5+ materials</div>
-                        </div>
-                        <div class="badge">
-                            <div class="badge-icon">📚</div>
-                            <div class="badge-name">Knowledge Seeker</div>
-                            <div class="badge-description">Completed 5 tutorials</div>
-                        </div>
-                        <div class="badge">
-                            <div class="badge-icon">💬</div>
-                            <div class="badge-name">Conversation Starter</div>
-                            <div class="badge-description">50+ comments received</div>
-                        </div>
-                        <div class="badge">
-                            <div class="badge-icon">🌍</div>
-                            <div class="badge-name">Local Legend</div>
-                            <div class="badge-description">Attended 3+ meetups</div>
-                        </div>
-                        <div class="badge">
-                            <div class="badge-icon">🎯</div>
-                            <div class="badge-name">Goal Getter</div>
-                            <div class="badge-description">Completed first goal</div>
-                        </div>
-                    </div>
-
-                    <div class="card-label">Locked Badges</div>
-                    <div class="badges-grid">
-                        <div class="badge locked">
-                            <div class="badge-icon">🏆</div>
-                            <div class="badge-name">Challenge Winner</div>
-                            <div class="badge-description">Win a challenge</div>
-                        </div>
-                        <div class="badge locked">
-                            <div class="badge-icon">👑</div>
-                            <div class="badge-name">Master Artisan</div>
-                            <div class="badge-description">Reach level 15</div>
-                        </div>
-                        <div class="badge locked">
-                            <div class="badge-icon">🚀</div>
-                            <div class="badge-name">Influencer</div>
-                            <div class="badge-description">100+ followers</div>
-                        </div>
-                        <div class="badge locked">
-                            <div class="badge-icon">⚡</div>
-                            <div class="badge-name">Speed Demon</div>
-                            <div class="badge-description">Complete 10 projects in a month</div>
-                        </div>
-                        <div class="badge locked">
-                            <div class="badge-icon">🎓</div>
-                            <div class="badge-name">Master Mentor</div>
-                            <div class="badge-description">Mentor 5 members</div>
-                        </div>
-                        <div class="badge locked">
-                            <div class="badge-icon">🌈</div>
-                            <div class="badge-name">Renaissance Crafter</div>
-                            <div class="badge-description">Master 5 different crafts</div>
+                    <div id="achievements-container">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            Loading achievements...
                         </div>
                     </div>
                 </div>
@@ -1327,130 +818,702 @@
         </main>
     </div>
 
-    <script>
-        // Navigation between sections
-        function showSection(sectionId) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.content-section');
-            sections.forEach(section => {
-                section.style.display = 'none';
-            });
+    <!-- Add Project Modal -->
+    <div class="modal" id="add-project-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Project</h2>
+                <button class="modal-close" onclick="closeAddProject()">&times;</button>
+            </div>
 
-            // Show selected section
-            const selectedSection = document.getElementById(sectionId);
-            if (selectedSection) {
-                selectedSection.style.display = 'block';
+            <div id="project-alert" class="alert"></div>
+
+            <form onsubmit="handleAddProject(event)">
+                <div class="form-group">
+                    <label for="project-title">Project Title *</label>
+                    <input type="text" id="project-title" required placeholder="e.g., Hand-woven Scarf">
+                </div>
+
+                <div class="form-group">
+                    <label for="project-description">Description</label>
+                    <textarea id="project-description" placeholder="Tell us about your project..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="project-craft-type">Craft Type *</label>
+                    <select id="project-craft-type" required>
+                        <option value="">Select a craft type</option>
+                        <option value="Sewing">Sewing</option>
+                        <option value="Knitting">Knitting</option>
+                        <option value="Crochet">Crochet</option>
+                        <option value="Weaving">Weaving</option>
+                        <option value="Embroidery">Embroidery</option>
+                        <option value="Quilting">Quilting</option>
+                        <option value="Leather Work">Leather Work</option>
+                        <option value="Ceramics">Ceramics</option>
+                        <option value="Woodworking">Woodworking</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="project-status">Status *</label>
+                    <select id="project-status" required>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="add-project-btn">
+                    Add Project
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentUser = null;
+        let userProfile = null;
+
+        // ============================================
+        // AUTHENTICATION CHECK
+        // ============================================
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (!session) {
+                window.location.href = 'login.html';
+                return;
             }
 
-            // Update active nav item
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.classList.remove('active');
-            });
+            currentUser = session.user;
+            await loadUserData();
+        }
+
+        // ============================================
+        // LOAD USER DATA
+        // ============================================
+        async function loadUserData() {
+            try {
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (error) throw error;
+
+                userProfile = profile;
+                updateUI(profile);
+                await loadAllData();
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                alert('Failed to load user data');
+            }
+        }
+
+        function updateUI(profile) {
+            // Header
+            document.getElementById('header-avatar').textContent = profile.avatar_initials;
+            document.getElementById('header-name').textContent = profile.full_name.split(' ')[0];
+
+            // Welcome
+            document.getElementById('welcome-text').textContent = `Welcome back, ${profile.full_name.split(' ')[0]}! 👋`;
+
+            // Profile card
+            document.getElementById('profile-avatar').textContent = profile.avatar_initials;
+            document.getElementById('profile-name').textContent = profile.full_name;
+            document.getElementById('profile-level').textContent = `⚡ ${profile.rank}`;
+
+            // XP Progress
+            const xpInLevel = profile.xp % 1000;
+            const xpProgress = (xpInLevel / 1000) * 100;
+            document.getElementById('level-label').textContent = `Level ${profile.level} Progress`;
+            document.getElementById('xp-progress').style.width = xpProgress + '%';
+            document.getElementById('xp-current').textContent = `${xpInLevel} / 1000 XP`;
+            document.getElementById('xp-remaining').textContent = `${1000 - xpInLevel} XP to Level ${profile.level + 1}`;
+
+            // Stats
+            document.getElementById('stat-projects').textContent = profile.projects_count || 0;
+            document.getElementById('stat-followers').textContent = profile.followers_count || 0;
+            document.getElementById('stat-badges').textContent = profile.badges_count || 0;
+
+            // Streak
+            const streakDays = profile.streak_days || 0;
+            document.getElementById('streak-days').textContent = streakDays;
+            document.getElementById('streak-text').textContent = streakDays === 0 
+                ? 'Start your crafting journey!' 
+                : streakDays === 1
+                ? 'Great start! Keep it going!'
+                : `Days in a row! Keep it going!`;
+        }
+
+        // ============================================
+        // LOAD ALL DATA
+        // ============================================
+        async function loadAllData() {
+            await Promise.all([
+                loadDashboardBadges(),
+                loadDashboardActivity(),
+                loadMyProjects(),
+                loadCommunityFeed(),
+                loadLeaderboard(),
+                loadAchievements()
+            ]);
+        }
+
+        // ============================================
+        // DASHBOARD BADGES
+        // ============================================
+        async function loadDashboardBadges() {
+            try {
+                const { data: userBadges, error } = await supabase
+                    .from('user_badges')
+                    .select(`
+                        earned_at,
+                        badges (name, icon, description)
+                    `)
+                    .eq('user_id', currentUser.id)
+                    .order('earned_at', { ascending: false })
+                    .limit(4);
+
+                if (error) throw error;
+
+                const container = document.getElementById('dashboard-badges');
+                
+                if (!userBadges || userBadges.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏆</div>
+                            <div class="empty-state-title">No badges yet</div>
+                            <div class="empty-state-text">Complete projects and participate in the community to earn badges!</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+                        ${userBadges.map(ub => `
+                            <div style="text-align: center; padding: 1rem; background: var(--light-beige); border-radius: 8px;">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${ub.badges.icon}</div>
+                                <div style="font-size: 0.9rem; font-family: -apple-system, sans-serif; color: var(--dark-brown);">${ub.badges.name}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading badges:', error);
+                document.getElementById('dashboard-badges').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text" style="color: #C75B5B;">Failed to load badges</div>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // DASHBOARD ACTIVITY
+        // ============================================
+        async function loadDashboardActivity() {
+            try {
+                const { data: activities, error } = await supabase
+                    .from('activities')
+                    .select(`
+                        *,
+                        profiles (full_name, avatar_initials)
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (error) throw error;
+
+                const container = document.getElementById('dashboard-activity');
+                
+                if (!activities || activities.length === 0) {
+                    container.innerHTML = `
+                        <li class="empty-state">
+                            <div class="empty-state-icon">🌊</div>
+                            <div class="empty-state-title">No activity yet</div>
+                            <div class="empty-state-text">Be the first to share a project!</div>
+                        </li>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = activities.map(activity => `
+                    <li class="activity-item">
+                        <div class="activity-avatar">${activity.profiles.avatar_initials}</div>
+                        <div class="activity-content">
+                            <p class="activity-text">
+                                <strong>${activity.profiles.full_name}</strong> ${getActivityText(activity)}
+                            </p>
+                            <p class="activity-time">${getTimeAgo(activity.created_at)}</p>
+                        </div>
+                    </li>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading activity:', error);
+                document.getElementById('dashboard-activity').innerHTML = `
+                    <li class="empty-state">
+                        <div class="empty-state-text" style="color: #C75B5B;">Failed to load activity</div>
+                    </li>
+                `;
+            }
+        }
+
+        // ============================================
+        // MY PROJECTS
+        // ============================================
+        async function loadMyProjects() {
+            try {
+                const { data: projects, error } = await supabase
+                    .from('projects')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const container = document.getElementById('my-projects-container');
+                
+                if (!projects || projects.length === 0) {
+                    container.innerHTML = `
+                        <div class="card">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">🎨</div>
+                                <div class="empty-state-title">No projects yet</div>
+                                <div class="empty-state-text">Start by adding your first craft project!</div>
+                                <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="showAddProject()">
+                                    + Add Your First Project
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="project-grid">
+                        ${projects.map(project => `
+                            <div class="project-card">
+                                <div class="project-image">${getCraftIcon(project.craft_type)}</div>
+                                <div class="project-info">
+                                    <h3 class="project-title">${project.title}</h3>
+                                    <p class="project-description">${project.description || 'No description'}</p>
+                                    <div class="project-meta">
+                                        <span class="project-meta-item">📁 ${project.craft_type}</span>
+                                        <span class="project-meta-item">${project.status === 'completed' ? '✅ Done' : '🔨 In Progress'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                document.getElementById('my-projects-container').innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-text" style="color: #C75B5B;">Failed to load projects</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // COMMUNITY FEED
+        // ============================================
+        async function loadCommunityFeed() {
+            try {
+                const { data: projects, error } = await supabase
+                    .from('projects')
+                    .select(`
+                        *,
+                        profiles (full_name, avatar_initials)
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                if (error) throw error;
+
+                const container = document.getElementById('community-feed');
+                
+                if (!projects || projects.length === 0) {
+                    container.innerHTML = `
+                        <div class="card">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">👥</div>
+                                <div class="empty-state-title">No community projects yet</div>
+                                <div class="empty-state-text">Be the first to share something amazing!</div>
+                                <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="showAddProject()">
+                                    + Share Your First Project
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="project-grid">
+                        ${projects.map(project => `
+                            <div class="project-card">
+                                <div class="project-image">${getCraftIcon(project.craft_type)}</div>
+                                <div class="project-info">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold;">
+                                            ${project.profiles.avatar_initials}
+                                        </div>
+                                        <span style="font-size: 0.9rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">
+                                            ${project.profiles.full_name}
+                                        </span>
+                                    </div>
+                                    <h3 class="project-title">${project.title}</h3>
+                                    <p class="project-description">${project.description || 'No description'}</p>
+                                    <div class="project-meta">
+                                        <span class="project-meta-item">📁 ${project.craft_type}</span>
+                                        <span class="project-meta-item">👁️ ${project.views_count || 0}</span>
+                                        <span class="project-meta-item">❤️ ${project.likes_count || 0}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading community feed:', error);
+                document.getElementById('community-feed').innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-text" style="color: #C75B5B;">Failed to load community feed</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // LEADERBOARD
+        // ============================================
+        async function loadLeaderboard() {
+            try {
+                const { data: leaders, error } = await supabase
+                    .from('profiles')
+                    .select('full_name, level, xp, rank, location, avatar_initials, id')
+                    .order('xp', { ascending: false })
+                    .limit(10);
+
+                if (error) throw error;
+
+                const container = document.getElementById('leaderboard-container');
+                
+                if (!leaders || leaders.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🏆</div>
+                            <div class="empty-state-title">Leaderboard coming soon</div>
+                            <div class="empty-state-text">Keep crafting to climb the ranks!</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div style="list-style: none;">
+                        ${leaders.map((user, index) => {
+                            const position = index + 1;
+                            let medal = '';
+                            if (position === 1) medal = '🥇';
+                            else if (position === 2) medal = '🥈';
+                            else if (position === 3) medal = '🥉';
+                            
+                            const isCurrentUser = user.id === currentUser.id;
+                            const highlightStyle = isCurrentUser ? 'background: var(--highlight); border-radius: 8px;' : '';
+
+                            return `
+                                <div style="display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--light-beige); ${highlightStyle}">
+                                    <div style="width: 40px; font-size: 1.5rem; text-align: center; margin-right: 1rem;">
+                                        ${medal || position}
+                                    </div>
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem;">
+                                        ${user.avatar_initials}
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; color: var(--dark-brown);">
+                                            ${user.full_name}${isCurrentUser ? ' (You)' : ''}
+                                        </div>
+                                        <div style="font-size: 0.85rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">
+                                            ${user.location || 'Location not set'} · Level ${user.level}
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 1.25rem; color: var(--terracotta); font-weight: bold;">
+                                        ${user.xp} XP
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                document.getElementById('leaderboard-container').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text" style="color: #C75B5B;">Failed to load leaderboard</div>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // ACHIEVEMENTS
+        // ============================================
+        async function loadAchievements() {
+            try {
+                // Get all badges
+                const { data: allBadges, error: badgesError } = await supabase
+                    .from('badges')
+                    .select('*')
+                    .order('rarity', { ascending: true });
+
+                if (badgesError) throw badgesError;
+
+                // Get user's badges
+                const { data: userBadges, error: userBadgesError } = await supabase
+                    .from('user_badges')
+                    .select('badge_id')
+                    .eq('user_id', currentUser.id);
+
+                if (userBadgesError) throw userBadgesError;
+
+                const userBadgeIds = userBadges.map(ub => ub.badge_id);
+                const earnedCount = userBadges.length;
+                const totalCount = allBadges.length;
+
+                const container = document.getElementById('achievements-container');
+                
+                container.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 3rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+                        <h2>${earnedCount} / ${totalCount} Badges Earned</h2>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Keep crafting to unlock more!</p>
+                    </div>
+
+                    ${earnedCount > 0 ? `
+                        <div class="card-label">Earned Badges</div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 3rem;">
+                            ${allBadges.filter(badge => userBadgeIds.includes(badge.id)).map(badge => `
+                                <div style="text-align: center; padding: 1rem; background: var(--light-beige); border-radius: 8px;">
+                                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${badge.icon}</div>
+                                    <div style="font-size: 0.85rem; font-family: -apple-system, sans-serif; color: var(--dark-brown); font-weight: 600;">${badge.name}</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">${badge.description}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    <div class="card-label">Locked Badges</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem;">
+                        ${allBadges.filter(badge => !userBadgeIds.includes(badge.id)).map(badge => `
+                            <div style="text-align: center; padding: 1rem; background: var(--light-beige); border-radius: 8px; opacity: 0.5; filter: grayscale(1);">
+                                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">${badge.icon}</div>
+                                <div style="font-size: 0.85rem; font-family: -apple-system, sans-serif; color: var(--dark-brown); font-weight: 600;">${badge.name}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">${badge.description}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+                document.getElementById('achievements-container').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-text" style="color: #C75B5B;">Failed to load achievements</div>
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // ADD PROJECT
+        // ============================================
+        function showAddProject() {
+            document.getElementById('add-project-modal').classList.add('show');
+            document.getElementById('project-alert').classList.remove('show');
+        }
+
+        function closeAddProject() {
+            document.getElementById('add-project-modal').classList.remove('show');
+            document.getElementById('add-project-btn').disabled = false;
+            document.getElementById('add-project-btn').textContent = 'Add Project';
+        }
+
+        async function handleAddProject(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('project-title').value;
+            const description = document.getElementById('project-description').value;
+            const craftType = document.getElementById('project-craft-type').value;
+            const status = document.getElementById('project-status').value;
+
+            const btn = document.getElementById('add-project-btn');
+            btn.disabled = true;
+            btn.textContent = 'Adding...';
+
+            try {
+                // Insert project
+                const { data: project, error: projectError } = await supabase
+                    .from('projects')
+                    .insert({
+                        user_id: currentUser.id,
+                        title: title,
+                        description: description,
+                        craft_type: craftType,
+                        status: status
+                    })
+                    .select()
+                    .single();
+
+                if (projectError) throw projectError;
+
+                // Update user's project count
+                await supabase
+                    .from('profiles')
+                    .update({ projects_count: userProfile.projects_count + 1 })
+                    .eq('id', currentUser.id);
+
+                // Award XP
+                await supabase.rpc('award_xp', {
+                    user_uuid: currentUser.id,
+                    xp_amount: status === 'completed' ? 100 : 50
+                });
+
+                // Create activity
+                await supabase
+                    .from('activities')
+                    .insert({
+                        user_id: currentUser.id,
+                        activity_type: status === 'completed' ? 'project_completed' : 'project_started',
+                        activity_data: { project_title: title }
+                    });
+
+                // Show success
+                const alert = document.getElementById('project-alert');
+                alert.textContent = 'Project added successfully!';
+                alert.className = 'alert alert-success show';
+
+                // Reset form
+                event.target.reset();
+
+                // Reload data
+                setTimeout(async () => {
+                    closeAddProject();
+                    await loadUserData();
+                }, 1500);
+
+            } catch (error) {
+                console.error('Error adding project:', error);
+                const alert = document.getElementById('project-alert');
+                alert.textContent = error.message || 'Failed to add project';
+                alert.className = 'alert alert-error show';
+                btn.disabled = false;
+                btn.textContent = 'Add Project';
+            }
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             event.target.classList.add('active');
         }
 
-        // Notification toggle
-        function toggleNotifications() {
-            alert('Notifications:\n\n✅ Maria Rossi liked your project\n✅ New challenge started: Winter Warmth\n✅ You earned a new badge: Streak Master');
-        }
-
-        // User menu toggle
         function toggleUserMenu() {
-            alert('User Menu:\n\n👤 View Profile\n⚙️ Settings\n🎨 Preferences\n🚪 Logout');
+            document.getElementById('user-menu').classList.toggle('show');
         }
 
-        // Filter buttons functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons in the same group
-                    const parent = this.parentElement;
-                    const siblings = parent.querySelectorAll('.filter-btn');
-                    siblings.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                });
-            });
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        }
 
-            // Animate progress bar on load
-            setTimeout(() => {
-                document.querySelector('.progress-fill').style.width = '65%';
-            }, 500);
-
-            // Badge hover effect with details
-            const badges = document.querySelectorAll('.badge');
-            badges.forEach(badge => {
-                badge.addEventListener('click', function() {
-                    if (this.classList.contains('locked')) {
-                        alert('🔒 Badge Locked\n\nKeep crafting to unlock this achievement!');
-                    } else {
-                        const badgeName = this.querySelector('.badge-name').textContent;
-                        alert(`✨ ${badgeName}\n\nYou earned this badge! Keep up the great work!`);
-                    }
-                });
-            });
-
-            // Activity preview click
-            const activityPreviews = document.querySelectorAll('.activity-preview');
-            activityPreviews.forEach(preview => {
-                preview.addEventListener('click', function() {
-                    alert('Opening project details...\n\n(This would open a modal with full project information)');
-                });
-            });
-
-            // Member card click
-            const memberCards = document.querySelectorAll('.member-card');
-            memberCards.forEach(card => {
-                card.addEventListener('click', function(e) {
-                    // Don't trigger if clicking the connect button
-                    if (!e.target.classList.contains('btn')) {
-                        const memberName = this.querySelector('.member-name').textContent;
-                        alert(`Opening profile for ${memberName}...\n\n(This would show full member profile)`);
-                    }
-                });
-            });
-
-            // Project card click
-            const projectCards = document.querySelectorAll('.project-card');
-            projectCards.forEach(card => {
-                card.addEventListener('click', function() {
-                    alert('Opening project...\n\n(This would display full project details, images, and comments)');
-                });
-            });
-
-            // Simulate XP gain animation
-            function animateXPGain(amount) {
-                const currentXP = 650;
-                const newXP = currentXP + amount;
-                const progressBar = document.querySelector('.progress-fill');
-                const progressInfo = document.querySelector('.progress-info span');
-                
-                // Animate progress bar
-                const newWidth = (newXP / 1000) * 100;
-                progressBar.style.width = newWidth + '%';
-                
-                // Update text
-                progressInfo.textContent = `${newXP} / 1000 XP`;
-                
-                // Show notification
-                alert(`🎉 +${amount} XP earned!\n\nKeep up the great work!`);
+        function getActivityText(activity) {
+            switch (activity.activity_type) {
+                case 'project_completed':
+                    return 'completed a project';
+                case 'project_started':
+                    return 'started a new project';
+                case 'badge_earned':
+                    return `earned the ${activity.activity_data?.badge_name} badge`;
+                case 'level_up':
+                    return `reached level ${activity.activity_data?.level}`;
+                default:
+                    return 'did something awesome';
             }
+        }
 
-            // Example: Simulate earning XP after 3 seconds (for demo purposes)
-            // setTimeout(() => {
-            //     animateXPGain(50);
-            // }, 3000);
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const past = new Date(timestamp);
+            const diffMs = now - past;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            return `${diffDays}d ago`;
+        }
+
+        function getCraftIcon(craftType) {
+            const icons = {
+                'Sewing': '🧵',
+                'Knitting': '🧶',
+                'Crochet': '🪡',
+                'Weaving': '🧵',
+                'Embroidery': '🪡',
+                'Quilting': '🧵',
+                'Leather Work': '👜',
+                'Ceramics': '🏺',
+                'Woodworking': '🪵',
+                'Other': '🎨'
+            };
+            return icons[craftType] || '🎨';
+        }
+
+        // Close modals when clicking outside
+        document.getElementById('add-project-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddProject();
+            }
         });
 
-        // Handle navigation links
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-            });
+        // Close user menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const userProfile = document.querySelector('.user-profile');
+            const userMenu = document.getElementById('user-menu');
+            
+            if (userProfile && !userProfile.contains(event.target)) {
+                userMenu.classList.remove('show');
+            }
         });
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        checkAuth();
     </script>
 </body>
 </html>
