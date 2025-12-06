@@ -113,6 +113,14 @@
             justify-content: center;
             color: white;
             font-weight: bold;
+            object-fit: cover;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .user-profile {
@@ -158,6 +166,7 @@
             border-bottom: 1px solid var(--light-beige);
             cursor: pointer;
             transition: background 0.3s;
+            font-family: -apple-system, sans-serif;
         }
 
         .dropdown-item:hover {
@@ -170,7 +179,6 @@
 
         .notif-content {
             font-size: 0.9rem;
-            font-family: -apple-system, sans-serif;
             margin-bottom: 0.25rem;
         }
 
@@ -257,19 +265,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Inspiration Quote */
-        .inspiration-quote {
-            background: linear-gradient(135deg, var(--terracotta), var(--dark-brown));
-            color: white;
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            font-style: italic;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
         /* Quick Stats */
         .quick-stats {
             display: grid;
@@ -306,82 +301,7 @@
             font-family: -apple-system, sans-serif;
         }
 
-        /* Goals/Todos */
-        .goal-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            background: var(--cream);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .goal-item:hover {
-            background: var(--highlight);
-        }
-
-        .goal-item.completed {
-            opacity: 0.6;
-            text-decoration: line-through;
-        }
-
-        .goal-checkbox {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--terracotta);
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .goal-checkbox.checked {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        /* Activity Feed */
-        .activity-item {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--light-beige);
-        }
-
-        .activity-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-text {
-            font-family: -apple-system, sans-serif;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .activity-time {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* Project Cards */
+        /* Project Grid */
         .project-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -447,6 +367,32 @@
             50% { transform: scale(1.1); }
         }
 
+        .follow-btn-small {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.4rem 0.8rem;
+            background: white;
+            border: 1px solid var(--terracotta);
+            color: var(--terracotta);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: -apple-system, sans-serif;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .follow-btn-small:hover {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .follow-btn-small.following {
+            background: var(--terracotta);
+            color: white;
+        }
+
         .project-info {
             padding: 1.25rem;
         }
@@ -465,153 +411,89 @@
             font-family: -apple-system, sans-serif;
         }
 
-        /* Messages */
-        .messages-list {
-            list-style: none;
-        }
-
-        .message-item {
-            padding: 1rem;
-            border-bottom: 1px solid var(--light-beige);
-            cursor: pointer;
-            transition: background 0.3s;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .message-item:hover {
-            background: var(--cream);
-        }
-
-        .message-item.unread {
-            background: #E8F5E9;
-            font-weight: 600;
-        }
-
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 600px;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            padding: 1rem 1.5rem;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 1.5rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .chat-message {
-            display: flex;
-            gap: 0.75rem;
-            max-width: 70%;
-        }
-
-        .chat-message.sent {
-            align-self: flex-end;
-            flex-direction: row-reverse;
-        }
-
-        .chat-bubble {
-            padding: 0.75rem 1rem;
-            border-radius: 16px;
-            font-family: -apple-system, sans-serif;
-            font-size: 0.95rem;
-        }
-
-        .chat-message.received .chat-bubble {
-            background: var(--light-beige);
-        }
-
-        .chat-message.sent .chat-bubble {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .chat-input-area {
-            padding: 1rem 1.5rem;
-            background: var(--cream);
-            display: flex;
-            gap: 1rem;
-        }
-
-        .chat-input-area input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: 2px solid var(--light-beige);
-            border-radius: 24px;
-            font-family: -apple-system, sans-serif;
-            font-size: 0.95rem;
-        }
-
-        .chat-input-area button {
-            padding: 0.75rem 1.5rem;
-            background: var(--terracotta);
-            color: white;
-            border: none;
-            border-radius: 24px;
-            cursor: pointer;
-            font-family: -apple-system, sans-serif;
-            font-weight: 600;
-        }
-
-        /* Trending Widget */
-        .trending-item {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--light-beige);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .trending-item:hover {
-            background: var(--cream);
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
-        }
-
-        .trending-rank {
-            width: 32px;
-            height: 32px;
+        .user-mini {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .user-mini-avatar {
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: var(--terracotta);
             color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
             font-weight: bold;
+            object-fit: cover;
+        }
+
+        .user-mini-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Feed Items */
+        .feed-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .feed-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .feed-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            object-fit: cover;
+        }
+
+        .feed-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .feed-content {
             font-family: -apple-system, sans-serif;
-            flex-shrink: 0;
+            line-height: 1.6;
         }
 
-        .trending-info {
-            flex: 1;
-        }
-
-        .trending-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .trending-author {
-            font-size: 0.85rem;
+        .feed-time {
+            font-size: 0.8rem;
             color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .mention {
+            color: var(--terracotta);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .mention:hover {
+            text-decoration: underline;
         }
 
         /* Buttons */
@@ -637,22 +519,19 @@
             transform: translateY(-2px);
         }
 
+        .btn-secondary {
+            background: var(--light-beige);
+            color: var(--dark-brown);
+        }
+
+        .btn-danger {
+            background: #C75B5B;
+            color: white;
+        }
+
         .btn-small {
             padding: 0.5rem 1rem;
             font-size: 0.85rem;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: var(--text-muted);
-        }
-
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
         }
 
         /* Forms */
@@ -702,6 +581,7 @@
             justify-content: center;
             align-items: center;
             padding: 2rem;
+            overflow-y: auto;
         }
 
         .modal.show { display: flex; }
@@ -731,6 +611,72 @@
             font-size: 2rem;
             cursor: pointer;
             color: var(--text-muted);
+        }
+
+        /* Profile Picture Upload */
+        .profile-picture-upload {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-picture-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: var(--terracotta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            object-fit: cover;
+            overflow: hidden;
+        }
+
+        .profile-picture-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border: 2px solid var(--light-beige);
+            border-radius: 8px;
+            min-height: 50px;
+        }
+
+        .tag {
+            padding: 0.4rem 0.8rem;
+            background: var(--light-beige);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
 
         /* Loading */
@@ -770,10 +716,6 @@
             .dashboard-grid, .project-grid {
                 grid-template-columns: 1fr;
             }
-
-            .dropdown {
-                right: -100px;
-            }
         }
     </style>
 </head>
@@ -807,14 +749,16 @@
             <!-- Messages Dropdown -->
             <div class="dropdown" id="messages-dropdown">
                 <div class="dropdown-header">Messages</div>
-                <ul class="messages-list" id="conversations-list">
-                    <li class="loading"><div class="spinner"></div></li>
-                </ul>
+                <div id="conversations-list">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
             </div>
 
             <!-- User Menu -->
             <div class="dropdown" id="user-menu" style="min-width: 200px;">
                 <div class="dropdown-item" onclick="showSection('dashboard')">👤 Dashboard</div>
+                <div class="dropdown-item" onclick="showEditProfile()">✏️ Edit Profile</div>
+                <div class="dropdown-item" onclick="showSettings()">⚙️ Settings</div>
                 <div class="dropdown-item" onclick="handleLogout()">🚪 Logout</div>
             </div>
         </div>
@@ -825,7 +769,7 @@
             <nav>
                 <a class="nav-item active" onclick="showSection('dashboard')">🏠 Dashboard</a>
                 <a class="nav-item" onclick="showSection('my-projects')">🎨 My Projects</a>
-                <a class="nav-item" onclick="showSection('community')">🌊 Community</a>
+                <a class="nav-item" onclick="showSection('community')">🌊 Community Feed</a>
                 <a class="nav-item" onclick="showSection('friends')">💫 Friends</a>
                 <a class="nav-item" onclick="showSection('members')">🔍 Find Makers</a>
                 <a class="nav-item" onclick="showSection('chat')">💬 Messages</a>
@@ -837,14 +781,7 @@
             <section id="dashboard" class="content-section active">
                 <h1 style="margin-bottom: 2rem;" id="welcome-text">Welcome! 👋</h1>
 
-                <!-- Inspiration Quote -->
-                <div class="inspiration-quote" id="daily-inspiration">
-                    "✨ Loading your daily inspiration..."
-                </div>
-
-                <!-- Dashboard Grid -->
                 <div class="dashboard-grid">
-                    <!-- Quick Stats -->
                     <div class="card">
                         <h3>📊 Your Stats</h3>
                         <div class="quick-stats">
@@ -856,7 +793,7 @@
                             <div class="stat-box">
                                 <div class="stat-icon">❤️</div>
                                 <div class="stat-value" id="stat-likes">0</div>
-                                <div class="stat-label">Likes</div>
+                                <div class="stat-label">Total Likes</div>
                             </div>
                             <div class="stat-box">
                                 <div class="stat-icon">👥</div>
@@ -870,26 +807,9 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Crafting Goals -->
-                    <div class="card">
-                        <h3>🎯 Today's Goals</h3>
-                        <div id="goals-list"></div>
-                        <input type="text" id="new-goal" placeholder="Add a new goal..." style="margin-top: 1rem;" onkeypress="if(event.key==='Enter') addGoal()">
-                    </div>
                 </div>
 
-                <!-- Friend Activity -->
-                <div class="card">
-                    <h3>💫 Friend Activity</h3>
-                    <div id="friend-activity"></div>
-                </div>
-
-                <!-- Trending Projects -->
-                <div class="card">
-                    <h3>🔥 Trending This Week</h3>
-                    <div id="trending-projects"></div>
-                </div>
+                <button class="btn btn-primary" onclick="showAddProject()">+ Add New Project</button>
             </section>
 
             <!-- My Projects -->
@@ -901,42 +821,129 @@
                 <div id="my-projects-container"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
-            <!-- Community -->
+            <!-- Community Feed -->
             <section id="community" class="content-section">
                 <h1 style="margin-bottom: 2rem;">🌊 Community Feed</h1>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; font-family: -apple-system, sans-serif;">
+                    Updates from projects you follow and friends you follow
+                </p>
                 <div id="community-feed"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
             <!-- Friends -->
             <section id="friends" class="content-section">
                 <h1 style="margin-bottom: 2rem;">💫 Your Friends</h1>
-                <p style="color: var(--text-muted); margin-bottom: 2rem; font-family: -apple-system, sans-serif;">
-                    Friends are people who follow each other! Send them messages and stay connected.
-                </p>
                 <div id="friends-container"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
             <!-- Find Members -->
             <section id="members" class="content-section">
                 <h1 style="margin-bottom: 2rem;">🔍 Find Makers</h1>
-                <input type="text" id="member-search" placeholder="Search by name..." style="margin-bottom: 2rem;" oninput="searchMembers()">
+                <input type="text" id="member-search" placeholder="Search by name or username..." style="margin-bottom: 2rem;" oninput="searchMembers()">
                 <div id="members-container"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
             <!-- Chat -->
             <section id="chat" class="content-section">
                 <h1 style="margin-bottom: 2rem;">💬 Messages</h1>
-                <p style="color: var(--text-muted); margin-bottom: 2rem; font-family: -apple-system, sans-serif;">
-                    Chat with your friends (mutual follows)
-                </p>
                 <div id="chat-area"></div>
             </section>
         </main>
     </div>
 
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="edit-profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Profile</h2>
+                <button class="modal-close" onclick="closeEditProfile()">&times;</button>
+            </div>
+            <form onsubmit="handleUpdateProfile(event)">
+                <div class="profile-picture-upload">
+                    <div class="profile-picture-preview" id="profile-pic-preview">
+                        <span id="profile-pic-initials">...</span>
+                    </div>
+                    <input type="file" id="profile-picture-input" accept="image/*" style="display: none;" onchange="handleProfilePictureChange(event)">
+                    <button type="button" class="btn btn-secondary btn-small" onclick="document.getElementById('profile-picture-input').click()">
+                        Change Picture
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="edit-username" readonly style="background: #f5f5f5;">
+                    <small style="color: var(--text-muted); font-size: 0.8rem;">Username cannot be changed</small>
+                </div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="edit-fullname">
+                </div>
+                <div class="form-group">
+                    <label>Bio</label>
+                    <textarea id="edit-bio" placeholder="Tell us about yourself..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" id="edit-location" placeholder="City, Country">
+                </div>
+                <div class="form-group">
+                    <label>Interests (comma separated)</label>
+                    <input type="text" id="edit-interests" placeholder="Sewing, Knitting, Crochet">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Settings</h2>
+                <button class="modal-close" onclick="closeSettings()">&times;</button>
+            </div>
+            <form onsubmit="handleUpdateSettings(event)">
+                <div class="form-group">
+                    <label>Measurement System</label>
+                    <select id="setting-measurement">
+                        <option value="metric">Metric (cm, m, kg)</option>
+                        <option value="imperial">Imperial (inches, yards, lbs)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Weight Unit</label>
+                    <select id="setting-weight">
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="lbs">Pounds (lbs)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Length Unit</label>
+                    <select id="setting-length">
+                        <option value="cm">Centimeters (cm)</option>
+                        <option value="m">Meters (m)</option>
+                        <option value="inches">Inches</option>
+                        <option value="yards">Yards</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Settings</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile View Modal -->
+    <div class="modal" id="profile-view-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Profile</h2>
+                <button class="modal-close" onclick="closeProfileView()">&times;</button>
+            </div>
+            <div id="profile-view-content"></div>
+        </div>
+    </div>
+
     <!-- Add Project Modal -->
     <div class="modal" id="add-project-modal">
-        <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-content">
             <div class="modal-header">
                 <h2>Add New Project</h2>
                 <button class="modal-close" onclick="closeAddProject()">&times;</button>
@@ -952,288 +959,26 @@
                 </div>
                 <div class="form-group">
                     <label>Craft Type *</label>
-                    <select id="project-craft-type" required onchange="showCraftFields()">
+                    <select id="project-craft-type" required>
                         <option value="">Select...</option>
                         <option value="Sewing">Sewing</option>
                         <option value="Knitting">Knitting</option>
                         <option value="Crochet">Crochet</option>
-                        <option value="Embroidery">Embroidery</option>
-                        <option value="Weaving">Weaving</option>
-                        <option value="Quilting">Quilting</option>
-                        <option value="Leather Work">Leather Work</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
-
-                <!-- Crochet Fields -->
-                <div id="crochet-fields" class="craft-specific-fields" style="display: none;">
-                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧶 Crochet Details</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Hook Size</label>
-                            <input type="text" id="crochet-hook-size" placeholder="e.g., 5mm, H/8">
-                        </div>
-                        <div class="form-group">
-                            <label>Yarn Weight</label>
-                            <input type="text" id="crochet-yarn-weight" placeholder="e.g., Worsted (4)">
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Yarn Brand</label>
-                            <input type="text" id="crochet-yarn-brand" placeholder="e.g., Lion Brand">
-                        </div>
-                        <div class="form-group">
-                            <label>Yarn Color</label>
-                            <input type="text" id="crochet-yarn-color" placeholder="e.g., Terracotta">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Yardage Needed</label>
-                        <input type="text" id="crochet-yardage" placeholder="e.g., 300 yards">
-                    </div>
-                    <div class="form-group">
-                        <label>Gauge</label>
-                        <input type="text" id="crochet-gauge" placeholder="e.g., 16 sts x 20 rows = 4 inches">
-                    </div>
-                    <div class="form-group">
-                        <label>🔗 Where to Buy Yarn</label>
-                        <input type="url" id="crochet-yarn-link" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label>🔗 Pattern Link (Optional)</label>
-                        <input type="url" id="crochet-pattern-link" placeholder="https://...">
-                    </div>
-                </div>
-
-                <!-- Knitting Fields -->
-                <div id="knitting-fields" class="craft-specific-fields" style="display: none;">
-                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧶 Knitting Details</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Needle Size</label>
-                            <input type="text" id="knitting-needle-size" placeholder="e.g., US 8, 5mm">
-                        </div>
-                        <div class="form-group">
-                            <label>Needle Type</label>
-                            <input type="text" id="knitting-needle-type" placeholder="e.g., Circular, DPN">
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Yarn Weight</label>
-                            <input type="text" id="knitting-yarn-weight" placeholder="e.g., DK (3)">
-                        </div>
-                        <div class="form-group">
-                            <label>Yarn Brand</label>
-                            <input type="text" id="knitting-yarn-brand" placeholder="e.g., Malabrigo">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Yardage Needed</label>
-                        <input type="text" id="knitting-yardage" placeholder="e.g., 400 yards">
-                    </div>
-                    <div class="form-group">
-                        <label>🔗 Where to Buy Yarn</label>
-                        <input type="url" id="knitting-yarn-link" placeholder="https://...">
-                    </div>
-                </div>
-
-                <!-- Sewing Fields -->
-                <div id="sewing-fields" class="craft-specific-fields" style="display: none;">
-                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧵 Sewing Details</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Needle Type</label>
-                            <input type="text" id="sewing-needle-type" placeholder="e.g., Universal 80/12">
-                        </div>
-                        <div class="form-group">
-                            <label>Fabric Type</label>
-                            <input type="text" id="sewing-fabric-type" placeholder="e.g., Cotton, Linen">
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Fabric Amount</label>
-                            <input type="text" id="sewing-fabric-amount" placeholder="e.g., 2 yards">
-                        </div>
-                        <div class="form-group">
-                            <label>Fabric Brand</label>
-                            <input type="text" id="sewing-fabric-brand" placeholder="e.g., Riley Blake">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Notions Needed</label>
-                        <input type="text" id="sewing-notions" placeholder="e.g., Buttons, zipper, interfacing">
-                    </div>
-                    <div class="form-group">
-                        <label>Pattern Size</label>
-                        <input type="text" id="sewing-pattern-size" placeholder="e.g., Medium, 10">
-                    </div>
-                    <div class="form-group">
-                        <label>🔗 Where to Buy Fabric</label>
-                        <input type="url" id="sewing-fabric-link" placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label>🔗 Pattern Link (Optional)</label>
-                        <input type="url" id="sewing-pattern-link" placeholder="https://...">
-                    </div>
-                </div>
-
-                <!-- Embroidery Fields -->
-                <div id="embroidery-fields" class="craft-specific-fields" style="display: none;">
-                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🪡 Embroidery Details</h3>
-                    <div class="form-group">
-                        <label>Thread Type</label>
-                        <input type="text" id="embroidery-thread-type" placeholder="e.g., DMC Floss">
-                    </div>
-                    <div class="form-group">
-                        <label>Thread Colors</label>
-                        <input type="text" id="embroidery-thread-colors" placeholder="e.g., 310, 666, 972">
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Fabric Type</label>
-                            <input type="text" id="embroidery-fabric-type" placeholder="e.g., Aida 14 count">
-                        </div>
-                        <div class="form-group">
-                            <label>Hoop Size</label>
-                            <input type="text" id="embroidery-hoop-size" placeholder="e.g., 6 inches">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>🔗 Supplies Link</label>
-                        <input type="url" id="embroidery-supplies-link" placeholder="https://...">
-                    </div>
-                </div>
-
-                <!-- Weaving Fields -->
-                <div id="weaving-fields" class="craft-specific-fields" style="display: none;">
-                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧵 Weaving Details</h3>
-                    <div class="form-group">
-                        <label>Loom Type</label>
-                        <input type="text" id="weaving-loom-type" placeholder="e.g., Rigid heddle">
-                    </div>
-                    <div class="form-group">
-                        <label>Yarn/Fiber Type</label>
-                        <input type="text" id="weaving-yarn-type" placeholder="e.g., Cotton warp, wool weft">
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Reed Size</label>
-                            <input type="text" id="weaving-reed-size" placeholder="e.g., 12 dent">
-                        </div>
-                        <div class="form-group">
-                            <label>Width</label>
-                            <input type="text" id="weaving-width" placeholder="e.g., 10 inches">
-                        </div>
-                        <div class="form-group">
-                            <label>Length</label>
-                            <input type="text" id="weaving-length" placeholder="e.g., 2 yards">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>🔗 Supplies Link</label>
-                        <input type="url" id="weaving-supplies-link" placeholder="https://...">
-                    </div>
-                </div>
-
-                <!-- Quilting Fields -->
-                <div id="quilting-fields" class="craft-specific-fields" style="display: none;">
-                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">🧵 Quilting Details</h3>
-                    <div class="form-group">
-                        <label>Quilt Size</label>
-                        <input type="text" id="quilting-quilt-size" placeholder="e.g., Throw (60x72)">
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Fabric Collection</label>
-                            <input type="text" id="quilting-fabric-collection" placeholder="e.g., Modern Solids">
-                        </div>
-                        <div class="form-group">
-                            <label>Batting Type</label>
-                            <input type="text" id="quilting-batting-type" placeholder="e.g., Cotton 80/20">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>🔗 Fabric Link</label>
-                        <input type="url" id="quilting-fabric-link" placeholder="https://...">
-                    </div>
-                </div>
-
-                <!-- Leather Work Fields -->
-                <div id="leather-fields" class="craft-specific-fields" style="display: none;">
-                    <h3 style="margin: 1.5rem 0 1rem; color: var(--terracotta); font-size: 1.1rem;">👜 Leather Work Details</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Leather Type</label>
-                            <input type="text" id="leather-leather-type" placeholder="e.g., Vegetable tanned">
-                        </div>
-                        <div class="form-group">
-                            <label>Leather Weight</label>
-                            <input type="text" id="leather-leather-weight" placeholder="e.g., 5-6 oz">
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label>Thread Type</label>
-                            <input type="text" id="leather-thread-type" placeholder="e.g., Waxed polyester">
-                        </div>
-                        <div class="form-group">
-                            <label>Needle Size</label>
-                            <input type="text" id="leather-needle-size" placeholder="e.g., Size 2">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Hardware</label>
-                        <input type="text" id="leather-hardware" placeholder="e.g., Brass rivets, D-rings">
-                    </div>
-                    <div class="form-group">
-                        <label>🔗 Supplies Link</label>
-                        <input type="url" id="leather-supplies-link" placeholder="https://...">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Create Project</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Project</button>
             </form>
         </div>
     </div>
 
-    <!-- Send Kudos Modal -->
-    <div class="modal" id="kudos-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Send Kudos! 🎉</h2>
-                <button class="modal-close" onclick="closeKudos()">&times;</button>
-            </div>
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">
-                    <span onclick="selectEmoji('👋')" style="cursor: pointer;">👋</span>
-                    <span onclick="selectEmoji('🎉')" style="cursor: pointer;">🎉</span>
-                    <span onclick="selectEmoji('⭐')" style="cursor: pointer;">⭐</span>
-                    <span onclick="selectEmoji('💪')" style="cursor: pointer;">💪</span>
-                    <span onclick="selectEmoji('🔥')" style="cursor: pointer;">🔥</span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Add a message (optional)</label>
-                <textarea id="kudos-message" placeholder="Great work on your project!"></textarea>
-            </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="sendKudos()">Send Kudos!</button>
-        </div>
-    </div>
-
     <script>
-const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
-
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
-
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
         let userProfile = null;
-        let selectedKudosUser = null;
-        let selectedKudosEmoji = '👋';
         let allMembers = [];
 
         async function checkAuth() {
@@ -1254,7 +999,15 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
                 .single();
 
             userProfile = profile;
-            document.getElementById('header-avatar').textContent = profile.avatar_initials;
+            
+            // Update header avatar
+            const headerAvatar = document.getElementById('header-avatar');
+            if (profile.profile_picture_url) {
+                headerAvatar.innerHTML = `<img src="${profile.profile_picture_url}" alt="${profile.full_name}">`;
+            } else {
+                headerAvatar.textContent = profile.avatar_initials;
+            }
+            
             document.getElementById('welcome-text').textContent = `Welcome back, ${profile.full_name.split(' ')[0]}! 👋`;
 
             await loadAllData();
@@ -1263,11 +1016,7 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
 
         async function loadAllData() {
             await Promise.all([
-                loadDailyInspiration(),
                 loadQuickStats(),
-                loadGoals(),
-                loadFriendActivity(),
-                loadTrendingProjects(),
                 loadMyProjects(),
                 loadCommunityFeed(),
                 loadFriends(),
@@ -1277,13 +1026,6 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
             ]);
         }
 
-        async function loadDailyInspiration() {
-            const { data } = await supabase.rpc('get_daily_inspiration');
-            if (data) {
-                document.getElementById('daily-inspiration').textContent = `✨ ${data}`;
-            }
-        }
-
         async function loadQuickStats() {
             const { data: friendsCount } = await supabase.rpc('get_friends_count', { user_uuid: currentUser.id });
             
@@ -1291,98 +1033,6 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
             document.getElementById('stat-likes').textContent = userProfile.total_likes_received || 0;
             document.getElementById('stat-friends').textContent = friendsCount || 0;
             document.getElementById('stat-streak').textContent = userProfile.streak_days || 0;
-        }
-
-        async function loadGoals() {
-            const { data: goals } = await supabase
-                .from('crafting_goals')
-                .select('*')
-                .eq('user_id', currentUser.id)
-                .order('created_at', { ascending: false })
-                .limit(5);
-
-            const container = document.getElementById('goals-list');
-            
-            if (!goals || goals.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted); font-family: -apple-system, sans-serif;">No goals yet. Add one above!</p>';
-                return;
-            }
-
-            container.innerHTML = goals.map(goal => `
-                <div class="goal-item ${goal.is_completed ? 'completed' : ''}" onclick="toggleGoal('${goal.id}', ${goal.is_completed})">
-                    <div class="goal-checkbox ${goal.is_completed ? 'checked' : ''}">
-                        ${goal.is_completed ? '✓' : ''}
-                    </div>
-                    <span style="font-family: -apple-system, sans-serif;">${goal.goal_text}</span>
-                </div>
-            `).join('');
-        }
-
-        async function addGoal() {
-            const input = document.getElementById('new-goal');
-            const text = input.value.trim();
-            if (!text) return;
-
-            await supabase.from('crafting_goals').insert({
-                user_id: currentUser.id,
-                goal_text: text
-            });
-
-            input.value = '';
-            loadGoals();
-        }
-
-        async function toggleGoal(goalId, currentStatus) {
-            await supabase.from('crafting_goals').update({
-                is_completed: !currentStatus,
-                completed_at: !currentStatus ? new Date().toISOString() : null
-            }).eq('id', goalId);
-
-            loadGoals();
-        }
-
-        async function loadFriendActivity() {
-            const { data } = await supabase.rpc('get_friend_activity', { user_uuid: currentUser.id, limit_count: 10 });
-            
-            const container = document.getElementById('friend-activity');
-            
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💫</div><p>No friend activity yet. Follow some makers!</p></div>';
-                return;
-            }
-
-            container.innerHTML = data.map(activity => `
-                <div class="activity-item">
-                    <div class="activity-avatar">${activity.avatar_initials}</div>
-                    <div class="activity-content">
-                        <div class="activity-text">
-                            <strong>${activity.full_name}</strong> ${getActivityText(activity)}
-                        </div>
-                        <div class="activity-time">${getTimeAgo(activity.created_at)}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function loadTrendingProjects() {
-            const { data } = await supabase.rpc('get_trending_projects', { limit_count: 5 });
-            
-            const container = document.getElementById('trending-projects');
-            
-            if (!data || data.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted); font-family: -apple-system, sans-serif;">No trending projects this week</p>';
-                return;
-            }
-
-            container.innerHTML = data.map((project, idx) => `
-                <div class="trending-item" onclick="alert('Project details coming soon!')">
-                    <div class="trending-rank">${idx + 1}</div>
-                    <div class="trending-info">
-                        <div class="trending-title">${project.title}</div>
-                        <div class="trending-author">by ${project.creator_name} · ${project.likes_count} ❤️</div>
-                    </div>
-                </div>
-            `).join('');
         }
 
         async function loadMyProjects() {
@@ -1395,7 +1045,15 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
             const container = document.getElementById('my-projects-container');
             
             if (!projects || projects.length === 0) {
-                container.innerHTML = '<div class="card"><div class="empty-state"><div class="empty-state-icon">🎨</div><p>No projects yet!</p><button class="btn btn-primary" style="margin-top: 1rem;" onclick="showAddProject()">Create Your First Project</button></div></div>';
+                container.innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🎨</div>
+                            <p>No projects yet!</p>
+                            <button class="btn btn-primary" style="margin-top: 1rem;" onclick="showAddProject()">Create Your First Project</button>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
@@ -1403,208 +1061,93 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
         }
 
         async function loadCommunityFeed() {
-            const { data: projects } = await supabase
-                .from('projects')
-                .select('*, profiles(full_name, avatar_initials)')
-                .order('created_at', { ascending: false })
-                .limit(20);
+            const { data: feedItems } = await supabase.rpc('get_user_feed', { 
+                user_uuid: currentUser.id,
+                limit_count: 20
+            });
 
             const container = document.getElementById('community-feed');
             
-            if (!projects || projects.length === 0) {
-                container.innerHTML = '<div class="card"><div class="empty-state"><div class="empty-state-icon">🌊</div><p>No projects yet!</p></div></div>';
+            if (!feedItems || feedItems.length === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🌊</div>
+                            <p>No activity yet. Follow some projects and makers!</p>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
-            container.innerHTML = `<div class="project-grid">${projects.map(project => createProjectCard(project, false)).join('')}</div>`;
-            
-            // Check like status for each project
-            projects.forEach(project => checkLikeStatus(project.id));
-        }
-
-        function createProjectCard(project, isOwner) {
-            const creator = project.profiles || { full_name: 'You', avatar_initials: userProfile.avatar_initials };
-            
-            // Create brief craft details preview
-            let craftPreview = '';
-            if (project.craft_details && Object.keys(project.craft_details).length > 0) {
-                const details = project.craft_details;
-                if (project.craft_type === 'Crochet' && details.hook_size) {
-                    craftPreview = ` • Hook: ${details.hook_size}`;
-                } else if (project.craft_type === 'Knitting' && details.needle_size) {
-                    craftPreview = ` • Needles: ${details.needle_size}`;
-                } else if (project.craft_type === 'Sewing' && details.fabric_type) {
-                    craftPreview = ` • ${details.fabric_type}`;
-                }
-            }
-            
-            return `
-                <div class="project-card" onclick="showProjectDetails('${project.id}')">
-                    <div class="project-image">
-                        ${getCraftIcon(project.craft_type)}
-                        ${!isOwner ? `<button class="like-btn" id="like-btn-${project.id}" onclick="toggleLike(event, '${project.id}')">🤍</button>` : ''}
-                    </div>
-                    <div class="project-info">
-                        ${!isOwner ? `
-                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold;">${creator.avatar_initials}</div>
-                                <span style="font-size: 0.85rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">${creator.full_name}</span>
+            container.innerHTML = feedItems.map(item => `
+                <div class="feed-item">
+                    <div class="feed-header">
+                        <div class="feed-avatar" onclick="showUserProfile('${item.user_id}')">
+                            ${item.profile_picture_url ? 
+                                `<img src="${item.profile_picture_url}" alt="${item.username}">` : 
+                                item.avatar_initials
+                            }
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; cursor: pointer;" onclick="showUserProfile('${item.user_id}')">
+                                @${item.username}
                             </div>
-                        ` : ''}
-                        <h3 class="project-title">${project.title}</h3>
-                        <p style="font-size: 0.85rem; color: var(--text-muted); font-family: -apple-system, sans-serif; margin-bottom: 0.5rem;">${project.craft_type}${craftPreview}</p>
-                        <div class="project-meta">
-                            <span>❤️ ${project.likes_count || 0}</span>
-                            <span>💬 ${project.comments_count || 0}</span>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">
+                                ${getFeedTypeText(item.type)} in "${item.project_title}"
+                            </div>
                         </div>
                     </div>
+                    <div class="feed-content">${formatMentions(item.content)}</div>
+                    <div class="feed-time">${getTimeAgo(item.created_at)}</div>
                 </div>
-            `;
+            `).join('');
         }
 
-        async function showProjectDetails(projectId) {
-            const { data: project } = await supabase
-                .from('projects')
-                .select('*, profiles(full_name, avatar_initials)')
-                .eq('id', projectId)
-                .single();
-
-            if (!project) return;
-
-            const isOwner = project.user_id === currentUser.id;
-            const craftDetailsHTML = displayCraftDetails(project.craft_type, project.craft_details);
-
-            const modalHTML = `
-                <div class="modal show" id="project-detail-temp" onclick="if(event.target === this) this.remove()">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>${project.title}</h2>
-                            <button class="modal-close" onclick="document.getElementById('project-detail-temp').remove()">&times;</button>
-                        </div>
-                        
-                        <div style="margin-bottom: 1rem;">
-                            <div style="display: inline-block; padding: 0.5rem 1rem; background: var(--light-beige); border-radius: 20px; font-family: -apple-system, sans-serif; font-size: 0.9rem;">
-                                ${getCraftIcon(project.craft_type)} ${project.craft_type}
-                            </div>
-                        </div>
-
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--light-beige);">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: bold;">${project.profiles.avatar_initials}</div>
-                            <div>
-                                <div style="font-weight: 600;">${project.profiles.full_name}</div>
-                                <div style="font-size: 0.85rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">Posted ${getTimeAgo(project.created_at)}</div>
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 2rem;">
-                            <h3 style="margin-bottom: 0.75rem;">About This Project</h3>
-                            <p style="font-family: -apple-system, sans-serif; line-height: 1.6;">${project.description || 'No description provided.'}</p>
-                        </div>
-
-                        ${craftDetailsHTML}
-
-                        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--light-beige); display: flex; gap: 2rem; font-family: -apple-system, sans-serif; color: var(--text-muted);">
-                            <span>❤️ ${project.likes_count || 0} likes</span>
-                            <span>💬 ${project.comments_count || 0} comments</span>
-                            <span>👁️ ${project.views_count || 0} views</span>
-                        </div>
-
-                        ${!isOwner ? `
-                            <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="toggleLike(event, '${project.id}'); setTimeout(() => document.getElementById('project-detail-temp').remove(), 500);" id="detail-like-btn-${project.id}">
-                                Like This Project ❤️
-                            </button>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-
-            document.body.insertAdjacentHTML('beforeend', modalHTML);
-            
-            // Check like status
-            if (!isOwner) {
-                const { data } = await supabase
-                    .from('likes')
-                    .select('id')
-                    .eq('project_id', projectId)
-                    .eq('user_id', currentUser.id)
-                    .single();
-
-                const btn = document.getElementById(`detail-like-btn-${project.id}`);
-                if (btn && data) {
-                    btn.textContent = 'Unlike ❤️';
-                }
+        function getFeedTypeText(type) {
+            switch(type) {
+                case 'project_update': return 'posted an update';
+                case 'comment': return 'commented';
+                case 'friend_project_update': return 'updated their project';
+                default: return 'posted';
             }
-        }
-
-        async function checkLikeStatus(projectId) {
-            const { data } = await supabase
-                .from('likes')
-                .select('id')
-                .eq('project_id', projectId)
-                .eq('user_id', currentUser.id)
-                .single();
-
-            const btn = document.getElementById(`like-btn-${projectId}`);
-            if (btn && data) {
-                btn.textContent = '❤️';
-                btn.classList.add('liked');
-            }
-        }
-
-        async function toggleLike(event, projectId) {
-            event.stopPropagation();
-            
-            const btn = document.getElementById(`like-btn-${projectId}`);
-            const isLiked = btn.classList.contains('liked');
-
-            if (isLiked) {
-                await supabase.from('likes').delete().eq('project_id', projectId).eq('user_id', currentUser.id);
-                btn.textContent = '🤍';
-                btn.classList.remove('liked');
-            } else {
-                await supabase.from('likes').insert({ project_id: projectId, user_id: currentUser.id });
-                btn.textContent = '❤️';
-                btn.classList.add('liked');
-                btn.classList.add('liked');
-                setTimeout(() => btn.classList.remove('liked'), 500);
-            }
-
-            loadCommunityFeed();
-            loadTrendingProjects();
         }
 
         async function loadFriends() {
             const { data: friendData } = await supabase
                 .from('friends')
-                .select('user1_id, user2_id, profiles!friends_user1_id_fkey(full_name, avatar_initials, projects_count), profiles!friends_user2_id_fkey(full_name, avatar_initials, projects_count)')
+                .select('user1_id, user2_id')
                 .or(`user1_id.eq.${currentUser.id},user2_id.eq.${currentUser.id}`);
 
             const container = document.getElementById('friends-container');
             
             if (!friendData || friendData.length === 0) {
-                container.innerHTML = '<div class="card"><div class="empty-state"><div class="empty-state-icon">💫</div><p>No friends yet! Follow someone back to become friends.</p></div></div>';
+                container.innerHTML = `<div class="card"><div class="empty-state"><div class="empty-state-icon">💫</div><p>No friends yet!</p></div></div>`;
                 return;
             }
 
-            const friends = friendData.map(f => {
-                if (f.user1_id === currentUser.id) {
-                    return { ...f.profiles, id: f.user2_id };
-                } else {
-                    return { ...f.profiles, id: f.user1_id };
-                }
-            });
+            const friendIds = friendData.map(f => 
+                f.user1_id === currentUser.id ? f.user2_id : f.user1_id
+            );
+
+            const { data: friends } = await supabase
+                .from('profiles')
+                .select('*')
+                .in('id', friendIds);
 
             container.innerHTML = `
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
                     ${friends.map(friend => `
                         <div class="card" style="text-align: center;">
-                            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--terracotta); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold;">${friend.avatar_initials}</div>
-                            <h3 style="margin-bottom: 0.5rem;">${friend.full_name}</h3>
-                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; margin-bottom: 1rem;">🎨 ${friend.projects_count || 0} projects</p>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <button class="btn btn-primary btn-small" style="flex: 1;" onclick="openChat('${friend.id}')">💬 Message</button>
-                                <button class="btn btn-primary btn-small" onclick="showKudos('${friend.id}')">🎉</button>
+                            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--terracotta); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold; overflow: hidden; cursor: pointer;" onclick="showUserProfile('${friend.id}')">
+                                ${friend.profile_picture_url ? 
+                                    `<img src="${friend.profile_picture_url}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                                    friend.avatar_initials
+                                }
                             </div>
+                            <h3 style="margin-bottom: 0.5rem; cursor: pointer;" onclick="showUserProfile('${friend.id}')">@${friend.username}</h3>
+                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; margin-bottom: 1rem;">${friend.full_name}</p>
+                            <button class="btn btn-primary btn-small" style="width: 100%;" onclick="openChat('${friend.id}')">💬 Message</button>
                         </div>
                     `).join('')}
                 </div>
@@ -1633,11 +1176,17 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
             container.innerHTML = `
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
                     ${members.map(member => `
-                        <div class="card" style="text-align: center;">
-                            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--terracotta); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold;">${member.avatar_initials}</div>
-                            <h3 style="margin-bottom: 0.5rem;">${member.full_name}</h3>
-                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; margin-bottom: 1rem;">${member.location || 'Location not set'}</p>
-                            <button class="btn btn-primary btn-small" style="width: 100%;" onclick="toggleFollow('${member.id}')" id="follow-btn-${member.id}">Follow</button>
+                        <div class="card" style="text-align: center; cursor: pointer;" onclick="showUserProfile('${member.id}')">
+                            <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--terracotta); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: bold; overflow: hidden;">
+                                ${member.profile_picture_url ? 
+                                    `<img src="${member.profile_picture_url}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                                    member.avatar_initials
+                                }
+                            </div>
+                            <h3 style="margin-bottom: 0.5rem;">@${member.username}</h3>
+                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; margin-bottom: 0.5rem;">${member.full_name}</p>
+                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; font-size: 0.85rem; margin-bottom: 1rem;">${member.location || 'Location not set'}</p>
+                            <button class="btn btn-primary btn-small" style="width: 100%;" onclick="event.stopPropagation(); toggleFollow('${member.id}')" id="follow-btn-${member.id}">Follow</button>
                         </div>
                     `).join('')}
                 </div>
@@ -1648,7 +1197,10 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
 
         function searchMembers() {
             const query = document.getElementById('member-search').value.toLowerCase();
-            const filtered = allMembers.filter(m => m.full_name.toLowerCase().includes(query));
+            const filtered = allMembers.filter(m => 
+                m.full_name.toLowerCase().includes(query) ||
+                m.username.toLowerCase().includes(query)
+            );
             displayMembers(filtered);
         }
 
@@ -1689,10 +1241,285 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
             loadQuickStats();
         }
 
+        function createProjectCard(project, isOwner) {
+            return `
+                <div class="project-card">
+                    <div class="project-image" onclick="showProjectDetail('${project.id}')">
+                        ${getCraftIcon(project.craft_type)}
+                        ${!isOwner ? `
+                            <button class="like-btn" id="like-btn-${project.id}" onclick="event.stopPropagation(); toggleLike(event, '${project.id}')">🤍</button>
+                            <button class="follow-btn-small" id="follow-project-${project.id}" onclick="event.stopPropagation(); toggleProjectFollow('${project.id}')">Follow</button>
+                        ` : ''}
+                    </div>
+                    <div class="project-info" onclick="showProjectDetail('${project.id}')">
+                        <h3 class="project-title">${project.title}</h3>
+                        <div class="project-meta">
+                            <span>❤️ ${project.likes_count || 0}</span>
+                            <span>💬 ${project.comments_count || 0}</span>
+                        </div>
+                        ${isOwner ? `
+                            <button class="btn btn-danger btn-small" style="width: 100%; margin-top: 1rem;" onclick="event.stopPropagation(); deleteProject('${project.id}')">
+                                🗑️ Delete
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function toggleProjectFollow(projectId) {
+            const { data: existing } = await supabase
+                .from('project_followers')
+                .select('id')
+                .eq('project_id', projectId)
+                .eq('user_id', currentUser.id)
+                .single();
+
+            if (existing) {
+                await supabase.from('project_followers').delete().eq('id', existing.id);
+            } else {
+                await supabase.from('project_followers').insert({
+                    project_id: projectId,
+                    user_id: currentUser.id
+                });
+            }
+
+            const btn = document.getElementById(`follow-project-${projectId}`);
+            if (btn) {
+                btn.textContent = existing ? 'Follow' : 'Following';
+                btn.className = existing ? 'follow-btn-small' : 'follow-btn-small following';
+            }
+        }
+
+        async function toggleLike(event, projectId) {
+            const btn = document.getElementById(`like-btn-${projectId}`);
+            const isLiked = btn.classList.contains('liked');
+
+            if (isLiked) {
+                await supabase.from('likes').delete().eq('project_id', projectId).eq('user_id', currentUser.id);
+                btn.textContent = '🤍';
+                btn.classList.remove('liked');
+            } else {
+                await supabase.from('likes').insert({ project_id: projectId, user_id: currentUser.id });
+                btn.textContent = '❤️';
+                btn.classList.add('liked');
+                setTimeout(() => btn.classList.remove('liked'), 500);
+            }
+
+            loadMyProjects();
+            loadQuickStats();
+        }
+
+        async function deleteProject(projectId) {
+            if (!confirm('Are you sure you want to delete this project? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                await supabase.from('projects').delete().eq('id', projectId);
+                await supabase.from('profiles').update({ 
+                    projects_count: Math.max(0, userProfile.projects_count - 1)
+                }).eq('id', currentUser.id);
+                
+                alert('Project deleted successfully!');
+                await loadUserData();
+            } catch (error) {
+                console.error('Error deleting project:', error);
+                alert('Failed to delete project');
+            }
+        }
+
+        async function showProjectDetail(projectId) {
+            alert('Project detail view - coming in next update!');
+        }
+
+        function showAddProject() {
+            document.getElementById('add-project-modal').classList.add('show');
+        }
+
+        function closeAddProject() {
+            document.getElementById('add-project-modal').classList.remove('show');
+        }
+
+        async function handleAddProject(event) {
+            event.preventDefault();
+            
+            await supabase.from('projects').insert({
+                user_id: currentUser.id,
+                title: document.getElementById('project-title').value,
+                description: document.getElementById('project-description').value,
+                craft_type: document.getElementById('project-craft-type').value,
+                status: 'in_progress'
+            });
+
+            await supabase.from('profiles').update({ 
+                projects_count: userProfile.projects_count + 1 
+            }).eq('id', currentUser.id);
+
+            closeAddProject();
+            event.target.reset();
+            await loadUserData();
+        }
+
+        function showEditProfile() {
+            document.getElementById('edit-username').value = userProfile.username;
+            document.getElementById('edit-fullname').value = userProfile.full_name;
+            document.getElementById('edit-bio').value = userProfile.bio || '';
+            document.getElementById('edit-location').value = userProfile.location || '';
+            document.getElementById('edit-interests').value = userProfile.interests ? userProfile.interests.join(', ') : '';
+            
+            const preview = document.getElementById('profile-pic-preview');
+            if (userProfile.profile_picture_url) {
+                preview.innerHTML = `<img src="${userProfile.profile_picture_url}">`;
+            } else {
+                preview.innerHTML = `<span id="profile-pic-initials">${userProfile.avatar_initials}</span>`;
+            }
+            
+            document.getElementById('edit-profile-modal').classList.add('show');
+            hideAllDropdowns();
+        }
+
+        function closeEditProfile() {
+            document.getElementById('edit-profile-modal').classList.remove('show');
+        }
+
+        async function handleProfilePictureChange(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${currentUser.id}/${Date.now()}.${fileExt}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('profile-pictures')
+                .upload(fileName, file);
+
+            if (uploadError) {
+                console.error('Upload error:', uploadError);
+                return;
+            }
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('profile-pictures')
+                .getPublicUrl(fileName);
+
+            document.getElementById('profile-pic-preview').innerHTML = `<img src="${publicUrl}">`;
+            userProfile.profile_picture_url = publicUrl;
+        }
+
+        async function handleUpdateProfile(event) {
+            event.preventDefault();
+
+            const interests = document.getElementById('edit-interests').value
+                .split(',')
+                .map(i => i.trim())
+                .filter(i => i);
+
+            await supabase.from('profiles').update({
+                full_name: document.getElementById('edit-fullname').value,
+                bio: document.getElementById('edit-bio').value,
+                location: document.getElementById('edit-location').value,
+                interests: interests,
+                profile_picture_url: userProfile.profile_picture_url
+            }).eq('id', currentUser.id);
+
+            closeEditProfile();
+            await loadUserData();
+            alert('Profile updated!');
+        }
+
+        function showSettings() {
+            document.getElementById('setting-measurement').value = userProfile.measurement_system || 'metric';
+            document.getElementById('setting-weight').value = userProfile.weight_unit || 'kg';
+            document.getElementById('setting-length').value = userProfile.length_unit || 'cm';
+            
+            document.getElementById('settings-modal').classList.add('show');
+            hideAllDropdowns();
+        }
+
+        function closeSettings() {
+            document.getElementById('settings-modal').classList.remove('show');
+        }
+
+        async function handleUpdateSettings(event) {
+            event.preventDefault();
+
+            await supabase.from('profiles').update({
+                measurement_system: document.getElementById('setting-measurement').value,
+                weight_unit: document.getElementById('setting-weight').value,
+                length_unit: document.getElementById('setting-length').value
+            }).eq('id', currentUser.id);
+
+            closeSettings();
+            await loadUserData();
+            alert('Settings saved!');
+        }
+
+        async function showUserProfile(userId) {
+            const { data: profile } = await supabase.rpc('get_user_profile', { user_uuid: userId });
+            
+            if (!profile || profile.length === 0) return;
+            
+            const user = profile[0];
+            const isOwnProfile = userId === currentUser.id;
+
+            const content = `
+                <div style="text-align: center;">
+                    <div style="width: 120px; height: 120px; border-radius: 50%; background: var(--terracotta); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: bold; overflow: hidden;">
+                        ${user.profile_picture_url ? 
+                            `<img src="${user.profile_picture_url}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                            user.avatar_initials
+                        }
+                    </div>
+                    <h2 style="margin-bottom: 0.5rem;">@${user.username}</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">${user.full_name}</p>
+                    ${user.bio ? `<p style="margin-bottom: 1rem;">${user.bio}</p>` : ''}
+                    ${user.location ? `<p style="color: var(--text-muted); margin-bottom: 1rem;">📍 ${user.location}</p>` : ''}
+                    ${user.interests && user.interests.length > 0 ? `
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;">
+                            ${user.interests.map(interest => `
+                                <span style="padding: 0.4rem 0.8rem; background: var(--light-beige); border-radius: 20px; font-size: 0.85rem;">${interest}</span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; padding: 1rem; background: var(--cream); border-radius: 8px;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${user.projects_count}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Projects</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${user.followers_count}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Followers</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${user.level}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Level</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${user.total_likes_received}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Likes</div>
+                        </div>
+                    </div>
+                    ${!isOwnProfile ? `
+                        <button class="btn btn-primary" style="width: 100%;" onclick="toggleFollow('${userId}'); setTimeout(() => closeProfileView(), 500);">
+                            Follow
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+
+            document.getElementById('profile-view-content').innerHTML = content;
+            document.getElementById('profile-view-modal').classList.add('show');
+        }
+
+        function closeProfileView() {
+            document.getElementById('profile-view-modal').classList.remove('show');
+        }
+
         async function loadNotifications() {
             const { data: notifs } = await supabase
                 .from('notifications')
-                .select('*, profiles(full_name, avatar_initials)')
+                .select('*')
                 .eq('user_id', currentUser.id)
                 .order('created_at', { ascending: false})
                 .limit(20);
@@ -1727,317 +1554,19 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
         }
 
         async function loadConversations() {
-            // Get all friends
-            const { data: friendData } = await supabase
-                .from('friends')
-                .select('user1_id, user2_id')
-                .or(`user1_id.eq.${currentUser.id},user2_id.eq.${currentUser.id}`);
-
-            if (!friendData || friendData.length === 0) {
-                document.getElementById('conversations-list').innerHTML = '<li class="dropdown-item">No conversations yet. Message your friends!</li>';
-                document.getElementById('chat-area').innerHTML = '<div class="card"><div class="empty-state"><p>No friends to chat with yet!</p></div></div>';
-                return;
-            }
-
-            // Get latest message with each friend
-            const conversations = [];
-            for (const friend of friendData) {
-                const friendId = friend.user1_id === currentUser.id ? friend.user2_id : friend.user1_id;
-                
-                const { data: lastMsg } = await supabase
-                    .from('messages')
-                    .select('*, profiles(full_name, avatar_initials)')
-                    .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${currentUser.id})`)
-                    .order('created_at', { ascending: false })
-                    .limit(1)
-                    .single();
-
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', friendId)
-                    .single();
-
-                conversations.push({
-                    friendId,
-                    profile,
-                    lastMsg
-                });
-            }
-
-            // Message count
-            const { data: unreadMsgs } = await supabase
-                .from('messages')
-                .select('id')
-                .eq('receiver_id', currentUser.id)
-                .eq('is_read', false);
-
-            const unreadCount = unreadMsgs?.length || 0;
-            const badge = document.getElementById('message-count');
-            if (unreadCount > 0) {
-                badge.textContent = unreadCount;
-                badge.style.display = 'flex';
-            } else {
-                badge.style.display = 'none';
-            }
-
-            // Dropdown
-            const dropdown = document.getElementById('conversations-list');
-            dropdown.innerHTML = conversations.map(conv => `
-                <li class="message-item" onclick="openChat('${conv.friendId}')">
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">${conv.profile.avatar_initials}</div>
-                    <div style="flex: 1;">
-                        <div style="font-weight: 600;">${conv.profile.full_name}</div>
-                        <div style="font-size: 0.85rem; color: var(--text-muted);">${conv.lastMsg?.content.substring(0, 30) || 'Start chatting...'}</div>
-                    </div>
-                </li>
-            `).join('');
-
-            // Chat area
-            document.getElementById('chat-area').innerHTML = `
-                <div class="card">
-                    <h3>Select a friend to start chatting</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
-                        ${conversations.map(conv => `
-                            <div onclick="openChat('${conv.friendId}')" style="text-align: center; padding: 1rem; background: var(--cream); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
-                                <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 0.5rem;">${conv.profile.avatar_initials}</div>
-                                <div style="font-family: -apple-system, sans-serif; font-size: 0.9rem;">${conv.profile.full_name}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
+            document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">Messages coming soon!</div>';
+            document.getElementById('chat-area').innerHTML = '<div class="card"><p>Messaging feature coming soon!</p></div>';
         }
 
         async function openChat(friendId) {
-            const { data: friend } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', friendId)
-                .single();
-
-            const { data: messages } = await supabase
-                .from('messages')
-                .select('*')
-                .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${currentUser.id})`)
-                .order('created_at', { ascending: true });
-
-            // Mark messages as read
-            await supabase
-                .from('messages')
-                .update({ is_read: true })
-                .eq('receiver_id', currentUser.id)
-                .eq('sender_id', friendId);
-
-            document.getElementById('chat-area').innerHTML = `
-                <div class="chat-container">
-                    <div class="chat-header">
-                        <div>
-                            <div style="font-weight: 600;">${friend.full_name}</div>
-                            <div style="font-size: 0.85rem; opacity: 0.9;">Friend</div>
-                        </div>
-                        <button onclick="loadConversations()" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.5rem;">&times;</button>
-                    </div>
-                    <div class="chat-messages" id="chat-messages">
-                        ${messages?.map(msg => `
-                            <div class="chat-message ${msg.sender_id === currentUser.id ? 'sent' : 'received'}">
-                                <div class="chat-bubble">${msg.content}</div>
-                            </div>
-                        `).join('') || '<p style="text-align: center; color: var(--text-muted);">No messages yet. Say hi!</p>'}
-                    </div>
-                    <div class="chat-input-area">
-                        <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendMessage('${friendId}')">
-                        <button onclick="sendMessage('${friendId}')">Send</button>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('chat-messages').scrollTop = 999999;
-            showSection('chat');
-            hideAllDropdowns();
-        }
-
-        async function sendMessage(friendId) {
-            const input = document.getElementById('chat-input');
-            const content = input.value.trim();
-            if (!content) return;
-
-            await supabase.from('messages').insert({
-                sender_id: currentUser.id,
-                receiver_id: friendId,
-                content: content
-            });
-
-            input.value = '';
-            openChat(friendId);
-        }
-
-        function showKudos(userId) {
-            selectedKudosUser = userId;
-            document.getElementById('kudos-modal').classList.add('show');
-        }
-
-        function closeKudos() {
-            document.getElementById('kudos-modal').classList.remove('show');
-            document.getElementById('kudos-message').value = '';
-        }
-
-        function selectEmoji(emoji) {
-            selectedKudosEmoji = emoji;
-        }
-
-        async function sendKudos() {
-            const message = document.getElementById('kudos-message').value.trim();
-            
-            await supabase.from('kudos').insert({
-                from_user_id: currentUser.id,
-                to_user_id: selectedKudosUser,
-                emoji: selectedKudosEmoji,
-                message: message || null
-            });
-
-            closeKudos();
-            alert('Kudos sent! 🎉');
-        }
-
-        function showAddProject() {
-            document.getElementById('add-project-modal').classList.add('show');
-        }
-
-        function closeAddProject() {
-            document.getElementById('add-project-modal').classList.remove('show');
-            // Reset form and hide all craft fields
-            document.querySelectorAll('.craft-specific-fields').forEach(el => el.style.display = 'none');
-        }
-
-        function showCraftFields() {
-            const craftType = document.getElementById('project-craft-type').value;
-            
-            // Hide all craft-specific fields
-            document.querySelectorAll('.craft-specific-fields').forEach(el => {
-                el.style.display = 'none';
-            });
-
-            // Show relevant fields based on craft type
-            const fieldMap = {
-                'Crochet': 'crochet-fields',
-                'Knitting': 'knitting-fields',
-                'Sewing': 'sewing-fields',
-                'Embroidery': 'embroidery-fields',
-                'Weaving': 'weaving-fields',
-                'Quilting': 'quilting-fields',
-                'Leather Work': 'leather-fields'
-            };
-
-            const fieldId = fieldMap[craftType];
-            if (fieldId) {
-                document.getElementById(fieldId).style.display = 'block';
-            }
-        }
-
-        function getCraftDetails(craftType) {
-            const details = {};
-
-            if (craftType === 'Crochet') {
-                details.hook_size = document.getElementById('crochet-hook-size').value;
-                details.yarn_weight = document.getElementById('crochet-yarn-weight').value;
-                details.yarn_brand = document.getElementById('crochet-yarn-brand').value;
-                details.yarn_color = document.getElementById('crochet-yarn-color').value;
-                details.yardage = document.getElementById('crochet-yardage').value;
-                details.gauge = document.getElementById('crochet-gauge').value;
-                details.yarn_link = document.getElementById('crochet-yarn-link').value;
-                details.pattern_link = document.getElementById('crochet-pattern-link').value;
-            } else if (craftType === 'Knitting') {
-                details.needle_size = document.getElementById('knitting-needle-size').value;
-                details.needle_type = document.getElementById('knitting-needle-type').value;
-                details.yarn_weight = document.getElementById('knitting-yarn-weight').value;
-                details.yarn_brand = document.getElementById('knitting-yarn-brand').value;
-                details.yardage = document.getElementById('knitting-yardage').value;
-                details.yarn_link = document.getElementById('knitting-yarn-link').value;
-            } else if (craftType === 'Sewing') {
-                details.needle_type = document.getElementById('sewing-needle-type').value;
-                details.fabric_type = document.getElementById('sewing-fabric-type').value;
-                details.fabric_amount = document.getElementById('sewing-fabric-amount').value;
-                details.fabric_brand = document.getElementById('sewing-fabric-brand').value;
-                details.notions = document.getElementById('sewing-notions').value;
-                details.pattern_size = document.getElementById('sewing-pattern-size').value;
-                details.fabric_link = document.getElementById('sewing-fabric-link').value;
-                details.pattern_link = document.getElementById('sewing-pattern-link').value;
-            } else if (craftType === 'Embroidery') {
-                details.thread_type = document.getElementById('embroidery-thread-type').value;
-                details.thread_colors = document.getElementById('embroidery-thread-colors').value;
-                details.fabric_type = document.getElementById('embroidery-fabric-type').value;
-                details.hoop_size = document.getElementById('embroidery-hoop-size').value;
-                details.supplies_link = document.getElementById('embroidery-supplies-link').value;
-            } else if (craftType === 'Weaving') {
-                details.loom_type = document.getElementById('weaving-loom-type').value;
-                details.yarn_type = document.getElementById('weaving-yarn-type').value;
-                details.reed_size = document.getElementById('weaving-reed-size').value;
-                details.width = document.getElementById('weaving-width').value;
-                details.length = document.getElementById('weaving-length').value;
-                details.supplies_link = document.getElementById('weaving-supplies-link').value;
-            } else if (craftType === 'Quilting') {
-                details.quilt_size = document.getElementById('quilting-quilt-size').value;
-                details.fabric_collection = document.getElementById('quilting-fabric-collection').value;
-                details.batting_type = document.getElementById('quilting-batting-type').value;
-                details.fabric_link = document.getElementById('quilting-fabric-link').value;
-            } else if (craftType === 'Leather Work') {
-                details.leather_type = document.getElementById('leather-leather-type').value;
-                details.leather_weight = document.getElementById('leather-leather-weight').value;
-                details.thread_type = document.getElementById('leather-thread-type').value;
-                details.needle_size = document.getElementById('leather-needle-size').value;
-                details.hardware = document.getElementById('leather-hardware').value;
-                details.supplies_link = document.getElementById('leather-supplies-link').value;
-            }
-
-            // Remove empty fields
-            Object.keys(details).forEach(key => {
-                if (!details[key]) delete details[key];
-            });
-
-            return details;
-        }
-
-        async function handleAddProject(event) {
-            event.preventDefault();
-            
-            const craftType = document.getElementById('project-craft-type').value;
-            const craftDetails = getCraftDetails(craftType);
-
-            await supabase.from('projects').insert({
-                user_id: currentUser.id,
-                title: document.getElementById('project-title').value,
-                description: document.getElementById('project-description').value,
-                craft_type: craftType,
-                status: 'in_progress',
-                craft_details: craftDetails
-            });
-
-            await supabase.from('profiles').update({ 
-                projects_count: userProfile.projects_count + 1 
-            }).eq('id', currentUser.id);
-
-            await supabase.rpc('award_xp', { user_uuid: currentUser.id, xp_amount: 50 });
-
-            closeAddProject();
-            event.target.reset();
-            await loadUserData();
+            alert('Chat feature coming soon!');
         }
 
         function startRealtimeUpdates() {
-            // Listen for new notifications
             supabase
                 .channel('notifications')
                 .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${currentUser.id}` }, () => {
                     loadNotifications();
-                })
-                .subscribe();
-
-            // Listen for new messages
-            supabase
-                .channel('messages')
-                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `receiver_id=eq.${currentUser.id}` }, () => {
-                    loadConversations();
                 })
                 .subscribe();
         }
@@ -2073,59 +1602,13 @@ const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
             window.location.href = 'login.html';
         }
 
-        function displayCraftDetails(craftType, craftDetails) {
-            if (!craftDetails || Object.keys(craftDetails).length === 0) {
-                return '';
-            }
-
-            let html = '<div style="background: var(--cream); padding: 1.5rem; border-radius: 12px; margin-top: 2rem;"><h3 style="margin-bottom: 1rem; color: var(--terracotta);">📝 Project Details</h3>';
-
-            const formatLabel = (key) => {
-                return key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-            };
-
-            const renderField = (label, value) => {
-                if (!value) return '';
-                
-                // Check if it's a link
-                if (value.startsWith('http://') || value.startsWith('https://')) {
-                    return `
-                        <div style="margin-bottom: 0.75rem;">
-                            <strong style="color: var(--dark-brown); font-family: -apple-system, sans-serif; font-size: 0.9rem;">${label}:</strong>
-                            <a href="${value}" target="_blank" style="color: var(--terracotta); text-decoration: none; font-family: -apple-system, sans-serif; margin-left: 0.5rem;">🔗 View Link</a>
-                        </div>
-                    `;
-                }
-                
-                return `
-                    <div style="margin-bottom: 0.75rem;">
-                        <strong style="color: var(--dark-brown); font-family: -apple-system, sans-serif; font-size: 0.9rem;">${label}:</strong>
-                        <span style="font-family: -apple-system, sans-serif; margin-left: 0.5rem;">${value}</span>
-                    </div>
-                `;
-            };
-
-            // Render all fields
-            Object.keys(craftDetails).forEach(key => {
-                const label = formatLabel(key);
-                html += renderField(label, craftDetails[key]);
-            });
-
-            html += '</div>';
-            return html;
-        }
-
         function getCraftIcon(craftType) {
             const icons = { 'Sewing': '🧵', 'Knitting': '🧶', 'Crochet': '🪡', 'Weaving': '🧵', 'Other': '🎨' };
             return icons[craftType] || '🎨';
         }
 
-        function getActivityText(activity) {
-            switch (activity.activity_type) {
-                case 'project_completed': return 'completed a project';
-                case 'project_liked': return 'liked a project';
-                default: return 'did something awesome';
-            }
+        function formatMentions(text) {
+            return text.replace(/@(\w+)/g, '<span class="mention">@$1</span>');
         }
 
         function getTimeAgo(timestamp) {
