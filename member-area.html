@@ -149,7 +149,7 @@
         .dropdown.show { display: block; }
 
         .dropdown-header {
-            padding: 1.2500001rem;
+            padding: 1.25rem;
             border-bottom: 2px solid var(--light-beige);
             font-family: -apple-system, sans-serif;
             font-weight: 600;
@@ -1465,6 +1465,41 @@
             container.innerHTML = `<div class="project-grid">${projects.map(project => createProjectCard(project, true)).join('')}</div>`;
         }
 
+        async function checkProjectLikeStatus(projectId) {
+            const { data } = await supabase
+                .from('likes')
+                .select('id')
+                .eq('project_id', projectId)
+                .eq('user_id', currentUser.id)
+                .single();
+
+            const btn = document.getElementById(`like-btn-${projectId}`);
+            if (btn) {
+                if (data) {
+                    btn.textContent = '❤️';
+                    btn.classList.add('liked');
+                } else {
+                    btn.textContent = '🤍';
+                    btn.classList.remove('liked');
+                }
+            }
+        }
+
+        async function checkProjectFollowStatus(projectId) {
+            const { data } = await supabase
+                .from('project_followers')
+                .select('id')
+                .eq('project_id', projectId)
+                .eq('user_id', currentUser.id)
+                .single();
+
+            const btn = document.getElementById(`follow-project-${projectId}`);
+            if (btn) {
+                btn.textContent = data ? 'Following' : 'Follow';
+                btn.className = data ? 'follow-btn-small following' : 'follow-btn-small';
+            }
+        }
+
         async function loadCommunityFeed() {
             const { data: feedItems } = await supabase.rpc('get_user_feed', { 
                 user_uuid: currentUser.id,
@@ -2425,16 +2460,42 @@
 
             if (conversationList.length === 0) {
                 document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">No messages yet<br><small>Start chatting with your friends!</small></div>';
+                
+                // Show friends list in chat area if no conversations yet
+                const { data: friendProfiles } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .in('id', friendIds);
+                
                 document.getElementById('chat-area').innerHTML = `
                     <div class="card">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">💬</div>
-                            <p>No conversations yet!</p>
-                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Go to the Friends tab to start chatting with your ${friendIds.length} friend${friendIds.length === 1 ? '' : 's'}!</p>
+                        <h3 style="margin-bottom: 1.5rem;">💬 Your Friends (${friendIds.length})</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-family: -apple-system, sans-serif;">
+                            Click on a friend to start chatting!
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+                            ${friendProfiles.map(friend => `
+                                <div class="card" style="cursor: pointer; transition: all 0.3s; padding: 1.5rem;" onclick="openChat('${friend.id}', '${friend.username}', '${friend.profile_picture_url || ''}', '${friend.avatar_initials}')">
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--terracotta); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; overflow: hidden; flex-shrink: 0;">
+                                            ${friend.profile_picture_url ? 
+                                                `<img src="${friend.profile_picture_url}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                                                friend.avatar_initials
+                                            }
+                                        </div>
+                                        <div style="flex: 1; min-width: 0;">
+                                            <h4 style="margin-bottom: 0.25rem;">@${friend.username}</h4>
+                                            <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; font-size: 0.9rem;">${friend.full_name}</p>
+                                        </div>
+                                        <div style="font-size: 1.5rem;">💬</div>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
                 `;
             } else {
+                // Update dropdown conversations
                 document.getElementById('conversations-list').innerHTML = conversationList.map(userId => {
                     const conv = conversations[userId];
                     return `
@@ -2456,31 +2517,42 @@
                     `;
                 }).join('');
 
+                // Show conversation list in chat area (main Messages section)
                 document.getElementById('chat-area').innerHTML = `
                     <div class="card">
-                        <h3 style="margin-bottom: 1.5rem;">Your Conversations</h3>
+                        <h3 style="margin-bottom: 1.5rem;">💬 Conversations</h3>
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
                             ${conversationList.map(userId => {
                                 const conv = conversations[userId];
                                 return `
-                                    <div class="card" style="cursor: pointer; background: ${conv.unread > 0 ? 'var(--cream)' : 'white'}; padding: 1.5rem;" onclick="openChat('${userId}', '${conv.otherUser.username}', '${conv.otherUser.profile_picture_url || ''}', '${conv.otherUser.avatar_initials}')">
+                                    <div class="card" style="cursor: pointer; background: ${conv.unread > 0 ? 'var(--cream)' : 'white'}; padding: 1.5rem; transition: all 0.3s; border: 2px solid ${conv.unread > 0 ? 'var(--terracotta)' : 'transparent'};" 
+                                         onclick="openChat('${userId}', '${conv.otherUser.username}', '${conv.otherUser.profile_picture_url || ''}', '${conv.otherUser.avatar_initials}')"
+                                         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(0,0,0,0.1)'"
+                                         onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)'">
                                         <div style="display: flex; align-items: center; gap: 1rem;">
-                                            <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--terracotta); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; overflow: hidden;">
+                                            <div style="width: 64px; height: 64px; border-radius: 50%; background: var(--terracotta); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.75rem; font-weight: bold; overflow: hidden; flex-shrink: 0;">
                                                 ${conv.otherUser.profile_picture_url ? 
                                                     `<img src="${conv.otherUser.profile_picture_url}" style="width: 100%; height: 100%; object-fit: cover;">` : 
                                                     conv.otherUser.avatar_initials
                                                 }
                                             </div>
-                                            <div style="flex: 1;">
-                                                <h4 style="margin-bottom: 0.25rem;">@${conv.otherUser.username}</h4>
-                                                <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; font-size: 0.9rem;">${conv.lastMessage.content.substring(0, 80)}${conv.lastMessage.content.length > 80 ? '...' : ''}</p>
-                                                <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">${getTimeAgo(conv.lastMessage.created_at)}</p>
-                                            </div>
-                                            ${conv.unread > 0 ? `
-                                                <div style="background: var(--love); color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                                                    ${conv.unread}
+                                            <div style="flex: 1; min-width: 0;">
+                                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                                    <h4 style="margin: 0;">@${conv.otherUser.username}</h4>
+                                                    ${conv.unread > 0 ? `
+                                                        <div style="background: var(--love); color: white; border-radius: 12px; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: bold; font-family: -apple-system, sans-serif;">
+                                                            ${conv.unread} new
+                                                        </div>
+                                                    ` : ''}
                                                 </div>
-                                            ` : ''}
+                                                <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; font-size: 0.95rem; margin-bottom: 0.5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                    ${conv.lastMessage.sender_id === currentUser.id ? 'You: ' : ''}${conv.lastMessage.content}
+                                                </p>
+                                                <p style="color: var(--text-muted); font-size: 0.8rem; font-family: -apple-system, sans-serif;">
+                                                    ${getTimeAgo(conv.lastMessage.created_at)}
+                                                </p>
+                                            </div>
+                                            <div style="font-size: 2rem; flex-shrink: 0;">💬</div>
                                         </div>
                                     </div>
                                 `;
@@ -2501,6 +2573,8 @@
             }
 
             currentChatUser = { id: friendId, username: friendUsername, picture: friendPicture, initials: friendInitials };
+            
+            console.log('Opening chat with:', friendUsername, friendId);
             
             // Update widget header
             const widgetAvatar = document.getElementById('chat-widget-avatar');
@@ -2525,24 +2599,33 @@
             // Load messages
             await loadWidgetMessages(friendId);
             
-            // Setup real-time
+            // Setup real-time - remove old channel first
             if (chatRealtimeChannel) {
-                supabase.removeChannel(chatRealtimeChannel);
+                await supabase.removeChannel(chatRealtimeChannel);
             }
             
+            // Create new channel for this conversation
+            const channelName = `chat-${currentUser.id}-${friendId}`;
+            console.log('Setting up real-time channel:', channelName);
+            
             chatRealtimeChannel = supabase
-                .channel(`chat-${friendId}`)
+                .channel(channelName)
                 .on('postgres_changes', {
                     event: 'INSERT',
                     schema: 'public',
-                    table: 'messages',
-                    filter: `sender_id=eq.${friendId}`
-                }, () => {
-                    loadWidgetMessages(friendId);
+                    table: 'messages'
+                }, (payload) => {
+                    console.log('New message received:', payload);
+                    // Check if message is for this conversation
+                    if ((payload.new.sender_id === friendId && payload.new.receiver_id === currentUser.id) ||
+                        (payload.new.sender_id === currentUser.id && payload.new.receiver_id === friendId)) {
+                        loadWidgetMessages(friendId);
+                        loadConversations(); // Update conversation list
+                    }
                 })
-                .subscribe();
-            
-            loadConversations();
+                .subscribe((status) => {
+                    console.log('Channel status:', status);
+                });
         }
 
         function closeChatWidget() {
@@ -2554,11 +2637,20 @@
         }
 
         async function loadWidgetMessages(friendId) {
-            const { data: messages } = await supabase
+            console.log('Loading messages with friend:', friendId);
+            
+            const { data: messages, error } = await supabase
                 .from('messages')
                 .select('*')
                 .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${currentUser.id})`)
                 .order('created_at', { ascending: true });
+
+            console.log('Messages loaded:', messages?.length || 0, 'messages');
+            
+            if (error) {
+                console.error('Error loading messages:', error);
+                return;
+            }
 
             const container = document.getElementById('chat-widget-messages');
             
@@ -2597,14 +2689,27 @@
             
             if (!content) return;
             
-            await supabase.from('messages').insert({
+            // Send message
+            const { error } = await supabase.from('messages').insert({
                 sender_id: currentUser.id,
                 receiver_id: currentChatUser.id,
                 content: content
             });
             
+            if (error) {
+                console.error('Error sending message:', error);
+                alert('Failed to send message');
+                return;
+            }
+            
+            // Clear input
             input.value = '';
+            
+            // Reload messages
             await loadWidgetMessages(currentChatUser.id);
+            
+            // Reload conversations list
+            await loadConversations();
         }
 
         async function loadChatMessages(friendId) {
@@ -2772,4 +2877,4 @@
         checkAuth();
     </script>
 </body>
-</html> 
+</html>
