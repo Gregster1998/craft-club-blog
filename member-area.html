@@ -973,8 +973,8 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
@@ -1114,22 +1114,33 @@
         }
 
         async function loadFriends() {
-            const { data: friendData } = await supabase
+            // Get all friendships where current user is involved
+            const { data: friendships } = await supabase
                 .from('friends')
                 .select('user1_id, user2_id')
                 .or(`user1_id.eq.${currentUser.id},user2_id.eq.${currentUser.id}`);
 
             const container = document.getElementById('friends-container');
             
-            if (!friendData || friendData.length === 0) {
-                container.innerHTML = `<div class="card"><div class="empty-state"><div class="empty-state-icon">💫</div><p>No friends yet!</p></div></div>`;
+            if (!friendships || friendships.length === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💫</div>
+                            <p>No friends yet!</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Friends are people who follow you AND you follow them back</p>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
-            const friendIds = friendData.map(f => 
+            // Extract friend IDs
+            const friendIds = friendships.map(f => 
                 f.user1_id === currentUser.id ? f.user2_id : f.user1_id
             );
 
+            // Get friend profiles
             const { data: friends } = await supabase
                 .from('profiles')
                 .select('*')
@@ -1147,7 +1158,10 @@
                             </div>
                             <h3 style="margin-bottom: 0.5rem; cursor: pointer;" onclick="showUserProfile('${friend.id}')">@${friend.username}</h3>
                             <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; margin-bottom: 1rem;">${friend.full_name}</p>
-                            <button class="btn btn-primary btn-small" style="width: 100%;" onclick="openChat('${friend.id}')">💬 Message</button>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-primary btn-small" style="flex: 1;" onclick="openChat('${friend.id}', '${friend.username}', '${friend.profile_picture_url || ''}', '${friend.avatar_initials}')">💬 Message</button>
+                                <button class="btn btn-secondary btn-small" onclick="showUserProfile('${friend.id}')">👤 Profile</button>
+                            </div>
                         </div>
                     `).join('')}
                 </div>
@@ -1463,6 +1477,28 @@
             const user = profile[0];
             const isOwnProfile = userId === currentUser.id;
 
+            // Get user's projects
+            const { data: userProjects } = await supabase
+                .from('projects')
+                .select('*')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false })
+                .limit(6);
+
+            // Get friend count
+            const { data: friendCount } = await supabase.rpc('get_friends_count', { user_uuid: userId });
+
+            // Check if we're friends
+            const { data: friendship } = await supabase
+                .from('friends')
+                .select('user1_id')
+                .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+                .or(`user1_id.eq.${currentUser.id},user2_id.eq.${currentUser.id}`)
+                .limit(1)
+                .single();
+
+            const areFriends = friendship !== null;
+
             const content = `
                 <div style="text-align: center;">
                     <div style="width: 120px; height: 120px; border-radius: 50%; background: var(--terracotta); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: bold; overflow: hidden;">
@@ -1472,24 +1508,29 @@
                         }
                     </div>
                     <h2 style="margin-bottom: 0.5rem;">@${user.username}</h2>
-                    <p style="color: var(--text-muted); margin-bottom: 1rem;">${user.full_name}</p>
-                    ${user.bio ? `<p style="margin-bottom: 1rem;">${user.bio}</p>` : ''}
+                    <p style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 1.1rem;">${user.full_name}</p>
                     ${user.location ? `<p style="color: var(--text-muted); margin-bottom: 1rem;">📍 ${user.location}</p>` : ''}
+                    ${user.bio ? `<p style="margin: 1.5rem 0; padding: 1rem; background: var(--cream); border-radius: 8px; font-style: italic;">"${user.bio}"</p>` : ''}
+                    
                     ${user.interests && user.interests.length > 0 ? `
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;">
-                            ${user.interests.map(interest => `
-                                <span style="padding: 0.4rem 0.8rem; background: var(--light-beige); border-radius: 20px; font-size: 0.85rem;">${interest}</span>
-                            `).join('')}
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="margin-bottom: 0.75rem; color: var(--dark-brown);">Interests</h4>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;">
+                                ${user.interests.map(interest => `
+                                    <span style="padding: 0.4rem 0.8rem; background: var(--light-beige); border-radius: 20px; font-size: 0.85rem;">${interest}</span>
+                                `).join('')}
+                            </div>
                         </div>
                     ` : ''}
+                    
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0; padding: 1rem; background: var(--cream); border-radius: 8px;">
                         <div style="text-align: center;">
                             <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${user.projects_count}</div>
                             <div style="font-size: 0.8rem; color: var(--text-muted);">Projects</div>
                         </div>
                         <div style="text-align: center;">
-                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${user.followers_count}</div>
-                            <div style="font-size: 0.8rem; color: var(--text-muted);">Followers</div>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${friendCount || 0}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Friends</div>
                         </div>
                         <div style="text-align: center;">
                             <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${user.level}</div>
@@ -1500,16 +1541,65 @@
                             <div style="font-size: 0.8rem; color: var(--text-muted);">Likes</div>
                         </div>
                     </div>
+
+                    ${userProjects && userProjects.length > 0 ? `
+                        <div style="text-align: left; margin-top: 2rem;">
+                            <h3 style="margin-bottom: 1rem; color: var(--dark-brown);">Recent Projects</h3>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                                ${userProjects.map(project => `
+                                    <div style="background: var(--light-beige); padding: 1rem; border-radius: 8px; cursor: pointer;" onclick="closeProfileView(); showProjectDetail('${project.id}');">
+                                        <div style="font-size: 2rem; text-align: center; margin-bottom: 0.5rem;">${getCraftIcon(project.craft_type)}</div>
+                                        <h4 style="font-size: 0.9rem; margin-bottom: 0.25rem; text-align: center;">${project.title}</h4>
+                                        <div style="text-align: center; font-size: 0.75rem; color: var(--text-muted);">
+                                            ❤️ ${project.likes_count || 0} · 💬 ${project.comments_count || 0}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : `
+                        <div style="padding: 2rem; background: var(--cream); border-radius: 8px; margin-top: 2rem;">
+                            <p style="color: var(--text-muted);">No projects yet</p>
+                        </div>
+                    `}
+                    
                     ${!isOwnProfile ? `
-                        <button class="btn btn-primary" style="width: 100%;" onclick="toggleFollow('${userId}'); setTimeout(() => closeProfileView(), 500);">
-                            Follow
-                        </button>
+                        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                            <button class="btn btn-primary" style="flex: 1;" onclick="toggleFollow('${userId}'); setTimeout(() => showUserProfile('${userId}'), 500);" id="profile-follow-btn-${userId}">
+                                Follow
+                            </button>
+                            ${areFriends ? `
+                                <button class="btn btn-secondary" style="flex: 1;" onclick="closeProfileView(); openChat('${userId}', '${user.username}', '${user.profile_picture_url || ''}', '${user.avatar_initials}');">
+                                    💬 Message
+                                </button>
+                            ` : ''}
+                        </div>
                     ` : ''}
                 </div>
             `;
 
             document.getElementById('profile-view-content').innerHTML = content;
             document.getElementById('profile-view-modal').classList.add('show');
+
+            // Update follow button state
+            if (!isOwnProfile) {
+                checkFollowStatusForProfile(userId);
+            }
+        }
+
+        async function checkFollowStatusForProfile(userId) {
+            const { data } = await supabase
+                .from('follows')
+                .select('id')
+                .eq('follower_id', currentUser.id)
+                .eq('following_id', userId)
+                .single();
+
+            const btn = document.getElementById(`profile-follow-btn-${userId}`);
+            if (btn) {
+                btn.textContent = data ? 'Following' : 'Follow';
+                btn.className = data ? 'btn btn-secondary' : 'btn btn-primary';
+            }
         }
 
         function closeProfileView() {
@@ -1554,12 +1644,255 @@
         }
 
         async function loadConversations() {
-            document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">Messages coming soon!</div>';
-            document.getElementById('chat-area').innerHTML = '<div class="card"><p>Messaging feature coming soon!</p></div>';
+            // Get all friends first
+            const { data: friendships } = await supabase
+                .from('friends')
+                .select('user1_id, user2_id')
+                .or(`user1_id.eq.${currentUser.id},user2_id.eq.${currentUser.id}`);
+
+            if (!friendships || friendships.length === 0) {
+                document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">No friends to message yet</div>';
+                document.getElementById('chat-area').innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💬</div>
+                            <p>No conversations yet!</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">You can message friends (mutual follows)</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const friendIds = friendships.map(f => 
+                f.user1_id === currentUser.id ? f.user2_id : f.user1_id
+            );
+
+            // Get messages with these friends
+            const { data: messages } = await supabase
+                .from('messages')
+                .select('*, sender:profiles!messages_sender_id_fkey(username, avatar_initials, profile_picture_url), receiver:profiles!messages_receiver_id_fkey(username, avatar_initials, profile_picture_url)')
+                .or(`sender_id.eq.${currentUser.id},receiver_id.eq.${currentUser.id}`)
+                .order('created_at', { ascending: false });
+
+            // Get unread count
+            const unreadCount = messages?.filter(m => m.receiver_id === currentUser.id && !m.is_read).length || 0;
+            const badge = document.getElementById('message-count');
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+
+            // Group messages by conversation
+            const conversations = {};
+            messages?.forEach(msg => {
+                const otherId = msg.sender_id === currentUser.id ? msg.receiver_id : msg.sender_id;
+                if (!conversations[otherId]) {
+                    conversations[otherId] = {
+                        lastMessage: msg,
+                        unread: 0,
+                        otherUser: msg.sender_id === currentUser.id ? msg.receiver : msg.sender
+                    };
+                }
+                if (msg.receiver_id === currentUser.id && !msg.is_read) {
+                    conversations[otherId].unread++;
+                }
+            });
+
+            const conversationList = Object.keys(conversations);
+
+            // Messages dropdown
+            if (conversationList.length === 0) {
+                document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">No messages yet</div>';
+            } else {
+                document.getElementById('conversations-list').innerHTML = conversationList.map(userId => {
+                    const conv = conversations[userId];
+                    return `
+                        <div class="dropdown-item ${conv.unread > 0 ? 'notif-unread' : ''}" onclick="hideAllDropdowns(); openChat('${userId}', '${conv.otherUser.username}', '${conv.otherUser.profile_picture_url || ''}', '${conv.otherUser.avatar_initials}')">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--terracotta); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; overflow: hidden;">
+                                    ${conv.otherUser.profile_picture_url ? 
+                                        `<img src="${conv.otherUser.profile_picture_url}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                                        conv.otherUser.avatar_initials
+                                    }
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600;">@${conv.otherUser.username}</div>
+                                    <div class="notif-content" style="margin: 0;">${conv.lastMessage.content.substring(0, 50)}${conv.lastMessage.content.length > 50 ? '...' : ''}</div>
+                                </div>
+                                ${conv.unread > 0 ? `<div style="background: var(--love); color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">${conv.unread}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Chat area - show conversation list
+            if (conversationList.length === 0) {
+                document.getElementById('chat-area').innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💬</div>
+                            <p>No conversations yet!</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Go to the Friends tab to start chatting</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                document.getElementById('chat-area').innerHTML = `
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem;">Your Conversations</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            ${conversationList.map(userId => {
+                                const conv = conversations[userId];
+                                return `
+                                    <div class="card" style="cursor: pointer; background: ${conv.unread > 0 ? 'var(--cream)' : 'white'}; padding: 1.5rem;" onclick="openChat('${userId}', '${conv.otherUser.username}', '${conv.otherUser.profile_picture_url || ''}', '${conv.otherUser.avatar_initials}')">
+                                        <div style="display: flex; align-items: center; gap: 1rem;">
+                                            <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--terracotta); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; font-weight: bold; overflow: hidden;">
+                                                ${conv.otherUser.profile_picture_url ? 
+                                                    `<img src="${conv.otherUser.profile_picture_url}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                                                    conv.otherUser.avatar_initials
+                                                }
+                                            </div>
+                                            <div style="flex: 1;">
+                                                <h4 style="margin-bottom: 0.25rem;">@${conv.otherUser.username}</h4>
+                                                <p style="color: var(--text-muted); font-family: -apple-system, sans-serif; font-size: 0.9rem;">${conv.lastMessage.content.substring(0, 80)}${conv.lastMessage.content.length > 80 ? '...' : ''}</p>
+                                                <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">${getTimeAgo(conv.lastMessage.created_at)}</p>
+                                            </div>
+                                            ${conv.unread > 0 ? `
+                                                <div style="background: var(--love); color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                                    ${conv.unread}
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
         }
 
-        async function openChat(friendId) {
-            alert('Chat feature coming soon!');
+        let currentChatUser = null;
+        let chatRealtimeChannel = null;
+
+        async function openChat(friendId, friendUsername, friendPicture, friendInitials) {
+            currentChatUser = { id: friendId, username: friendUsername, picture: friendPicture, initials: friendInitials };
+            
+            // Switch to chat section
+            showSection('chat');
+            
+            // Mark messages as read
+            await supabase
+                .from('messages')
+                .update({ is_read: true })
+                .eq('sender_id', friendId)
+                .eq('receiver_id', currentUser.id)
+                .eq('is_read', false);
+            
+            // Load messages
+            await loadChatMessages(friendId);
+            
+            // Setup realtime for this conversation
+            if (chatRealtimeChannel) {
+                supabase.removeChannel(chatRealtimeChannel);
+            }
+            
+            chatRealtimeChannel = supabase
+                .channel(`chat-${friendId}`)
+                .on('postgres_changes', {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'messages',
+                    filter: `sender_id=eq.${friendId}`
+                }, () => {
+                    loadChatMessages(friendId);
+                })
+                .subscribe();
+            
+            loadConversations();
+        }
+
+        async function loadChatMessages(friendId) {
+            const { data: messages } = await supabase
+                .from('messages')
+                .select('*')
+                .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${currentUser.id})`)
+                .order('created_at', { ascending: true });
+
+            const chatArea = document.getElementById('chat-area');
+            
+            chatArea.innerHTML = `
+                <div class="card" style="height: calc(100vh - 250px); display: flex; flex-direction: column;">
+                    <!-- Chat Header -->
+                    <div style="display: flex; align-items: center; gap: 1rem; padding-bottom: 1rem; border-bottom: 2px solid var(--light-beige); margin-bottom: 1rem;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--terracotta); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; overflow: hidden; cursor: pointer;" onclick="showUserProfile('${currentChatUser.id}')">
+                            ${currentChatUser.picture ? 
+                                `<img src="${currentChatUser.picture}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                                currentChatUser.initials
+                            }
+                        </div>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0; cursor: pointer;" onclick="showUserProfile('${currentChatUser.id}')">@${currentChatUser.username}</h3>
+                        </div>
+                        <button onclick="showSection('chat'); currentChatUser = null; loadConversations();" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted);">✕</button>
+                    </div>
+                    
+                    <!-- Messages -->
+                    <div id="chat-messages" style="flex: 1; overflow-y: auto; padding: 1rem 0; display: flex; flex-direction: column; gap: 1rem;">
+                        ${messages.length === 0 ? `
+                            <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                <p>No messages yet. Start the conversation! 👋</p>
+                            </div>
+                        ` : messages.map(msg => {
+                            const isSent = msg.sender_id === currentUser.id;
+                            return `
+                                <div style="display: flex; justify-content: ${isSent ? 'flex-end' : 'flex-start'};">
+                                    <div style="max-width: 70%; padding: 0.75rem 1rem; border-radius: 16px; background: ${isSent ? 'var(--terracotta)' : 'var(--light-beige)'}; color: ${isSent ? 'white' : 'var(--text-dark)'};">
+                                        <div style="font-family: -apple-system, sans-serif; word-wrap: break-word;">${msg.content}</div>
+                                        <div style="font-size: 0.7rem; margin-top: 0.25rem; opacity: 0.7;">${getTimeAgo(msg.created_at)}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    
+                    <!-- Message Input -->
+                    <form onsubmit="sendMessage(event, '${friendId}')" style="display: flex; gap: 0.75rem; padding-top: 1rem; border-top: 2px solid var(--light-beige);">
+                        <input type="text" id="message-input" placeholder="Type a message..." style="flex: 1; border: 2px solid var(--light-beige); padding: 0.75rem 1rem; border-radius: 24px; font-family: -apple-system, sans-serif;" required>
+                        <button type="submit" class="btn btn-primary" style="border-radius: 24px; padding: 0.75rem 2rem;">Send</button>
+                    </form>
+                </div>
+            `;
+            
+            // Scroll to bottom
+            setTimeout(() => {
+                const messagesDiv = document.getElementById('chat-messages');
+                if (messagesDiv) {
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }
+            }, 100);
+        }
+
+        async function sendMessage(event, receiverId) {
+            event.preventDefault();
+            
+            const input = document.getElementById('message-input');
+            const content = input.value.trim();
+            
+            if (!content) return;
+            
+            await supabase.from('messages').insert({
+                sender_id: currentUser.id,
+                receiver_id: receiverId,
+                content: content
+            });
+            
+            input.value = '';
+            await loadChatMessages(receiverId);
         }
 
         function startRealtimeUpdates() {
@@ -1567,6 +1900,13 @@
                 .channel('notifications')
                 .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${currentUser.id}` }, () => {
                     loadNotifications();
+                })
+                .subscribe();
+            
+            supabase
+                .channel('messages-updates')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages', filter: `receiver_id=eq.${currentUser.id}` }, () => {
+                    loadConversations();
                 })
                 .subscribe();
         }
@@ -1594,7 +1934,20 @@
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // Find and activate the nav item that corresponds to this section
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                const onclickAttr = item.getAttribute('onclick');
+                if (onclickAttr && onclickAttr.includes(`'${sectionId}'`)) {
+                    item.classList.add('active');
+                }
+            });
+            
+            // Load section-specific data if needed
+            if (sectionId === 'chat' && !currentChatUser) {
+                loadConversations();
+            }
         }
 
         async function handleLogout() {
