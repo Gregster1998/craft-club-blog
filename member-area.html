@@ -181,7 +181,7 @@
         }
 
         .notif-time {
-            font-size: 0.75001rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
         }
 
@@ -1808,10 +1808,14 @@
         }
 
         async function loadCommunityFeed() {
-            const { data: feedItems } = await supabase.rpc('get_user_feed', { 
+            const { data: feedItems, error } = await supabase.rpc('get_user_feed', { 
                 user_uuid: currentUser.id,
                 limit_count: 20
             });
+
+            if (error) {
+                console.error('Error loading feed:', error);
+            }
 
             const container = document.getElementById('community-feed');
             
@@ -1827,35 +1831,100 @@
                 return;
             }
 
-            container.innerHTML = feedItems.map(item => `
-                <div class="feed-item">
-                    <div class="feed-header">
-                        <div class="feed-avatar" onclick="showUserProfile('${item.user_id}')">
-                            ${item.profile_picture_url ? 
-                                `<img src="${item.profile_picture_url}" alt="${item.username}">` : 
-                                item.avatar_initials
-                            }
-                        </div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; cursor: pointer;" onclick="showUserProfile('${item.user_id}')">
-                                @${item.username}
+            container.innerHTML = feedItems.map(item => {
+                if (item.type === 'project') {
+                    // Display as project card
+                    return `
+                        <div class="feed-item" style="cursor: pointer;" onclick="showProjectDetail('${item.project_id}')">
+                            <div class="feed-header">
+                                <div class="feed-avatar" onclick="event.stopPropagation(); showUserProfile('${item.user_id}')">
+                                    ${item.profile_picture_url ? 
+                                        `<img src="${item.profile_picture_url}" alt="${item.username}">` : 
+                                        item.avatar_initials
+                                    }
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; cursor: pointer;" onclick="event.stopPropagation(); showUserProfile('${item.user_id}')">
+                                        @${item.username}
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">
+                                        created a new ${item.project_craft_type} project
+                                    </div>
+                                </div>
                             </div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted);">
-                                ${getFeedTypeText(item.type)} in "${item.project_title}"
+                            <div style="margin: 1rem 0;">
+                                <h3 style="margin-bottom: 0.5rem;">${item.project_title}</h3>
+                                ${item.project_description ? `<p style="color: var(--text-muted); font-family: -apple-system, sans-serif;">${item.project_description.substring(0, 150)}${item.project_description.length > 150 ? '...' : ''}</p>` : ''}
                             </div>
+                            <div style="display: flex; gap: 1rem; color: var(--text-muted); font-size: 0.9rem;">
+                                <span>❤️ ${item.project_likes_count || 0}</span>
+                                <span>💬 ${item.project_comments_count || 0}</span>
+                                <span>👁️ ${item.project_views_count || 0}</span>
+                            </div>
+                            <div class="feed-time">${getTimeAgo(item.created_at)}</div>
                         </div>
-                    </div>
-                    <div class="feed-content">${formatMentions(item.content)}</div>
-                    <div class="feed-time">${getTimeAgo(item.created_at)}</div>
-                </div>
-            `).join('');
+                    `;
+                } else if (item.type === 'update') {
+                    // Display as update
+                    return `
+                        <div class="feed-item" style="cursor: pointer;" onclick="showProjectDetail('${item.project_id}')">
+                            <div class="feed-header">
+                                <div class="feed-avatar" onclick="event.stopPropagation(); showUserProfile('${item.user_id}')">
+                                    ${item.profile_picture_url ? 
+                                        `<img src="${item.profile_picture_url}" alt="${item.username}">` : 
+                                        item.avatar_initials
+                                    }
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; cursor: pointer;" onclick="event.stopPropagation(); showUserProfile('${item.user_id}')">
+                                        @${item.username}
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">
+                                        posted an update on "${item.project_title}"
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <p style="font-family: -apple-system, sans-serif; line-height: 1.6;">${item.update_content}</p>
+                                ${item.update_photo_url ? `
+                                    <img src="${item.update_photo_url}" style="width: 100%; border-radius: 8px; margin-top: 1rem; max-height: 400px; object-fit: cover;">
+                                ` : ''}
+                            </div>
+                            <div class="feed-time">${getTimeAgo(item.created_at)}</div>
+                        </div>
+                    `;
+                } else if (item.type === 'edit') {
+                    // Display as edit activity
+                    return `
+                        <div class="feed-item" style="cursor: pointer; border-left: 4px solid var(--terracotta);" onclick="showProjectDetail('${item.project_id}')">
+                            <div class="feed-header">
+                                <div class="feed-avatar" onclick="event.stopPropagation(); showUserProfile('${item.user_id}')">
+                                    ${item.profile_picture_url ? 
+                                        `<img src="${item.profile_picture_url}" alt="${item.username}">` : 
+                                        item.avatar_initials
+                                    }
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; cursor: pointer;" onclick="event.stopPropagation(); showUserProfile('${item.user_id}')">
+                                        Update: @${item.username} edited ${item.project_title}
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                        ${item.update_content}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="feed-time">${getTimeAgo(item.created_at)}</div>
+                        </div>
+                    `;
+                }
+            }).join('');
         }
 
         function getFeedTypeText(type) {
             switch(type) {
-                case 'project_update': return 'posted an update';
+                case 'project': return 'created a new project';
+                case 'update': return 'posted an update';
                 case 'comment': return 'commented';
-                case 'friend_project_update': return 'updated their project';
                 default: return 'posted';
             }
         }
@@ -2548,19 +2617,68 @@
             const projectId = document.getElementById('edit-project-id').value;
             const craftType = document.getElementById('edit-project-craft-type').value;
             
-            // Get craft-specific details
-            const craftDetails = getEditCraftDetails(craftType);
+            console.log('Updating project:', projectId);
+            
+            // Get old project data to compare
+            const { data: oldProject } = await supabase
+                .from('projects')
+                .select('title, craft_details')
+                .eq('id', projectId)
+                .single();
+            
+            const newTitle = document.getElementById('edit-project-title').value;
+            const newCraftDetails = getEditCraftDetails(craftType);
+            
+            // Build changes summary
+            let changes = [];
+            if (oldProject.title !== newTitle) {
+                changes.push('title');
+            }
+            
+            // Check if craft details changed
+            const oldDetails = oldProject.craft_details || {};
+            const newDetails = newCraftDetails;
+            
+            if (Object.keys(newDetails).length > Object.keys(oldDetails).length) {
+                changes.push('added craft details');
+            } else if (JSON.stringify(oldDetails) !== JSON.stringify(newDetails)) {
+                changes.push('updated craft details');
+            }
 
-            await supabase.from('projects').update({
-                title: document.getElementById('edit-project-title').value,
+            const { data, error } = await supabase.from('projects').update({
+                title: newTitle,
                 description: document.getElementById('edit-project-description').value,
                 status: document.getElementById('edit-project-status').value,
-                craft_details: craftDetails
-            }).eq('id', projectId);
+                craft_details: newCraftDetails
+            }).eq('id', projectId).select();
+
+            if (error) {
+                console.error('Error updating project:', error);
+                alert('Failed to update project: ' + error.message);
+                return;
+            }
+
+            console.log('Project updated successfully:', data);
+
+            // Log the edit for the feed
+            if (changes.length > 0) {
+                await supabase.from('project_edits').insert({
+                    project_id: projectId,
+                    user_id: currentUser.id,
+                    changes_summary: 'Updated: ' + changes.join(', ')
+                });
+            }
 
             closeEditProject();
-            alert('Project updated!');
+            alert('Project updated successfully!');
+            
+            // Reload all data
             await loadUserData();
+            
+            // Reopen the project to show changes
+            setTimeout(() => {
+                showProjectDetail(projectId);
+            }, 500);
         }
 
         function getEditCraftDetails(craftType) {
