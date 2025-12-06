@@ -683,7 +683,9 @@
 </head>
 <body>
     <header>
-        <div class="logo">🎨 Craft Club</div>
+        <a href="index.html" style="text-decoration: none;">
+            <div class="logo">🎨 Craft Club</div>
+        </a>
         <div class="user-nav">
             <button class="icon-btn" onclick="toggleNotifications()">
                 🔔
@@ -1212,11 +1214,27 @@
         }
 
         async function loadQuickStats() {
-            const { data: friendsCount } = await supabase.rpc('get_friends_count', { user_uuid: currentUser.id });
+            // Get friend count using mutual follow logic
+            const { data: iFollow } = await supabase
+                .from('follows')
+                .select('following_id')
+                .eq('follower_id', currentUser.id);
+
+            const { data: followMe } = await supabase
+                .from('follows')
+                .select('follower_id')
+                .eq('following_id', currentUser.id);
+
+            let friendsCount = 0;
+            if (iFollow && followMe) {
+                const iFollowIds = iFollow.map(f => f.following_id);
+                const followMeIds = followMe.map(f => f.follower_id);
+                friendsCount = iFollowIds.filter(id => followMeIds.includes(id)).length;
+            }
             
             document.getElementById('stat-projects').textContent = userProfile.projects_count || 0;
             document.getElementById('stat-likes').textContent = userProfile.total_likes_received || 0;
-            document.getElementById('stat-friends').textContent = friendsCount || 0;
+            document.getElementById('stat-friends').textContent = friendsCount;
             document.getElementById('stat-streak').textContent = userProfile.streak_days || 0;
         }
 
@@ -1298,31 +1316,73 @@
             }
         }
 
+        async function checkIfFriends(userId1, userId2) {
+            // Check if both users follow each other
+            const { data: follow1 } = await supabase
+                .from('follows')
+                .select('id')
+                .eq('follower_id', userId1)
+                .eq('following_id', userId2)
+                .single();
+
+            const { data: follow2 } = await supabase
+                .from('follows')
+                .select('id')
+                .eq('follower_id', userId2)
+                .eq('following_id', userId1)
+                .single();
+
+            return follow1 && follow2;
+        }
+
         async function loadFriends() {
-            const { data: friendships } = await supabase
-                .from('friends')
-                .select('user1_id, user2_id')
-                .or(`user1_id.eq.${currentUser.id},user2_id.eq.${currentUser.id}`);
+            // Get all users I follow
+            const { data: iFollow } = await supabase
+                .from('follows')
+                .select('following_id')
+                .eq('follower_id', currentUser.id);
+
+            // Get all users who follow me
+            const { data: followMe } = await supabase
+                .from('follows')
+                .select('follower_id')
+                .eq('following_id', currentUser.id);
 
             const container = document.getElementById('friends-container');
             
-            if (!friendships || friendships.length === 0) {
+            if (!iFollow || !followMe || iFollow.length === 0 || followMe.length === 0) {
                 container.innerHTML = `
                     <div class="card">
                         <div class="empty-state">
                             <div class="empty-state-icon">💫</div>
                             <p>No friends yet!</p>
-                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Friends are people who follow you AND you follow them back</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Follow someone and have them follow you back to become friends!</p>
                         </div>
                     </div>
                 `;
                 return;
             }
 
-            const friendIds = friendships.map(f => 
-                f.user1_id === currentUser.id ? f.user2_id : f.user1_id
-            );
+            // Find mutual follows (friends)
+            const iFollowIds = iFollow.map(f => f.following_id);
+            const followMeIds = followMe.map(f => f.follower_id);
+            const friendIds = iFollowIds.filter(id => followMeIds.includes(id));
 
+            if (friendIds.length === 0) {
+                container.innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💫</div>
+                            <p>No friends yet!</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">You follow ${iFollowIds.length} people and ${followMeIds.length} people follow you.</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Follow each other to become friends!</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Get friend profiles
             const { data: friends } = await supabase
                 .from('profiles')
                 .select('*')
@@ -1878,6 +1938,7 @@
             const user = profile[0];
             const isOwnProfile = userId === currentUser.id;
 
+            // Get user's projects
             const { data: userProjects } = await supabase
                 .from('projects')
                 .select('*')
@@ -1885,16 +1946,26 @@
                 .order('created_at', { ascending: false })
                 .limit(6);
 
-            const { data: friendCount } = await supabase.rpc('get_friends_count', { user_uuid: userId });
+            // Get friend count using the same mutual follow logic
+            const { data: userIFollow } = await supabase
+                .from('follows')
+                .select('following_id')
+                .eq('follower_id', userId);
 
-            const { data: friendship } = await supabase
-                .from('friends')
-                .select('user1_id')
-                .or(`and(user1_id.eq.${userId},user2_id.eq.${currentUser.id}),and(user1_id.eq.${currentUser.id},user2_id.eq.${userId})`)
-                .limit(1)
-                .single();
+            const { data: userFollowMe } = await supabase
+                .from('follows')
+                .select('follower_id')
+                .eq('following_id', userId);
 
-            const areFriends = friendship !== null;
+            let friendCount = 0;
+            if (userIFollow && userFollowMe) {
+                const userIFollowIds = userIFollow.map(f => f.following_id);
+                const userFollowMeIds = userFollowMe.map(f => f.follower_id);
+                friendCount = userIFollowIds.filter(id => userFollowMeIds.includes(id)).length;
+            }
+
+            // Check if we're friends with this user
+            const areFriends = await checkIfFriends(currentUser.id, userId);
 
             const content = `
                 <div style="text-align: center;">
@@ -1926,7 +1997,7 @@
                             <div style="font-size: 0.8rem; color: var(--text-muted);">Projects</div>
                         </div>
                         <div style="text-align: center;">
-                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${friendCount || 0}</div>
+                            <div style="font-size: 1.5rem; font-weight: bold; color: var(--terracotta);">${friendCount}</div>
                             <div style="font-size: 0.8rem; color: var(--text-muted);">Friends</div>
                         </div>
                         <div style="text-align: center;">
@@ -1969,7 +2040,11 @@
                                 <button class="btn btn-secondary" style="flex: 1;" onclick="closeProfileView(); openChat('${userId}', '${user.username}', '${user.profile_picture_url || ''}', '${user.avatar_initials}');">
                                     💬 Message
                                 </button>
-                            ` : ''}
+                            ` : `
+                                <div style="flex: 1; padding: 0.75rem; background: var(--light-beige); border-radius: 8px; font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+                                    Follow each other to message
+                                </div>
+                            `}
                         </div>
                     ` : ''}
                 </div>
@@ -1978,6 +2053,7 @@
             document.getElementById('profile-view-content').innerHTML = content;
             document.getElementById('profile-view-modal').classList.add('show');
 
+            // Update follow button state
             if (!isOwnProfile) {
                 checkFollowStatusForProfile(userId);
             }
@@ -2027,11 +2103,20 @@
             }
 
             container.innerHTML = notifs.map(notif => `
-                <div class="dropdown-item ${!notif.is_read ? 'notif-unread' : ''}">
+                <div class="dropdown-item ${!notif.is_read ? 'notif-unread' : ''}" onclick="markNotificationRead('${notif.id}')">
                     <div class="notif-content">${notif.content}</div>
                     <div class="notif-time">${getTimeAgo(notif.created_at)}</div>
                 </div>
             `).join('');
+        }
+
+        async function markNotificationRead(notifId) {
+            await supabase
+                .from('notifications')
+                .update({ is_read: true })
+                .eq('id', notifId);
+            
+            await loadNotifications();
         }
 
         async function markAllRead() {
@@ -2040,29 +2125,52 @@
         }
 
         async function loadConversations() {
-            const { data: friendships } = await supabase
-                .from('friends')
-                .select('user1_id, user2_id')
-                .or(`user1_id.eq.${currentUser.id},user2_id.eq.${currentUser.id}`);
+            // Get all users I follow
+            const { data: iFollow } = await supabase
+                .from('follows')
+                .select('following_id')
+                .eq('follower_id', currentUser.id);
 
-            if (!friendships || friendships.length === 0) {
+            // Get all users who follow me
+            const { data: followMe } = await supabase
+                .from('follows')
+                .select('follower_id')
+                .eq('following_id', currentUser.id);
+
+            if (!iFollow || !followMe || iFollow.length === 0 || followMe.length === 0) {
                 document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">No friends to message yet</div>';
                 document.getElementById('chat-area').innerHTML = `
                     <div class="card">
                         <div class="empty-state">
                             <div class="empty-state-icon">💬</div>
                             <p>No conversations yet!</p>
-                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">You can message friends (mutual follows)</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Follow someone and have them follow you back to become friends and message each other!</p>
                         </div>
                     </div>
                 `;
                 return;
             }
 
-            const friendIds = friendships.map(f => 
-                f.user1_id === currentUser.id ? f.user2_id : f.user1_id
-            );
+            // Find mutual follows (friends)
+            const iFollowIds = iFollow.map(f => f.following_id);
+            const followMeIds = followMe.map(f => f.follower_id);
+            const friendIds = iFollowIds.filter(id => followMeIds.includes(id));
 
+            if (friendIds.length === 0) {
+                document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">No friends to message yet<br><small>Follow someone and have them follow you back!</small></div>';
+                document.getElementById('chat-area').innerHTML = `
+                    <div class="card">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">💬</div>
+                            <p>No friends yet!</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Follow someone and have them follow you back to become friends and start messaging!</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Get messages with friends only
             const { data: messages } = await supabase
                 .from('messages')
                 .select('*, sender:profiles!messages_sender_id_fkey(username, avatar_initials, profile_picture_url), receiver:profiles!messages_receiver_id_fkey(username, avatar_initials, profile_picture_url)')
@@ -2081,28 +2189,31 @@
             const conversations = {};
             messages?.forEach(msg => {
                 const otherId = msg.sender_id === currentUser.id ? msg.receiver_id : msg.sender_id;
-                if (!conversations[otherId]) {
-                    conversations[otherId] = {
-                        lastMessage: msg,
-                        unread: 0,
-                        otherUser: msg.sender_id === currentUser.id ? msg.receiver : msg.sender
-                    };
-                }
-                if (msg.receiver_id === currentUser.id && !msg.is_read) {
-                    conversations[otherId].unread++;
+                // Only include if they're a friend
+                if (friendIds.includes(otherId)) {
+                    if (!conversations[otherId]) {
+                        conversations[otherId] = {
+                            lastMessage: msg,
+                            unread: 0,
+                            otherUser: msg.sender_id === currentUser.id ? msg.receiver : msg.sender
+                        };
+                    }
+                    if (msg.receiver_id === currentUser.id && !msg.is_read) {
+                        conversations[otherId].unread++;
+                    }
                 }
             });
 
             const conversationList = Object.keys(conversations);
 
             if (conversationList.length === 0) {
-                document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">No messages yet</div>';
+                document.getElementById('conversations-list').innerHTML = '<div class="dropdown-item">No messages yet<br><small>Start chatting with your friends!</small></div>';
                 document.getElementById('chat-area').innerHTML = `
                     <div class="card">
                         <div class="empty-state">
                             <div class="empty-state-icon">💬</div>
                             <p>No conversations yet!</p>
-                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Go to the Friends tab to start chatting</p>
+                            <p style="font-size: 0.9rem; margin-top: 0.5rem;">Go to the Friends tab to start chatting with your ${friendIds.length} friend${friendIds.length === 1 ? '' : 's'}!</p>
                         </div>
                     </div>
                 `;
@@ -2164,6 +2275,14 @@
         }
 
         async function openChat(friendId, friendUsername, friendPicture, friendInitials) {
+            // Verify users are friends before opening chat
+            const areFriends = await checkIfFriends(currentUser.id, friendId);
+            
+            if (!areFriends) {
+                alert('You can only message friends! Follow each other to become friends.');
+                return;
+            }
+
             currentChatUser = { id: friendId, username: friendUsername, picture: friendPicture, initials: friendInitials };
             
             showSection('chat');
