@@ -1339,21 +1339,25 @@
 
     <!-- Edit Project Modal -->
     <div class="modal" id="edit-project-modal">
-        <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
                 <h2>Edit Project</h2>
                 <button class="modal-close" onclick="closeEditProject()">&times;</button>
             </div>
             <form onsubmit="handleUpdateProject(event)">
                 <input type="hidden" id="edit-project-id">
+                <input type="hidden" id="edit-project-craft-type">
+                
                 <div class="form-group">
                     <label>Title *</label>
                     <input type="text" id="edit-project-title" required>
                 </div>
+                
                 <div class="form-group">
                     <label>Description</label>
                     <textarea id="edit-project-description"></textarea>
                 </div>
+                
                 <div class="form-group">
                     <label>Status</label>
                     <select id="edit-project-status">
@@ -1363,6 +1367,253 @@
                         <option value="on_hold">On Hold</option>
                     </select>
                 </div>
+
+                <!-- Crochet Fields -->
+                <div id="edit-crochet-fields" class="craft-fields" style="display: none;">
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--terracotta);">🧶 Crochet Details</h4>
+                    <div class="form-group">
+                        <label>🪝 Hook Size</label>
+                        <input type="text" id="edit-crochet-hook" placeholder="e.g., 5mm, H/8">
+                    </div>
+                    <div class="form-group">
+                        <label>🧵 Yarn Brand</label>
+                        <input type="text" id="edit-crochet-yarn-brand">
+                    </div>
+                    <div class="form-group">
+                        <label>🎨 Yarn Color</label>
+                        <input type="text" id="edit-crochet-yarn-color">
+                    </div>
+                    <div class="form-group">
+                        <label>⚖️ Yarn Weight</label>
+                        <select id="edit-crochet-yarn-weight">
+                            <option value="">Select weight</option>
+                            <option value="Lace">Lace</option>
+                            <option value="Fingering">Fingering</option>
+                            <option value="Sport">Sport</option>
+                            <option value="DK">DK</option>
+                            <option value="Worsted">Worsted</option>
+                            <option value="Bulky">Bulky</option>
+                            <option value="Super Bulky">Super Bulky</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>📏 Gauge</label>
+                        <input type="text" id="edit-crochet-gauge" placeholder="e.g., 16 sts x 20 rows = 4 inches">
+                    </div>
+                    <div class="form-group">
+                        <label>📐 Yardage Used</label>
+                        <input type="text" id="edit-crochet-yardage" placeholder="e.g., 400 yards">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Pattern Link</label>
+                        <input type="url" id="edit-crochet-pattern-link" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="edit-crochet-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Knitting Fields -->
+                <div id="edit-knitting-fields" class="craft-fields" style="display: none;">
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--terracotta);">🧶 Knitting Details</h4>
+                    <div class="form-group">
+                        <label>🪡 Needle Type</label>
+                        <select id="edit-knitting-needle-type">
+                            <option value="">Select type</option>
+                            <option value="Straight">Straight</option>
+                            <option value="Circular">Circular</option>
+                            <option value="DPN">Double Pointed (DPN)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>📏 Needle Size</label>
+                        <input type="text" id="edit-knitting-needle-size" placeholder="e.g., US 8, 5mm">
+                    </div>
+                    <div class="form-group">
+                        <label>🧵 Yarn Brand</label>
+                        <input type="text" id="edit-knitting-yarn-brand">
+                    </div>
+                    <div class="form-group">
+                        <label>🎨 Yarn Color</label>
+                        <input type="text" id="edit-knitting-yarn-color">
+                    </div>
+                    <div class="form-group">
+                        <label>⚖️ Yarn Weight</label>
+                        <select id="edit-knitting-yarn-weight">
+                            <option value="">Select weight</option>
+                            <option value="Lace">Lace</option>
+                            <option value="Fingering">Fingering</option>
+                            <option value="Sport">Sport</option>
+                            <option value="DK">DK</option>
+                            <option value="Worsted">Worsted</option>
+                            <option value="Bulky">Bulky</option>
+                            <option value="Super Bulky">Super Bulky</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>📐 Yardage Used</label>
+                        <input type="text" id="edit-knitting-yardage">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Pattern Link</label>
+                        <input type="url" id="edit-knitting-pattern-link" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="edit-knitting-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Sewing Fields -->
+                <div id="edit-sewing-fields" class="craft-fields" style="display: none;">
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--terracotta);">🪡 Sewing Details</h4>
+                    <div class="form-group">
+                        <label>🧵 Fabric Type</label>
+                        <input type="text" id="edit-sewing-fabric-type" placeholder="e.g., Cotton, Linen">
+                    </div>
+                    <div class="form-group">
+                        <label>📏 Fabric Amount</label>
+                        <input type="text" id="edit-sewing-fabric-amount" placeholder="e.g., 2 yards">
+                    </div>
+                    <div class="form-group">
+                        <label>🏷️ Fabric Brand</label>
+                        <input type="text" id="edit-sewing-fabric-brand">
+                    </div>
+                    <div class="form-group">
+                        <label>🪡 Needle Type/Size</label>
+                        <input type="text" id="edit-sewing-needle-info" placeholder="e.g., Universal 80/12">
+                    </div>
+                    <div class="form-group">
+                        <label>✂️ Notions Used</label>
+                        <input type="text" id="edit-sewing-notions" placeholder="e.g., Zipper, buttons">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Pattern Link</label>
+                        <input type="url" id="edit-sewing-pattern-link" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="edit-sewing-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Embroidery Fields -->
+                <div id="edit-embroidery-fields" class="craft-fields" style="display: none;">
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--terracotta);">🪡 Embroidery Details</h4>
+                    <div class="form-group">
+                        <label>🧵 Thread Brand</label>
+                        <input type="text" id="edit-embroidery-thread-brand" placeholder="e.g., DMC">
+                    </div>
+                    <div class="form-group">
+                        <label>🎨 Thread Colors</label>
+                        <input type="text" id="edit-embroidery-colors" placeholder="e.g., 310, 498, 666">
+                    </div>
+                    <div class="form-group">
+                        <label>🧵 Fabric Type</label>
+                        <input type="text" id="edit-embroidery-fabric">
+                    </div>
+                    <div class="form-group">
+                        <label>⭕ Hoop Size</label>
+                        <input type="text" id="edit-embroidery-hoop" placeholder="e.g., 6 inch">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Pattern Link</label>
+                        <input type="url" id="edit-embroidery-pattern-link" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="edit-embroidery-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Weaving Fields -->
+                <div id="edit-weaving-fields" class="craft-fields" style="display: none;">
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--terracotta);">🧵 Weaving Details</h4>
+                    <div class="form-group">
+                        <label>🧵 Loom Type</label>
+                        <input type="text" id="edit-weaving-loom" placeholder="e.g., Floor loom, Rigid heddle">
+                    </div>
+                    <div class="form-group">
+                        <label>📏 Reed Size</label>
+                        <input type="text" id="edit-weaving-reed" placeholder="e.g., 12 dent">
+                    </div>
+                    <div class="form-group">
+                        <label>📐 Warp Yarn</label>
+                        <input type="text" id="edit-weaving-warp">
+                    </div>
+                    <div class="form-group">
+                        <label>🧵 Weft Yarn</label>
+                        <input type="text" id="edit-weaving-weft">
+                    </div>
+                    <div class="form-group">
+                        <label>📏 Dimensions</label>
+                        <input type="text" id="edit-weaving-dimensions" placeholder="e.g., 24 x 36 inches">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="edit-weaving-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Quilting Fields -->
+                <div id="edit-quilting-fields" class="craft-fields" style="display: none;">
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--terracotta);">🧵 Quilting Details</h4>
+                    <div class="form-group">
+                        <label>📏 Quilt Size</label>
+                        <input type="text" id="edit-quilting-size" placeholder="e.g., Twin, Queen">
+                    </div>
+                    <div class="form-group">
+                        <label>🧵 Batting Type</label>
+                        <input type="text" id="edit-quilting-batting" placeholder="e.g., Cotton, Polyester">
+                    </div>
+                    <div class="form-group">
+                        <label>🎨 Fabric Collection</label>
+                        <input type="text" id="edit-quilting-fabric">
+                    </div>
+                    <div class="form-group">
+                        <label>📐 Block Pattern</label>
+                        <input type="text" id="edit-quilting-block" placeholder="e.g., Log Cabin">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Pattern Link</label>
+                        <input type="url" id="edit-quilting-pattern-link" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="edit-quilting-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
+                <!-- Leather Work Fields -->
+                <div id="edit-leather-fields" class="craft-fields" style="display: none;">
+                    <h4 style="margin: 1.5rem 0 1rem; color: var(--terracotta);">🧳 Leather Work Details</h4>
+                    <div class="form-group">
+                        <label>🧳 Leather Type</label>
+                        <input type="text" id="edit-leather-type" placeholder="e.g., Veg-tan, Chrome-tan">
+                    </div>
+                    <div class="form-group">
+                        <label>📏 Leather Weight</label>
+                        <input type="text" id="edit-leather-weight" placeholder="e.g., 4-5 oz">
+                    </div>
+                    <div class="form-group">
+                        <label>🎨 Color/Finish</label>
+                        <input type="text" id="edit-leather-color">
+                    </div>
+                    <div class="form-group">
+                        <label>🔧 Hardware Used</label>
+                        <input type="text" id="edit-leather-hardware" placeholder="e.g., Brass buckle">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Pattern Link</label>
+                        <input type="url" id="edit-leather-pattern-link" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>🔗 Supplies Link</label>
+                        <input type="url" id="edit-leather-supplies-link" placeholder="https://...">
+                    </div>
+                </div>
+
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Save Changes</button>
             </form>
         </div>
@@ -2206,10 +2457,83 @@
 
             if (!project) return;
 
+            // Set basic fields
             document.getElementById('edit-project-id').value = project.id;
+            document.getElementById('edit-project-craft-type').value = project.craft_type;
             document.getElementById('edit-project-title').value = project.title;
             document.getElementById('edit-project-description').value = project.description || '';
             document.getElementById('edit-project-status').value = project.status;
+            
+            // Hide all craft fields first
+            document.querySelectorAll('#edit-project-modal .craft-fields').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show and populate craft-specific fields
+            const details = project.craft_details || {};
+            
+            if (project.craft_type === 'Crochet') {
+                document.getElementById('edit-crochet-fields').style.display = 'block';
+                document.getElementById('edit-crochet-hook').value = details.hook_size || '';
+                document.getElementById('edit-crochet-yarn-brand').value = details.yarn_brand || '';
+                document.getElementById('edit-crochet-yarn-color').value = details.yarn_color || '';
+                document.getElementById('edit-crochet-yarn-weight').value = details.yarn_weight || '';
+                document.getElementById('edit-crochet-gauge').value = details.gauge || '';
+                document.getElementById('edit-crochet-yardage').value = details.yardage || '';
+                document.getElementById('edit-crochet-pattern-link').value = details.pattern_link || '';
+                document.getElementById('edit-crochet-supplies-link').value = details.supplies_link || '';
+            } else if (project.craft_type === 'Knitting') {
+                document.getElementById('edit-knitting-fields').style.display = 'block';
+                document.getElementById('edit-knitting-needle-type').value = details.needle_type || '';
+                document.getElementById('edit-knitting-needle-size').value = details.needle_size || '';
+                document.getElementById('edit-knitting-yarn-brand').value = details.yarn_brand || '';
+                document.getElementById('edit-knitting-yarn-color').value = details.yarn_color || '';
+                document.getElementById('edit-knitting-yarn-weight').value = details.yarn_weight || '';
+                document.getElementById('edit-knitting-yardage').value = details.yardage || '';
+                document.getElementById('edit-knitting-pattern-link').value = details.pattern_link || '';
+                document.getElementById('edit-knitting-supplies-link').value = details.supplies_link || '';
+            } else if (project.craft_type === 'Sewing') {
+                document.getElementById('edit-sewing-fields').style.display = 'block';
+                document.getElementById('edit-sewing-fabric-type').value = details.fabric_type || '';
+                document.getElementById('edit-sewing-fabric-amount').value = details.fabric_amount || '';
+                document.getElementById('edit-sewing-fabric-brand').value = details.fabric_brand || '';
+                document.getElementById('edit-sewing-needle-info').value = details.needle_info || '';
+                document.getElementById('edit-sewing-notions').value = details.notions || '';
+                document.getElementById('edit-sewing-pattern-link').value = details.pattern_link || '';
+                document.getElementById('edit-sewing-supplies-link').value = details.supplies_link || '';
+            } else if (project.craft_type === 'Embroidery') {
+                document.getElementById('edit-embroidery-fields').style.display = 'block';
+                document.getElementById('edit-embroidery-thread-brand').value = details.thread_brand || '';
+                document.getElementById('edit-embroidery-colors').value = details.thread_colors || '';
+                document.getElementById('edit-embroidery-fabric').value = details.fabric || '';
+                document.getElementById('edit-embroidery-hoop').value = details.hoop_size || '';
+                document.getElementById('edit-embroidery-pattern-link').value = details.pattern_link || '';
+                document.getElementById('edit-embroidery-supplies-link').value = details.supplies_link || '';
+            } else if (project.craft_type === 'Weaving') {
+                document.getElementById('edit-weaving-fields').style.display = 'block';
+                document.getElementById('edit-weaving-loom').value = details.loom_type || '';
+                document.getElementById('edit-weaving-reed').value = details.reed_size || '';
+                document.getElementById('edit-weaving-warp').value = details.warp_yarn || '';
+                document.getElementById('edit-weaving-weft').value = details.weft_yarn || '';
+                document.getElementById('edit-weaving-dimensions').value = details.dimensions || '';
+                document.getElementById('edit-weaving-supplies-link').value = details.supplies_link || '';
+            } else if (project.craft_type === 'Quilting') {
+                document.getElementById('edit-quilting-fields').style.display = 'block';
+                document.getElementById('edit-quilting-size').value = details.quilt_size || '';
+                document.getElementById('edit-quilting-batting').value = details.batting_type || '';
+                document.getElementById('edit-quilting-fabric').value = details.fabric_collection || '';
+                document.getElementById('edit-quilting-block').value = details.block_pattern || '';
+                document.getElementById('edit-quilting-pattern-link').value = details.pattern_link || '';
+                document.getElementById('edit-quilting-supplies-link').value = details.supplies_link || '';
+            } else if (project.craft_type === 'Leather Work') {
+                document.getElementById('edit-leather-fields').style.display = 'block';
+                document.getElementById('edit-leather-type').value = details.leather_type || '';
+                document.getElementById('edit-leather-weight').value = details.leather_weight || '';
+                document.getElementById('edit-leather-color').value = details.color_finish || '';
+                document.getElementById('edit-leather-hardware').value = details.hardware || '';
+                document.getElementById('edit-leather-pattern-link').value = details.pattern_link || '';
+                document.getElementById('edit-leather-supplies-link').value = details.supplies_link || '';
+            }
             
             document.getElementById('edit-project-modal').classList.add('show');
         }
@@ -2222,16 +2546,137 @@
             event.preventDefault();
             
             const projectId = document.getElementById('edit-project-id').value;
+            const craftType = document.getElementById('edit-project-craft-type').value;
             
+            // Get craft-specific details
+            const craftDetails = getEditCraftDetails(craftType);
+
             await supabase.from('projects').update({
                 title: document.getElementById('edit-project-title').value,
                 description: document.getElementById('edit-project-description').value,
-                status: document.getElementById('edit-project-status').value
+                status: document.getElementById('edit-project-status').value,
+                craft_details: craftDetails
             }).eq('id', projectId);
 
             closeEditProject();
             alert('Project updated!');
             await loadUserData();
+        }
+
+        function getEditCraftDetails(craftType) {
+            const details = {};
+            
+            if (craftType === 'Crochet') {
+                const hook = document.getElementById('edit-crochet-hook').value;
+                const brand = document.getElementById('edit-crochet-yarn-brand').value;
+                const color = document.getElementById('edit-crochet-yarn-color').value;
+                const weight = document.getElementById('edit-crochet-yarn-weight').value;
+                const gauge = document.getElementById('edit-crochet-gauge').value;
+                const yardage = document.getElementById('edit-crochet-yardage').value;
+                const pattern = document.getElementById('edit-crochet-pattern-link').value;
+                const supplies = document.getElementById('edit-crochet-supplies-link').value;
+                
+                if (hook) details.hook_size = hook;
+                if (brand) details.yarn_brand = brand;
+                if (color) details.yarn_color = color;
+                if (weight) details.yarn_weight = weight;
+                if (gauge) details.gauge = gauge;
+                if (yardage) details.yardage = yardage;
+                if (pattern) details.pattern_link = pattern;
+                if (supplies) details.supplies_link = supplies;
+            } else if (craftType === 'Knitting') {
+                const needleType = document.getElementById('edit-knitting-needle-type').value;
+                const needleSize = document.getElementById('edit-knitting-needle-size').value;
+                const brand = document.getElementById('edit-knitting-yarn-brand').value;
+                const color = document.getElementById('edit-knitting-yarn-color').value;
+                const weight = document.getElementById('edit-knitting-yarn-weight').value;
+                const yardage = document.getElementById('edit-knitting-yardage').value;
+                const pattern = document.getElementById('edit-knitting-pattern-link').value;
+                const supplies = document.getElementById('edit-knitting-supplies-link').value;
+                
+                if (needleType) details.needle_type = needleType;
+                if (needleSize) details.needle_size = needleSize;
+                if (brand) details.yarn_brand = brand;
+                if (color) details.yarn_color = color;
+                if (weight) details.yarn_weight = weight;
+                if (yardage) details.yardage = yardage;
+                if (pattern) details.pattern_link = pattern;
+                if (supplies) details.supplies_link = supplies;
+            } else if (craftType === 'Sewing') {
+                const fabricType = document.getElementById('edit-sewing-fabric-type').value;
+                const fabricAmount = document.getElementById('edit-sewing-fabric-amount').value;
+                const fabricBrand = document.getElementById('edit-sewing-fabric-brand').value;
+                const needleInfo = document.getElementById('edit-sewing-needle-info').value;
+                const notions = document.getElementById('edit-sewing-notions').value;
+                const pattern = document.getElementById('edit-sewing-pattern-link').value;
+                const supplies = document.getElementById('edit-sewing-supplies-link').value;
+                
+                if (fabricType) details.fabric_type = fabricType;
+                if (fabricAmount) details.fabric_amount = fabricAmount;
+                if (fabricBrand) details.fabric_brand = fabricBrand;
+                if (needleInfo) details.needle_info = needleInfo;
+                if (notions) details.notions = notions;
+                if (pattern) details.pattern_link = pattern;
+                if (supplies) details.supplies_link = supplies;
+            } else if (craftType === 'Embroidery') {
+                const threadBrand = document.getElementById('edit-embroidery-thread-brand').value;
+                const colors = document.getElementById('edit-embroidery-colors').value;
+                const fabric = document.getElementById('edit-embroidery-fabric').value;
+                const hoop = document.getElementById('edit-embroidery-hoop').value;
+                const pattern = document.getElementById('edit-embroidery-pattern-link').value;
+                const supplies = document.getElementById('edit-embroidery-supplies-link').value;
+                
+                if (threadBrand) details.thread_brand = threadBrand;
+                if (colors) details.thread_colors = colors;
+                if (fabric) details.fabric = fabric;
+                if (hoop) details.hoop_size = hoop;
+                if (pattern) details.pattern_link = pattern;
+                if (supplies) details.supplies_link = supplies;
+            } else if (craftType === 'Weaving') {
+                const loom = document.getElementById('edit-weaving-loom').value;
+                const reed = document.getElementById('edit-weaving-reed').value;
+                const warp = document.getElementById('edit-weaving-warp').value;
+                const weft = document.getElementById('edit-weaving-weft').value;
+                const dimensions = document.getElementById('edit-weaving-dimensions').value;
+                const supplies = document.getElementById('edit-weaving-supplies-link').value;
+                
+                if (loom) details.loom_type = loom;
+                if (reed) details.reed_size = reed;
+                if (warp) details.warp_yarn = warp;
+                if (weft) details.weft_yarn = weft;
+                if (dimensions) details.dimensions = dimensions;
+                if (supplies) details.supplies_link = supplies;
+            } else if (craftType === 'Quilting') {
+                const size = document.getElementById('edit-quilting-size').value;
+                const batting = document.getElementById('edit-quilting-batting').value;
+                const fabric = document.getElementById('edit-quilting-fabric').value;
+                const block = document.getElementById('edit-quilting-block').value;
+                const pattern = document.getElementById('edit-quilting-pattern-link').value;
+                const supplies = document.getElementById('edit-quilting-supplies-link').value;
+                
+                if (size) details.quilt_size = size;
+                if (batting) details.batting_type = batting;
+                if (fabric) details.fabric_collection = fabric;
+                if (block) details.block_pattern = block;
+                if (pattern) details.pattern_link = pattern;
+                if (supplies) details.supplies_link = supplies;
+            } else if (craftType === 'Leather Work') {
+                const type = document.getElementById('edit-leather-type').value;
+                const weight = document.getElementById('edit-leather-weight').value;
+                const color = document.getElementById('edit-leather-color').value;
+                const hardware = document.getElementById('edit-leather-hardware').value;
+                const pattern = document.getElementById('edit-leather-pattern-link').value;
+                const supplies = document.getElementById('edit-leather-supplies-link').value;
+                
+                if (type) details.leather_type = type;
+                if (weight) details.leather_weight = weight;
+                if (color) details.color_finish = color;
+                if (hardware) details.hardware = hardware;
+                if (pattern) details.pattern_link = pattern;
+                if (supplies) details.supplies_link = supplies;
+            }
+            
+            return details;
         }
 
         function showAddUpdate(projectId) {
@@ -2253,6 +2698,8 @@
             const content = document.getElementById('update-content').value;
             const photoInput = document.getElementById('update-photo');
             
+            console.log('Adding update for project:', projectId);
+            
             let photoUrl = null;
             
             // Upload photo if provided
@@ -2261,29 +2708,50 @@
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${projectId}/${Date.now()}.${fileExt}`;
                 
-                const { error: uploadError } = await supabase.storage
+                console.log('Uploading photo:', fileName);
+                
+                const { data, error: uploadError } = await supabase.storage
                     .from('project-images')
                     .upload(fileName, file);
                 
-                if (!uploadError) {
-                    const { data: { publicUrl } } = supabase.storage
+                if (uploadError) {
+                    console.warn('Photo upload failed:', uploadError.message);
+                    // Continue without photo
+                } else {
+                    const { data: urlData } = supabase.storage
                         .from('project-images')
                         .getPublicUrl(fileName);
-                    photoUrl = publicUrl;
+                    photoUrl = urlData.publicUrl;
+                    console.log('Photo uploaded:', photoUrl);
                 }
             }
             
             // Create update
-            await supabase.from('project_updates').insert({
+            const { data, error } = await supabase.from('project_updates').insert({
                 project_id: projectId,
                 user_id: currentUser.id,
                 content: content,
                 photo_url: photoUrl
-            });
+            }).select();
+            
+            if (error) {
+                console.error('Error creating update:', error);
+                alert('Failed to post update: ' + error.message);
+                return;
+            }
+            
+            console.log('Update posted successfully:', data);
             
             closeAddUpdate();
             alert('Update posted!');
+            
+            // Reload everything
             await loadUserData();
+            
+            // Reopen the project to show the update
+            setTimeout(() => {
+                showProjectDetail(projectId);
+            }, 500);
         }
 
         // Preview photo before upload
@@ -2914,25 +3382,46 @@
         async function sendWidgetMessage(event) {
             event.preventDefault();
             
-            if (!currentChatUser) return;
+            console.log('Sending message...');
+            
+            if (!currentChatUser) {
+                console.error('No chat user selected');
+                return;
+            }
             
             const input = document.getElementById('chat-widget-input');
             const content = input.value.trim();
             
-            if (!content) return;
+            if (!content) {
+                console.log('Empty message');
+                return;
+            }
+            
+            console.log('Message content:', content);
+            console.log('Sending to:', currentChatUser.id);
             
             // Send message
-            const { error } = await supabase.from('messages').insert({
+            const { data, error } = await supabase.from('messages').insert({
                 sender_id: currentUser.id,
                 receiver_id: currentChatUser.id,
                 content: content
-            });
+            }).select();
             
             if (error) {
                 console.error('Error sending message:', error);
-                alert('Failed to send message');
+                alert('Failed to send message: ' + error.message);
                 return;
             }
+            
+            console.log('Message sent successfully:', data);
+            
+            // Send notification to receiver
+            await supabase.from('notifications').insert({
+                user_id: currentChatUser.id,
+                type: 'message',
+                content: `New message from @${userProfile.username}`,
+                related_user_id: currentUser.id
+            });
             
             // Clear input
             input.value = '';
