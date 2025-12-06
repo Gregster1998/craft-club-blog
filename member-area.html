@@ -1337,6 +1337,62 @@
         </div>
     </div>
 
+    <!-- Edit Project Modal -->
+    <div class="modal" id="edit-project-modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2>Edit Project</h2>
+                <button class="modal-close" onclick="closeEditProject()">&times;</button>
+            </div>
+            <form onsubmit="handleUpdateProject(event)">
+                <input type="hidden" id="edit-project-id">
+                <div class="form-group">
+                    <label>Title *</label>
+                    <input type="text" id="edit-project-title" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="edit-project-description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="edit-project-status">
+                        <option value="planning">Planning</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="on_hold">On Hold</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Update Modal -->
+    <div class="modal" id="add-update-modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2>Add Project Update</h2>
+                <button class="modal-close" onclick="closeAddUpdate()">&times;</button>
+            </div>
+            <form onsubmit="handleAddUpdate(event)">
+                <input type="hidden" id="update-project-id">
+                <div class="form-group">
+                    <label>What's new? *</label>
+                    <textarea id="update-content" required placeholder="Made progress on the sleeves today..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Add Photo (Optional)</label>
+                    <input type="file" id="update-photo" accept="image/*">
+                    <div id="update-photo-preview" style="margin-top: 1rem; display: none;">
+                        <img style="max-width: 100%; border-radius: 8px;">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">Post Update</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Floating Chat Widget -->
     <div class="chat-widget" id="chat-widget">
         <div class="chat-widget-header">
@@ -1889,7 +1945,15 @@
                             <span>💬 ${project.comments_count || 0}</span>
                         </div>
                         ${isOwner ? `
-                            <button class="btn btn-danger btn-small" style="width: 100%; margin-top: 1rem;" onclick="event.stopPropagation(); deleteProject('${project.id}')">
+                            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                <button class="btn btn-secondary btn-small" style="flex: 1;" onclick="event.stopPropagation(); showEditProject('${project.id}')">
+                                    ✏️ Edit
+                                </button>
+                                <button class="btn btn-primary btn-small" style="flex: 1;" onclick="event.stopPropagation(); showAddUpdate('${project.id}')">
+                                    📝 Update
+                                </button>
+                            </div>
+                            <button class="btn btn-danger btn-small" style="width: 100%; margin-top: 0.5rem;" onclick="event.stopPropagation(); deleteProject('${project.id}')">
                                 🗑️ Delete
                             </button>
                         ` : ''}
@@ -1907,8 +1971,57 @@
 
             if (!project) return;
 
+            // Load project updates
+            const { data: updates } = await supabase
+                .from('project_updates')
+                .select('*, profiles(username, avatar_initials, profile_picture_url)')
+                .eq('project_id', projectId)
+                .order('created_at', { ascending: false });
+
             const isOwner = project.user_id === currentUser.id;
             const craftDetailsHTML = displayCraftDetails(project.craft_type, project.craft_details);
+
+            const updatesHTML = updates && updates.length > 0 ? `
+                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--light-beige);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="margin: 0;">📝 Project Updates (${updates.length})</h3>
+                        ${isOwner ? `
+                            <button class="btn btn-primary btn-small" onclick="event.stopPropagation(); document.getElementById('project-detail-temp').remove(); showAddUpdate('${projectId}')">
+                                + Add Update
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        ${updates.map(update => `
+                            <div style="background: var(--cream); padding: 1.5rem; border-radius: 12px;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                                    <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--terracotta); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; overflow: hidden;">
+                                        ${update.profiles?.profile_picture_url ? 
+                                            `<img src="${update.profiles.profile_picture_url}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                                            update.profiles?.avatar_initials
+                                        }
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; font-size: 0.9rem;">@${update.profiles?.username}</div>
+                                        <div style="font-size: 0.75rem; color: var(--text-muted); font-family: -apple-system, sans-serif;">${getTimeAgo(update.created_at)}</div>
+                                    </div>
+                                </div>
+                                <p style="font-family: -apple-system, sans-serif; line-height: 1.6; margin-bottom: ${update.photo_url ? '1rem' : '0'};">${update.content}</p>
+                                ${update.photo_url ? `
+                                    <img src="${update.photo_url}" style="width: 100%; border-radius: 8px; max-height: 400px; object-fit: cover;">
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : isOwner ? `
+                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--light-beige); text-align: center;">
+                    <p style="color: var(--text-muted); margin-bottom: 1rem;">No updates yet. Share your progress!</p>
+                    <button class="btn btn-primary" onclick="event.stopPropagation(); document.getElementById('project-detail-temp').remove(); showAddUpdate('${projectId}')">
+                        + Add First Update
+                    </button>
+                </div>
+            ` : '';
 
             const modalHTML = `
                 <div class="modal show" id="project-detail-temp" onclick="if(event.target === this) this.remove()" style="display: flex;">
@@ -1920,7 +2033,7 @@
                         
                         <div style="margin-bottom: 1rem;">
                             <div style="display: inline-block; padding: 0.5rem 1rem; background: var(--light-beige); border-radius: 20px; font-family: -apple-system, sans-serif; font-size: 0.9rem;">
-                                ${getCraftIcon(project.craft_type)} ${project.craft_type}
+                                ${getCraftIcon(project.craft_type)} ${project.craft_type} • ${project.status.replace('_', ' ')}
                             </div>
                         </div>
 
@@ -1944,6 +2057,8 @@
 
                         ${craftDetailsHTML}
 
+                        ${updatesHTML}
+
                         <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--light-beige); display: flex; gap: 2rem; font-family: -apple-system, sans-serif; color: var(--text-muted);">
                             <span>❤️ ${project.likes_count || 0} likes</span>
                             <span>💬 ${project.comments_count || 0} comments</span>
@@ -1954,7 +2069,16 @@
                             <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="toggleLike(event, '${project.id}'); setTimeout(() => document.getElementById('project-detail-temp').remove(), 500);" id="detail-like-btn-${project.id}">
                                 Like This Project ❤️
                             </button>
-                        ` : ''}
+                        ` : `
+                            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                                <button class="btn btn-secondary" style="flex: 1;" onclick="event.stopPropagation(); document.getElementById('project-detail-temp').remove(); showEditProject('${project.id}')">
+                                    ✏️ Edit Project
+                                </button>
+                                <button class="btn btn-primary" style="flex: 1;" onclick="event.stopPropagation(); document.getElementById('project-detail-temp').remove(); showAddUpdate('${project.id}')">
+                                    📝 Add Update
+                                </button>
+                            </div>
+                        `}
                     </div>
                 </div>
             `;
@@ -2072,6 +2196,114 @@
             event.target.reset();
             await loadUserData();
         }
+
+        async function showEditProject(projectId) {
+            const { data: project } = await supabase
+                .from('projects')
+                .select('*')
+                .eq('id', projectId)
+                .single();
+
+            if (!project) return;
+
+            document.getElementById('edit-project-id').value = project.id;
+            document.getElementById('edit-project-title').value = project.title;
+            document.getElementById('edit-project-description').value = project.description || '';
+            document.getElementById('edit-project-status').value = project.status;
+            
+            document.getElementById('edit-project-modal').classList.add('show');
+        }
+
+        function closeEditProject() {
+            document.getElementById('edit-project-modal').classList.remove('show');
+        }
+
+        async function handleUpdateProject(event) {
+            event.preventDefault();
+            
+            const projectId = document.getElementById('edit-project-id').value;
+            
+            await supabase.from('projects').update({
+                title: document.getElementById('edit-project-title').value,
+                description: document.getElementById('edit-project-description').value,
+                status: document.getElementById('edit-project-status').value
+            }).eq('id', projectId);
+
+            closeEditProject();
+            alert('Project updated!');
+            await loadUserData();
+        }
+
+        function showAddUpdate(projectId) {
+            document.getElementById('update-project-id').value = projectId;
+            document.getElementById('update-content').value = '';
+            document.getElementById('update-photo').value = '';
+            document.getElementById('update-photo-preview').style.display = 'none';
+            document.getElementById('add-update-modal').classList.add('show');
+        }
+
+        function closeAddUpdate() {
+            document.getElementById('add-update-modal').classList.remove('show');
+        }
+
+        async function handleAddUpdate(event) {
+            event.preventDefault();
+            
+            const projectId = document.getElementById('update-project-id').value;
+            const content = document.getElementById('update-content').value;
+            const photoInput = document.getElementById('update-photo');
+            
+            let photoUrl = null;
+            
+            // Upload photo if provided
+            if (photoInput.files && photoInput.files[0]) {
+                const file = photoInput.files[0];
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${projectId}/${Date.now()}.${fileExt}`;
+                
+                const { error: uploadError } = await supabase.storage
+                    .from('project-images')
+                    .upload(fileName, file);
+                
+                if (!uploadError) {
+                    const { data: { publicUrl } } = supabase.storage
+                        .from('project-images')
+                        .getPublicUrl(fileName);
+                    photoUrl = publicUrl;
+                }
+            }
+            
+            // Create update
+            await supabase.from('project_updates').insert({
+                project_id: projectId,
+                user_id: currentUser.id,
+                content: content,
+                photo_url: photoUrl
+            });
+            
+            closeAddUpdate();
+            alert('Update posted!');
+            await loadUserData();
+        }
+
+        // Preview photo before upload
+        document.addEventListener('DOMContentLoaded', () => {
+            const photoInput = document.getElementById('update-photo');
+            if (photoInput) {
+                photoInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const preview = document.getElementById('update-photo-preview');
+                            preview.querySelector('img').src = e.target.result;
+                            preview.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
 
         function showEditProfile() {
             document.getElementById('edit-username').value = userProfile.username;
