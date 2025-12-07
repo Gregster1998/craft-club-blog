@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migrate to Supabase | International Craft Club</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #F5F1E8;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-family: 'Georgia', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #3C2F2F;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .step {
+            background: #F5F1E8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .step h2 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: #A0695F;
+        }
+
+        button {
+            padding: 0.75rem 2rem;
+            background: #A0695F;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        button:hover {
+            background: #8D5A4F;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Migrate to Supabase</h1>
+        <p>This tool helps you migrate your existing localStorage posts to your new Supabase database.</p>
+
+        <!-- Step 1: Check localStorage -->
+        <div class="step">
+            <h2>Step 1: Check Your Current Posts</h2>
+            <p>First, let's see if you have any posts in localStorage.</p>
+            <button onclick="checkLocalStorage()">Check localStorage</button>
+            <div id="localStorageResult"></div>
+        </div>
+
+        <!-- Step 2: Add Sample Data (Optional) -->
+        <div class="step">
+            <h2>Step 2: Add Sample Data (Optional)</h2>
+            <p>If you want to start with sample posts, use this SQL in your Supabase SQL Editor:</p>
+            <pre>
+-- Insert sample posts
+INSERT INTO posts (id, title, slug, category, excerpt, content, image, author, read_time, status, created_at, updated_at) VALUES
+('sample-1', 'Slow Stitching as Meditation: Finding Peace in Every Thread', 'slow-stitching-meditation', 'slow-living', 'In a world that demands constant productivity, there''s something radical about sitting down with needle and thread, making one stitch at a time.', '# Slow Stitching as Meditation
+
+In a world that demands constant productivity, there''s something radical about sitting down with needle and thread, making one stitch at a time.
+
+## The Practice of Presence
+
+When you slow stitch, you''re forced into the present moment. Unlike machine sewing with its mechanical hum and rapid completion, hand stitching demands your full attention. Each stitch is a small meditation—thread through fabric, pull gently, repeat.
+
+## Why It Matters
+
+Our hands were made to create. For thousands of years, humans have worked with fiber, with thread, with the slow accumulation of stitches that become something whole. In our hurried modern world, we''ve lost touch with this ancient rhythm.
+
+## Getting Started
+
+You don''t need fancy equipment. A needle, thread, and a scrap of fabric are enough. Start with a simple running stitch. Feel the resistance of the fabric, the slide of thread, the rhythm of your breathing synchronized with your hands.
+
+## The Radical Act of Slow
+
+In a culture of fast fashion and instant gratification, choosing to create slowly is an act of rebellion. It''s a statement that not everything should be optimized for speed. Some things—beautiful things—take time.
+
+And that''s exactly the point.', NULL, 'Elena Rosetti', 6, 'published', NOW() - INTERVAL '5 days', NOW() - INTERVAL '5 days'),
+
+('sample-2', 'Natural Dyes from Your Kitchen: A Beginner''s Guide', 'natural-dyes-kitchen-guide', 'techniques', 'Onion skins, avocado pits, and black beans—your kitchen scraps hold beautiful colors waiting to be discovered.', '# Natural Dyes from Your Kitchen
+
+Before synthetic dyes, all color came from nature. Plants, insects, minerals—people extracted beauty from the world around them. Today, we can rediscover these ancient techniques right in our own kitchens.
+
+## What You''ll Need
+
+- White or light-colored natural fabric
+- Large pot (not for cooking food!)
+- Water
+- Kitchen scraps
+- Fixative (salt or vinegar)
+
+## The Best Kitchen Scraps
+
+**Onion Skins** - Yellow to orange-brown colors
+**Avocado Pits** - Dusty pink
+**Black Beans** - Blue-purple hues
+**Coffee Grounds** - Rich browns
+
+## The Process
+
+1. Simmer your scraps in water for 1-2 hours
+2. Strain out plant material
+3. Add fixative
+4. Add fabric and simmer 1 hour
+5. Rinse and dry
+
+## Embrace Imperfection
+
+Natural dyes are unpredictable. Colors vary by season, water, timing. This isn''t a flaw—it''s the beauty. Each piece becomes unique, unrepeatable, yours.', NULL, 'Maya Chen', 8, 'published', NOW() - INTERVAL '3 days', NOW() - INTERVAL '3 days'),
+
+('sample-3', 'Your First Crochet Project: The Granny Square', 'first-crochet-granny-square', 'tutorials', 'Every master was once a beginner. Start your crochet journey with this timeless, forgiving pattern.', '# Your First Crochet Project
+
+The granny square is where most crocheters begin, and for good reason. It''s forgiving, versatile, and teaches you all the fundamental stitches you''ll need.
+
+## What You''ll Need
+
+- Worsted weight yarn
+- Size H/8 (5mm) hook
+- Scissors
+- Patience
+
+## Why Granny Squares?
+
+1. **Forgiving** - Mistakes are easy to fix
+2. **Repetitive** - You''ll memorize quickly
+3. **Modular** - Make many and join them
+4. **Functional** - Endless possibilities
+
+## Your First Square Will Be Ugly
+
+Let me save you anxiety: your first square will probably be wonky. The tension will be off, maybe you''ll drop a stitch, the corners won''t be quite square.
+
+Make it anyway.
+
+Then make another. By your fifth square, you''ll see improvement. By your twentieth, you''ll be proud.
+
+Every master was once a beginner who kept going.', NULL, 'Elena Rosetti', 12, 'published', NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day');
+            </pre>
+            <p style="margin-top: 1rem;">Copy this SQL and run it in your Supabase SQL Editor.</p>
+        </div>
+
+        <!-- Step 3: Migrate -->
+        <div class="step">
+            <h2>Step 3: Migrate Your Posts</h2>
+            <p>Click below to migrate your localStorage posts to Supabase. Make sure you've configured your Supabase credentials in <code>supabase-client.js</code>!</p>
+            <button onclick="migrateToSupabase()" id="migrateBtn">Migrate to Supabase</button>
+            <div id="migrationResult"></div>
+        </div>
+
+        <!-- Step 4: Verify -->
+        <div class="step">
+            <h2>Step 4: Verify Migration</h2>
+            <p>After migration, open your Supabase dashboard and check the <code>posts</code> table to verify your data.</p>
+            <button onclick="window.open('https://supabase.com/dashboard', '_blank')">Open Supabase Dashboard</button>
+        </div>
+
+        <!-- Step 5: Switch -->
+        <div class="step">
+            <h2>Step 5: Switch to Supabase Files</h2>
+            <p>Once migration is complete, rename your files:</p>
+            <ul style="margin-left: 2rem; margin-top: 1rem;">
+                <li>Rename <code>cms-supabase.html</code> to <code>cms.html</code></li>
+                <li>Keep <code>journal.html</code> and <code>post.html</code> as they are (already updated)</li>
+                <li>Make sure <code>supabase-client.js</code> has your credentials</li>
+            </ul>
+            <p style="margin-top: 1rem;">Your blog is now powered by Supabase! 🎉</p>
+        </div>
+    </div>
+
+    <script src="supabase-client.js"></script>
+    <script>
+        function checkLocalStorage() {
+            const resultDiv = document.getElementById('localStorageResult');
+            const savedPosts = localStorage.getItem('craftClubPosts');
+            
+            if (!savedPosts) {
+                resultDiv.innerHTML = '<div class="info">No posts found in localStorage. You can skip migration and use the sample data above!</div>';
+                return;
+            }
+
+            const posts = JSON.parse(savedPosts);
+            resultDiv.innerHTML = `
+                <div class="success">
+                    Found ${posts.length} posts in localStorage:
+                    <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                        ${posts.map(p => `<li>${p.title} (${p.status})</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        async function migrateToSupabase() {
+            const resultDiv = document.getElementById('migrationResult');
+            const migrateBtn = document.getElementById('migrateBtn');
+            
+            // Check if Supabase is configured
+            if (!isSupabaseConfigured()) {
+                resultDiv.innerHTML = '<div class="error">⚠️ Supabase not configured! Please edit supabase-client.js with your credentials first.</div>';
+                return;
+            }
+
+            // Check for posts
+            const savedPosts = localStorage.getItem('craftClubPosts');
+            if (!savedPosts) {
+                resultDiv.innerHTML = '<div class="info">No posts to migrate. Use the sample data above!</div>';
+                return;
+            }
+
+            migrateBtn.disabled = true;
+            migrateBtn.textContent = 'Migrating...';
+            resultDiv.innerHTML = '<div class="info">Starting migration...</div>';
+
+            try {
+                // Initialize Supabase
+                await initSupabase();
+
+                const posts = JSON.parse(savedPosts);
+                let successCount = 0;
+                let errorCount = 0;
+                const errors = [];
+
+                // Migrate each post
+                for (const post of posts) {
+                    try {
+                        // Transform the post data
+                        const supabasePost = {
+                            id: post.id,
+                            title: post.title,
+                            slug: post.slug,
+                            category: post.category,
+                            excerpt: post.excerpt,
+                            content: post.content,
+                            image: post.image || null,
+                            author: post.author,
+                            read_time: post.readTime || post.read_time,
+                            status: post.status,
+                            created_at: post.date || new Date().toISOString(),
+                            updated_at: new Date().toISOString()
+                        };
+
+                        await PostsDB.create(supabasePost);
+                        successCount++;
+                    } catch (error) {
+                        errorCount++;
+                        errors.push(`${post.title}: ${error.message}`);
+                    }
+                }
+
+                // Show results
+                if (errorCount === 0) {
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            ✅ Migration complete! Successfully migrated ${successCount} posts to Supabase.
+                            <p style="margin-top: 1rem;">Next: Verify your data in Supabase dashboard, then switch to the new CMS file.</p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            ⚠️ Migration completed with errors:
+                            <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                                <li>Successful: ${successCount}</li>
+                                <li>Failed: ${errorCount}</li>
+                            </ul>
+                            <p style="margin-top: 1rem;">Errors:</p>
+                            <ul style="margin-left: 2rem;">
+                                ${errors.map(e => `<li>${e}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Migration failed: ${error.message}</div>`;
+            } finally {
+                migrateBtn.disabled = false;
+                migrateBtn.textContent = 'Migrate to Supabase';
+            }
+        }
+    </script>
+</body>
+</html>
