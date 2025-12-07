@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>International Craft Club | Learn. Create. Connect.</title>
+    <title>International Craft Club - A Home for Makers Worldwide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
@@ -16,125 +20,198 @@
             --dark-brown: #3C2F2F;
             --cream: #F5F1E8;
             --light-beige: #EDE8DC;
-            --text-dark: #3C2F2F;
-            --text-muted: #8B7E74;
+            --text-dark: #2C2C2C;
+            --text-muted: #6B6B6B;
+            --background: #FAF8F4;
         }
 
         body {
-            font-family: 'Georgia', serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             color: var(--text-dark);
             line-height: 1.6;
+            background: var(--background);
         }
 
-        /* Typography */
         h1, h2, h3 {
-            font-weight: 400;
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
         }
 
-        .section-label {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--terracotta);
-            margin-bottom: 1rem;
-        }
-
-        .italic {
-            font-style: italic;
-        }
-
-        /* Header */
-        header {
+        /* Navigation */
+        nav {
+            background: var(--background);
+            padding: 1.5rem 0;
             position: fixed;
             top: 0;
             width: 100%;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
+            z-index: 100;
+            border-bottom: 1px solid rgba(160, 105, 95, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo-section {
+            display: flex;
+            flex-direction: column;
         }
 
         .logo {
-            font-size: 1.125rem;
-            font-weight: 400;
-            letter-spacing: 0.02em;
-        }
-
-        nav {
-            display: flex;
-            gap: 2rem;
-        }
-
-        nav a {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
             color: var(--text-dark);
             text-decoration: none;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 1rem;
+            font-weight: 400;
             transition: color 0.3s;
         }
 
-        nav a:hover {
+        .nav-links a:hover {
+            color: var(--terracotta);
+        }
+
+        .nav-cta {
+            background: var(--terracotta);
+            color: white !important;
+            padding: 0.75rem 1.75rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .nav-cta:hover {
+            background: var(--dark-brown);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
             color: var(--terracotta);
         }
 
         /* Hero Section */
         .hero {
-            height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><rect fill="%23C4A68A"/></svg>');
-            background-size: cover;
-            background-position: center;
+            margin-top: 80px;
+            position: relative;
+            height: 90vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 2rem;
-            color: white;
+            color: var(--text-dark);
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 1;
         }
 
         .hero-content {
-            max-width: 900px;
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
+
+        .hero-label {
+            font-size: 0.875rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 2rem;
+            font-weight: 500;
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            font-weight: 500;
         }
 
-        .hero h1 .accent {
+        .hero h1 .italic-accent {
+            font-style: italic;
             color: var(--terracotta);
         }
 
-        .hero p {
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            margin-bottom: 2.5rem;
-            opacity: 0.95;
-            line-height: 1.8;
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         .btn {
-            padding: 0.875rem 2rem;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
+            padding: 1rem 2rem;
+            border-radius: 8px;
             text-decoration: none;
-            display: inline-block;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .btn-primary {
@@ -143,24 +220,35 @@
         }
 
         .btn-primary:hover {
-            background: #8D5A4F;
+            background: var(--dark-brown);
             transform: translateY(-2px);
         }
 
         .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--terracotta);
+            border: 2px solid var(--terracotta);
         }
 
         .btn-secondary:hover {
-            background: white;
-            color: var(--text-dark);
+            background: var(--terracotta);
+            color: white;
         }
 
-        /* Section Styles */
-        section {
-            padding: 6rem 2rem;
+        .btn-tertiary {
+            background: rgba(134, 168, 153, 0.8);
+            color: white;
+        }
+
+        .btn-tertiary:hover {
+            background: rgba(134, 168, 153, 1);
+            transform: translateY(-2px);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 6rem 3rem;
+            background: white;
         }
 
         .section-header {
@@ -168,529 +256,601 @@
             margin-bottom: 4rem;
         }
 
-        .section-header h2 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            margin-bottom: 1rem;
-        }
-
-        .section-header p {
-            font-size: 1.125rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* Craft Diaries Section */
-        .diaries {
-            background: var(--light-beige);
-        }
-
-        .diaries-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .diary-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .diary-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .diary-card-image {
-            width: 100%;
-            height: 300px;
-            background: linear-gradient(135deg, #C4A68A, #A0695F);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .section-title {
+            font-family: 'Playfair Display', serif;
             font-size: 3rem;
-            color: white;
+            font-weight: 500;
+            line-height: 1.2;
         }
 
-        .diary-card-content {
-            padding: 1.5rem;
-        }
-
-        .diary-card-handle {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.875rem;
-            color: var(--terracotta);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .diary-card-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .diary-card-desc {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        /* Makers Section */
-        .makers {
-            background: var(--cream);
-        }
-
-        .makers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 3rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .maker-card {
-            text-align: center;
-        }
-
-        .maker-image {
-            width: 100%;
-            height: 400px;
-            background: linear-gradient(135deg, #E8D5C4, #C4A68A);
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-
-        .maker-name {
-            font-size: 1.75rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .maker-craft {
-            color: var(--terracotta);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .maker-location {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.25rem;
-        }
-
-        .maker-quote {
+        .section-title .italic-accent {
             font-style: italic;
-            font-size: 1rem;
-            color: var(--text-muted);
-            line-height: 1.8;
-        }
-
-        /* Coming Soon Section */
-        .coming-soon {
-            background: var(--dark-brown);
-            color: white;
-            text-align: center;
-        }
-
-        .coming-soon-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(160, 105, 95, 0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.875rem;
             color: var(--terracotta);
         }
 
-        .coming-soon h2 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            margin-bottom: 1.5rem;
-        }
-
-        .coming-soon p {
-            font-size: 1.125rem;
-            margin-bottom: 3rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .email-form {
-            display: flex;
-            gap: 1rem;
-            max-width: 600px;
-            margin: 0 auto 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .email-input {
-            flex: 1;
-            min-width: 250px;
-            padding: 0.875rem 1.25rem;
-            border: 2px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.1);
-            color: white;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 1rem;
-            border-radius: 4px;
-        }
-
-        .email-input::placeholder {
-            color: rgba(255,255,255,0.6);
-        }
-
-        .email-disclaimer {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.875rem;
-            opacity: 0.7;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--cream);
-            padding: 4rem 2rem 2rem;
-        }
-
-        .footer-content {
+        .steps-container {
             max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
         }
 
-        .footer-brand h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+        .step {
+            text-align: center;
         }
 
-        .footer-brand p {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            line-height: 1.8;
+        .step-icon-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
         }
 
-        .footer-section h4 {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 1.5rem;
+        .step-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--terracotta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--terracotta);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: var(--terracotta);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
             font-weight: 600;
         }
 
-        .footer-links {
-            list-style: none;
+        .step h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
         }
 
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-links a {
+        .step p {
             color: var(--text-muted);
-            text-decoration: none;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.95rem;
-            transition: color 0.3s;
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Projects Section */
+        .projects-section {
+            padding: 6rem 3rem;
+            background: var(--background);
+        }
+
+        .section-label {
+            font-size: 0.875rem;
+            color: var(--terracotta);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .projects-grid {
+            max-width: 1400px;
+            margin: 0 auto 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .project-category {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .project-image {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: var(--light-beige);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            font-size: 6rem;
+            color: rgba(0,0,0,0.1);
         }
 
-        .footer-links a:hover {
+        .project-info {
+            padding: 2rem;
+        }
+
+        .project-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .project-author {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .project-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .project-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .view-all-btn {
+            text-align: center;
+        }
+
+        /* Beginners Section */
+        .beginners-section {
+            padding: 6rem 3rem;
+            background: white;
+        }
+
+        .beginners-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .beginners-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+            font-weight: 500;
+        }
+
+        .beginners-content h2 .italic-accent {
+            font-style: italic;
             color: var(--terracotta);
         }
 
-        .footer-bottom {
-            border-top: 1px solid rgba(0,0,0,0.1);
-            padding-top: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .footer-bottom p {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.875rem;
+        .beginners-content p {
             color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
         }
 
-        .footer-bottom .tagline {
-            font-style: italic;
+        .beginners-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            header {
-                padding: 1rem;
+        .beginners-features {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .feature-item {
+            background: var(--cream);
+            padding: 2rem;
+            border-radius: 12px;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(160, 105, 95, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .feature-text p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            z-index: 2;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 1024px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
             }
 
-            nav {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .beginners-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
                 gap: 1rem;
             }
 
-            nav a {
-                font-size: 0.85rem;
+            .nav-links.active {
+                display: flex;
             }
 
-            section {
-                padding: 4rem 1.5rem;
+            .mobile-menu-btn {
+                display: block;
             }
 
-            .email-form {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .beginners-content h2 {
+                font-size: 2rem;
+            }
+
+            .hero-buttons {
                 flex-direction: column;
             }
-
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        /* Smooth Scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Icons (simple emoji/unicode alternatives) */
-        .icon-instagram::before {
-            content: "📷";
-            margin-right: 0.25rem;
-        }
-
-        .icon-location::before {
-            content: "📍";
-            margin-right: 0.25rem;
-        }
-
-        .icon-sparkles::before {
-            content: "✨";
-            margin-right: 0.25rem;
-        }
-
-        .icon-community::before {
-            content: "👥";
-            margin-right: 0.25rem;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">International Craft Club</a>
-        <nav>
+    <!-- Navigation -->
+    <nav>
         <div class="nav-container">
             <div class="logo-section">
                 <a href="index.html" class="logo">International Craft Club</a>
                 <span class="tagline">A Home for Makers Worldwide</span>
             </div>
-
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
             <div class="nav-links" id="navLinks">
                 <a href="journal.html">Journal</a>
-                <a href="landing-page.html">About Members Area</a>
-                <a href="login.html" class="nav-cta">Login / Join</a>
+                <a href="about-members.html">About Members Area</a>
+                <a href="member-area-ultimate.html" class="nav-cta">Login / Join</a>
             </div>
         </div>
     </nav>
-    </header>
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-background">
+            <img src="/mnt/user-data/uploads/firefox_HlNmNyNYoW.jpg" alt="Hands crafting">
+        </div>
+        <div class="hero-overlay"></div>
         <div class="hero-content">
-            <p class="section-label">A COMMUNITY FOR MAKERS</p>
-            <h1>
-                Learn. Create.<br>
-                <span class="accent">Connect.</span>
-            </h1>
-            <p>Rediscover the joy of slow creativity. Join a global community celebrating traditional crafts, authentic skills, and the makers who keep them alive.</p>
+            <div class="hero-label">A COMMUNITY FOR MAKERS</div>
+            <h1>Learn. Create.<br><span class="italic-accent">Connect.</span></h1>
+            <p class="hero-description">
+                A global community where makers share projects, track their learning journeys, and discover crafts from around the world.
+            </p>
             <div class="hero-buttons">
-                <a href="#join" class="btn btn-primary">Join the Club</a>
-                <a href="#about" class="btn btn-secondary">Our Story</a>
+                <a href="#projects" class="btn btn-primary">🎨 Explore Projects</a>
+                <a href="member-area-ultimate.html" class="btn btn-secondary">👥 Join the Community</a>
+                <a href="member-area-ultimate.html" class="btn btn-tertiary">📖 Start a Learning Diary</a>
             </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
         </div>
     </section>
 
-    <!-- Craft Learning Diaries Section -->
-    <section class="diaries" id="journal">
+    <!-- How It Works Section -->
+    <section class="how-it-works">
         <div class="section-header">
-            <p class="section-label">FOLLOW THE JOURNEY</p>
-            <h2>Craft Learning <span class="italic">Diaries</span></h2>
-            <p>Real makers documenting their learning journey. No filters, no shortcuts—just honest progress and the beautiful imperfections along the way.</p>
+            <h2 class="section-title">How International Craft Club <span class="italic-accent">Works</span></h2>
         </div>
-        <div class="diaries-grid">
-            <a href="#" class="diary-card">
-                <div class="diary-card-image">🪡</div>
-                <div class="diary-card-content">
-                    <div class="diary-card-handle icon-instagram">@sewingdiaries</div>
-                    <h3 class="diary-card-title">Sewing Journey</h3>
-                    <p class="diary-card-desc">From first stitch to final seam</p>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-icon-wrapper">
+                    <div class="step-circle">👥</div>
+                    <div class="step-number">1</div>
                 </div>
-            </a>
-            <a href="#" class="diary-card">
-                <div class="diary-card-image">🧶</div>
-                <div class="diary-card-content">
-                    <div class="diary-card-handle icon-instagram">@crochetdiaries</div>
-                    <h3 class="diary-card-title">Crochet Diaries</h3>
-                    <p class="diary-card-desc">Loops, knots, and cozy creations</p>
+                <h3>Join for free</h3>
+                <p>Create a maker profile and become part of our global community.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon-wrapper">
+                    <div class="step-circle">📷</div>
+                    <div class="step-number">2</div>
                 </div>
-            </a>
-            <a href="#" class="diary-card">
-                <div class="diary-card-image">👜</div>
-                <div class="diary-card-content">
-                    <div class="diary-card-handle icon-instagram">@leathercraft</div>
-                    <h3 class="diary-card-title">Leather Craft</h3>
-                    <p class="diary-card-desc">Timeless craft, modern makers</p>
+                <h3>Share your projects</h3>
+                <p>Post updates, photos, and materials used as you create.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon-wrapper">
+                    <div class="step-circle">🤝</div>
+                    <div class="step-number">3</div>
                 </div>
-            </a>
-            <a href="#" class="diary-card">
-                <div class="diary-card-image icon-community"></div>
-                <div class="diary-card-content">
-                    <div class="diary-card-handle">Community</div>
-                    <h3 class="diary-card-title">Meet the Makers</h3>
-                    <p class="diary-card-desc">Stories from our global community</p>
-                </div>
-            </a>
+                <h3>Follow maker journeys</h3>
+                <p>Explore learning diaries and connect with other creators.</p>
+            </div>
         </div>
     </section>
 
-    <!-- Meet the Makers Section -->
-    <section class="makers" id="makers">
+    <!-- Projects Section -->
+    <section class="projects-section" id="projects">
         <div class="section-header">
-            <p class="section-label">THE HEART OF THE CLUB</p>
-            <h2>Meet the <span class="italic">Makers</span></h2>
-            <p>The artisans, teachers, and passionate hobbyists who inspire us to slow down and create with intention.</p>
+            <div class="section-label">FROM OUR COMMUNITY</div>
+            <h2 class="section-title">Explore Maker <span class="italic-accent">Projects</span></h2>
+            <p style="text-align: center; color: var(--text-muted); margin-top: 1rem; font-size: 1.1rem;">
+                Discover what our community is creating — from first stitches to finished masterpieces.
+            </p>
         </div>
-        <div class="makers-grid">
-            <div class="maker-card">
-                <div class="maker-image"></div>
-                <h3 class="maker-name">Elena Rosetti</h3>
-                <p class="maker-craft">Traditional Embroidery</p>
-                <p class="maker-location icon-location">Tuscany, Italy</p>
-                <p class="maker-quote">"Every stitch carries the memory of hands that came before mine."</p>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-image">
+                    <div class="project-category">Knitting</div>
+                    🧶
+                </div>
+                <div class="project-info">
+                    <h3>Vintage Cardigan Restoration</h3>
+                    <p class="project-author">by Elena M. · Stockholm</p>
+                    <div class="project-stats">
+                        <span>♥ 124</span>
+                        <span>💬 18</span>
+                    </div>
+                </div>
             </div>
-            <div class="maker-card">
-                <div class="maker-image"></div>
-                <h3 class="maker-name">Hans Müller</h3>
-                <p class="maker-craft">Wood Carving</p>
-                <p class="maker-location icon-location">Black Forest, Germany</p>
-                <p class="maker-quote">"The wood teaches you patience. You cannot rush what takes a tree decades to grow."</p>
+            <div class="project-card">
+                <div class="project-image">
+                    <div class="project-category">Leathercraft</div>
+                    🧳
+                </div>
+                <div class="project-info">
+                    <h3>Hand-Tooled Leather Journal</h3>
+                    <p class="project-author">by Marcus B. · Portland</p>
+                    <div class="project-stats">
+                        <span>♥ 89</span>
+                        <span>💬 12</span>
+                    </div>
+                </div>
             </div>
-            <div class="maker-card">
-                <div class="maker-image"></div>
-                <h3 class="maker-name">Maya Chen</h3>
-                <p class="maker-craft">Natural Dyeing</p>
-                <p class="maker-location icon-location">Portland, Oregon</p>
-                <p class="maker-quote">"Color is a conversation between the maker and the earth."</p>
+            <div class="project-card">
+                <div class="project-image">
+                    <div class="project-category">Crochet</div>
+                    🧶
+                </div>
+                <div class="project-info">
+                    <h3>Granny Square Blanket</h3>
+                    <p class="project-author">by Priya S. · Mumbai</p>
+                    <div class="project-stats">
+                        <span>♥ 203</span>
+                        <span>💬 34</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="view-all-btn">
+            <a href="member-area-ultimate.html" class="btn btn-secondary">View All Projects</a>
+        </div>
+    </section>
+
+    <!-- Beginners Section -->
+    <section class="beginners-section">
+        <div class="beginners-container">
+            <div class="beginners-content">
+                <div class="section-label">NEW TO CRAFTING?</div>
+                <h2>Start Your Journey<br><span class="italic-accent">Here</span></h2>
+                <p>
+                    Everyone starts somewhere. Whether you've never picked up a needle or you're rediscovering a childhood hobby, our community welcomes you with open arms and helpful hands.
+                </p>
+                <div class="beginners-buttons">
+                    <a href="member-area-ultimate.html" class="btn btn-primary">Browse Tutorials</a>
+                    <a href="member-area-ultimate.html" class="btn btn-secondary">Meet Fellow Beginners</a>
+                </div>
+            </div>
+            <div class="beginners-features">
+                <div class="feature-item">
+                    <div class="feature-icon">📖</div>
+                    <div class="feature-text">
+                        <h3>Step-by-Step Guides</h3>
+                        <p>Clear tutorials written for complete beginners, with photos at every step.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <h3>Find Your Craft</h3>
+                        <p>Not sure where to start? Explore different crafts and discover what calls to you.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">❤️</div>
+                    <div class="feature-text">
+                        <h3>Supportive Community</h3>
+                        <p>Ask questions without judgment. We all remember our first project.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Coming Soon Section -->
-    <section class="coming-soon" id="join">
-        <div class="coming-soon-badge icon-sparkles">Coming Soon</div>
-        <h2>Building Something <span class="italic">Special</span></h2>
-        <p>A curated shop of artisan-made tools and materials. Learning retreats in beautiful places. We're crafting these with the same care and intention we bring to everything we do.</p>
-        <form class="email-form" onsubmit="handleSubmit(event)">
-            <input type="email" class="email-input" placeholder="your@email.com" required>
-            <button type="submit" class="btn btn-primary">Get Notified</button>
-        </form>
-        <p class="email-disclaimer">No spam, ever. Just quiet updates when we have something worth sharing.</p>
+    <!-- Newsletter Section -->
+    <section style="background: var(--light-beige); padding: 4rem 3rem; text-align: center;">
+        <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 3rem;">
+            <div style="text-align: left;">
+                <h2 style="font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.5rem; font-weight: 500;">Stay Inspired</h2>
+                <p style="color: var(--text-muted); font-size: 1rem;">Get craft inspiration, project ideas, and maker stories delivered monthly.</p>
+            </div>
+            <form style="display: flex; gap: 1rem; min-width: 500px;" onsubmit="handleNewsletter(event)">
+                <input type="email" placeholder="your@email.com" required style="flex: 1; padding: 1rem 1.5rem; border: 1.5px solid rgba(160, 105, 95, 0.2); border-radius: 8px; font-size: 1rem; font-family: 'Inter', sans-serif; background: var(--background);">
+                <button type="submit" style="padding: 1rem 2rem; background: var(--terracotta); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s;">Subscribe</button>
+            </form>
+        </div>
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-brand">
-                <h3>International<br>Craft Club</h3>
-                <p>A global community celebrating slow creativity, traditional skills, and the makers who keep them alive.</p>
+    <footer style="background: var(--background); padding: 4rem 3rem 2rem; border-top: 1px solid rgba(160, 105, 95, 0.1);">
+        <div style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem;">
+            <div>
+                <h3 style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.5rem; font-weight: 600;">International<br>Craft Club</h3>
+                <p style="font-style: italic; margin-top: 0.5rem; color: var(--text-muted);">A Home for Makers Worldwide</p>
+                <p style="margin-top: 1rem; color: var(--text-muted); line-height: 1.7;">A global community celebrating slow creativity, traditional skills, and the makers who keep them alive.</p>
             </div>
-            <div class="footer-section">
-                <h4>FOLLOW ALONG</h4>
-                <ul class="footer-links">
-                    <li><a href="#" class="icon-instagram">@sewingdiaries</a></li>
-                    <li><a href="#" class="icon-instagram">@crochetdiaries</a></li>
-                    <li><a href="#" class="icon-instagram">@leathercraft</a></li>
-                    <li><a href="#" class="icon-instagram">@intlcraftclub</a></li>
+            
+            <div>
+                <h3 style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.5rem; font-weight: 600;">START HERE</h3>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 0.75rem;"><a href="about-members.html" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">About Members Area</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="journal.html" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Journal</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="#projects" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Meet the Makers</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="#projects" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Local Meetups</a></li>
                 </ul>
             </div>
-            <div class="footer-section">
-                <h4>EXPLORE</h4>
-                <ul class="footer-links">
-                    <li><a href="#about">About the Club</a></li>
-                    <li><a href="#makers">Meet the Makers</a></li>
-                    <li><a href="#meetups">Local Meetups</a></li>
-                    <li><a href="#contact">Contact</a></li>
+            
+            <div>
+                <h3 style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.5rem; font-weight: 600;">CRAFTS</h3>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 0.75rem;"><a href="#projects" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Sewing</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="#projects" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Crochet</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="#projects" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Knitting</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="#projects" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Leather</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="#projects" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Embroidery</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="#projects" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Pottery</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="#projects" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s;">Woodwork</a></li>
                 </ul>
+            </div>
+            
+            <div>
+                <h3 style="font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1.5rem; font-weight: 600;">CONNECT</h3>
+                <div>
+                    <a href="member-area-ultimate.html" style="color: var(--text-muted); text-decoration: none; margin-bottom: 0.75rem; display: block; transition: color 0.3s;">Login / Join</a>
+                    <a href="#" style="color: var(--text-muted); text-decoration: none; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s;">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        @sewingdiaries
+                    </a>
+                    <a href="#" style="color: var(--text-muted); text-decoration: none; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s;">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        @crochetdiaries
+                    </a>
+                    <a href="#" style="color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.3s;">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        @leathercraft
+                    </a>
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2024 International Craft Club. Made with care.</p>
-            <p class="tagline">"Part of International Craft Club"</p>
+        
+        <div style="max-width: 1400px; margin: 0 auto; padding-top: 2rem; border-top: 1px solid rgba(160, 105, 95, 0.1); text-align: center; color: var(--text-muted); font-size: 0.875rem;">
+            <p>© 2025 International Craft Club. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
 
-        // Email form submission
-        function handleSubmit(event) {
+        function handleNewsletter(event) {
             event.preventDefault();
-            const email = event.target.querySelector('input').value;
-            alert(`Thank you! We'll notify you at ${email} when we launch.`);
+            const email = event.target.querySelector('input[type="email"]').value;
+            alert('Thanks for subscribing! We\'ll send craft inspiration to ' + email);
             event.target.reset();
         }
 
-        // Header scroll effect
-        let lastScroll = 0;
-        const header = document.querySelector('header');
-        
-        window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const navLinks = document.getElementById('navLinks');
             
-            if (currentScroll > 100) {
-                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-            } else {
-                header.style.boxShadow = 'none';
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
             }
-            
-            lastScroll = currentScroll;
         });
     </script>
 </body>
