@@ -27,45 +27,87 @@
             background: var(--cream);
         }
 
-        /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
+        /* Header/Navigation */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: var(--cream);
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(160, 105, 95, 0.1);
+}
 
-        .logo {
-            font-size: 1.125rem;
-            font-weight: 400;
-            letter-spacing: 0.02em;
-            text-decoration: none;
-            color: var(--text-dark);
-        }
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        nav {
-            display: flex;
-            gap: 2rem;
-        }
+.logo-section {
+    display: flex;
+    flex-direction: column;
+}
 
-        nav a {
-            color: var(--text-dark);
-            text-decoration: none;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
+.logo {
+    font-family: 'Georgia', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    text-decoration: none;
+    line-height: 1.2;
+}
 
-        nav a:hover {
-            color: var(--terracotta);
-        }
+.tagline {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-weight: 300;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.nav-links {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--terracotta);
+}
+
+.nav-cta {
+    background: var(--terracotta);
+    color: white !important;
+    padding: 0.75rem 1.75rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.nav-cta:hover {
+    background: var(--dark-brown);
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--terracotta);
+}
 
         /* Post Container */
         article {
@@ -262,6 +304,33 @@
         }
 
         /* Responsive */
+
+        @media (max-width: 768px) {
+    .nav-container {
+        padding: 0 1.5rem;
+    }
+    
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        gap: 1rem;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+}
         @media (max-width: 768px) {
             header {
                 padding: 1rem;
@@ -340,16 +409,21 @@
 </head>
 <body>
     <!-- Header -->
-    <header>
-        <a href="index.html" class="logo">International Craft Club</a>
-        <nav>
+<!-- Header -->
+<header>
+    <div class="nav-container">
+        <div class="logo-section">
+            <a href="landing-page.html" class="logo">International Craft Club</a>
+            <span class="tagline">A Home for Makers Worldwide</span>
+        </div>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        <div class="nav-links" id="navLinks">
             <a href="journal.html">Journal</a>
-            <a href="index.html#makers">Makers</a>
-            <a href="index.html#meetups">Meetups</a>
-            <a href="cms.html" style="color: var(--terracotta);">CMS</a>
-            <a href="login.html">Join</a>
-        </nav>
-    </header>
+            <a href="about-members.html">About Members Area</a>
+            <a href="member-area-ultimate.html" class="nav-cta">Login / Join</a>
+        </div>
+    </div>
+</header>
 
     <!-- Post Content (will be dynamically loaded) -->
     <div id="postContainer">
@@ -508,5 +582,11 @@
             return labels[category] || category.toUpperCase();
         }
     </script>
+    <script>
+    function toggleMobileMenu() {
+        const navLinks = document.getElementById('navLinks');
+        navLinks.classList.toggle('active');
+    }
+</script>
 </body>
 </html>
