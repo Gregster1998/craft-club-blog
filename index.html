@@ -503,13 +503,20 @@
     <!-- Header -->
     <header>
         <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">International Craft Club</a>
-        <nav>
-            <a href="journal.html">Journal</a>
-            <a href="#makers">Makers</a>
-            <a href="#meetups">Meetups</a>
-            <a href="cms.html" style="color: var(--terracotta);">CMS</a>
-            <a href="login.html">Join</a>
-        </nav>
+    <nav>
+        <div class="nav-container">
+            <div class="logo-section">
+                <a href="index.html" class="logo">International Craft Club</a>
+                <span class="tagline">A Home for Makers Worldwide</span>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="#journal">Journal</a>
+                <a href="about-members.html">About Members Area</a>
+                <a href="member-area-ultimate.html" class="nav-cta">Login / Join</a>
+            </div>
+        </div>
+    </nav>
     </header>
 
     <!-- Hero Section -->
