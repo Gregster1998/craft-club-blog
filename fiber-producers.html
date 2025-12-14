@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiber Producers - International Craft Club</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --terracotta: #A0695F;
+            --dark-brown: #3C2F2F;
+            --cream: #F5F1E8;
+            --light-beige: #EDE8DC;
+            --text-dark: #2C2C2C;
+            --text-muted: #6B6B6B;
+            --background: #FAF8F4;
+            --sage-green: rgba(134, 168, 153, 0.15);
+            --sage-green-dark: #86A899;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--background);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 500;
+        }
+
+        /* Header/Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--cream);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(160, 105, 95, 0.1);
+        }
+
+        nav {
+            width: 100%;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            text-decoration: none;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 1rem;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--terracotta);
+        }
+
+        .nav-cta {
+            background: var(--terracotta);
+            color: white !important;
+            padding: 0.75rem 1.75rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .nav-cta:hover {
+            background: var(--dark-brown);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--terracotta);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 100px;
+            padding: 6rem 3rem;
+            text-align: center;
+            background: var(--background);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--sage-green);
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            color: var(--sage-green-dark);
+            margin-bottom: 2rem;
+            border: 1px solid rgba(134, 168, 153, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero h1 .italic-accent {
+            font-style: italic;
+            color: var(--terracotta);
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+        }
+
+        .filter-btn {
+            padding: 1rem 2rem;
+            background: transparent;
+            color: var(--terracotta);
+            border: 2px solid var(--terracotta);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn:hover {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 6rem 3rem;
+            background: white;
+            border-top: 1px solid var(--light-beige);
+        }
+
+        .steps-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--light-beige);
+            color: var(--terracotta);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 auto 2rem;
+        }
+
+        .step h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .step p {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Producers Grid */
+        .producers-section {
+            padding: 6rem 3rem;
+            background: var(--background);
+        }
+
+        .producers-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+        }
+
+        .producer-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .producer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .producer-image {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .producer-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sustainable-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--sage-green-dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .animal-type {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .producer-info {
+            padding: 2rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .producer-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .producer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--light-beige);
+            flex-shrink: 0;
+        }
+
+        .producer-title h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .producer-location {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .producer-description {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+
+        .producer-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-beige);
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--terracotta);
+            font-weight: 500;
+        }
+
+        .available {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* CTA Section */
+        .producer-cta {
+            padding: 6rem 3rem;
+            background: white;
+            text-align: center;
+            border-top: 1px solid var(--light-beige);
+        }
+
+        .producer-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .producer-cta p {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: var(--terracotta);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-brown);
+            transform: translateY(-2px);
+        }
+
+        /* Newsletter Section */
+        .newsletter {
+            background: white;
+            padding: 4rem 3rem;
+            border-top: 1px solid var(--light-beige);
+        }
+
+        .newsletter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .newsletter h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .newsletter p {
+            color: var(--text-muted);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            min-width: 500px;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 1.5px solid var(--light-beige);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .newsletter-form button {
+            padding: 1rem 2rem;
+            background: var(--terracotta);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .newsletter-form button:hover {
+            background: var(--dark-brown);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--light-beige);
+            padding: 4rem 3rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-top: 1rem;
+        }
+
+        .footer-section h4 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--terracotta);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(160, 105, 95, 0.1);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .producers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .producers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .newsletter-container {
+                flex-direction: column;
+            }
+
+            .newsletter-form {
+                min-width: auto;
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+    <nav>
+        <div class="nav-container">
+            <div class="logo-section">
+                <a href="index.html" class="logo">International Craft Club</a>
+                <span class="tagline">A Home for Makers Worldwide</span>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+            <div class="nav-links" id="navLinks">
+                <a href="journal.html">Journal</a>
+                <a href="fiber-producers.html">Fiber Producers</a>
+                <a href="landing-page.html">About Members Area</a>
+                <a href="login.html" class="nav-cta">Login / Join</a>
+            </div>
+        </div>
+    </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">🌿 Fiber Producers</div>
+        <h1>Meet Our <span class="italic-accent">Fiber Farmers</span></h1>
+        <p class="hero-description">Connect directly with ethical wool producers worldwide. Adopt an animal and receive their beautiful fleece once or twice a year.</p>
+        <button class="filter-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            Filter by Animal
+        </button>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Choose Your Animal</h3>
+                <p>Browse profiles and pick a sheep, alpaca, or goat to adopt</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Support the Farm</h3>
+                <p>Your adoption helps sustain ethical, small-scale farming</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Receive the Fleece</h3>
+                <p>Get your animal's wool delivered 1-2 times per year</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Producers Grid -->
+    <section class="producers-section">
+        <div class="producers-grid">
+            <a href="producer-profile.html?id=highland-meadows" class="producer-card">
+                <div class="producer-image">
+                    <img src="hero-background.jpg" alt="Highland Meadows Farm">
+                    <div class="sustainable-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Sustainable
+                    </div>
+                    <div class="animal-type">Sheep • Shetland</div>
+                </div>
+                <div class="producer-info">
+                    <div class="producer-header">
+                        <div class="producer-avatar"></div>
+                        <div class="producer-title">
+                            <h3>Highland Meadows Farm</h3>
+                            <div class="producer-location">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                Scottish Highlands, UK
+                            </div>
+                        </div>
+                    </div>
+                    <p class="producer-description">Third-generation sheep farmers specializing in heritage Shetland wool.</p>
+                    <div class="producer-stats">
+                        <div class="rating">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            4.9 (47)
+                        </div>
+                        <div class="available">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            12 available
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="producer-profile.html?id=andean-collective" class="producer-card">
+                <div class="producer-image">
+                    <img src="hero-crafts.jpg" alt="Andean Fleece Collective">
+                    <div class="sustainable-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Sustainable
+                    </div>
+                    <div class="animal-type">Alpaca • Huacaya</div>
+                </div>
+                <div class="producer-info">
+                    <div class="producer-header">
+                        <div class="producer-avatar"></div>
+                        <div class="producer-title">
+                            <h3>Andean Fleece Collective</h3>
+                            <div class="producer-location">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                Cusco Region, Peru
+                            </div>
+                        </div>
+                    </div>
+                    <p class="producer-description">Community-owned alpaca farm with sustainable practices passed down through generations.</p>
+                    <div class="producer-stats">
+                        <div class="rating">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            5 (89)
+                        </div>
+                        <div class="available">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            24 available
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <a href="producer-profile.html?id=nordic-sanctuary" class="producer-card">
+                <div class="producer-image">
+                    <img src="hero-background.jpg" alt="Nordic Wool Sanctuary">
+                    <div class="sustainable-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        Sustainable
+                    </div>
+                    <div class="animal-type">Goat • Angora</div>
+                </div>
+                <div class="producer-info">
+                    <div class="producer-header">
+                        <div class="producer-avatar"></div>
+                        <div class="producer-title">
+                            <h3>Nordic Wool Sanctuary</h3>
+                            <div class="producer-location">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                Dalarna, Sweden
+                            </div>
+                        </div>
+                    </div>
+                    <p class="producer-description">Ethical angora goat farm focusing on animal welfare and premium mohair production.</p>
+                    <div class="producer-stats">
+                        <div class="rating">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            4.8 (34)
+                        </div>
+                        <div class="available">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                            8 available
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Producer CTA -->
+    <section class="producer-cta">
+        <h2>Are You a Fiber Producer?</h2>
+        <p>Join our network of ethical farmers and connect with makers who value sustainable, traceable wool.</p>
+        <a href="#apply" class="btn-primary">Apply to Join</a>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="newsletter-container">
+            <div>
+                <h2>Stay Inspired</h2>
+                <p>Get craft inspiration, project ideas, and maker stories delivered monthly.</p>
+            </div>
+            <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+                <input type="email" placeholder="your@email.com" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>International<br>Craft Club</h3>
+                <p style="font-style: italic; margin-top: 0.5rem; color: var(--text-muted);">A Home for Makers Worldwide</p>
+                <p>A global community celebrating slow creativity, traditional skills, and the makers who keep them alive.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>START HERE</h4>
+                <ul>
+                    <li><a href="about-members.html">About Members Area</a></li>
+                    <li><a href="journal.html">Journal</a></li>
+                    <li><a href="#makers">Meet the Makers</a></li>
+                    <li><a href="#meetups">Local Meetups</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>CRAFTS</h4>
+                <ul>
+                    <li><a href="#sewing">Sewing</a></li>
+                    <li><a href="#crochet">Crochet</a></li>
+                    <li><a href="#knitting">Knitting</a></li>
+                    <li><a href="#leather">Leather</a></li>
+                    <li><a href="#embroidery">Embroidery</a></li>
+                    <li><a href="#pottery">Pottery</a></li>
+                    <li><a href="#woodwork">Woodwork</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>CONNECT</h4>
+                <ul>
+                    <li><a href="member-area-ultimate.html">Login / Join</a></li>
+                    <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        @sewingdiaries
+                    </a></li>
+                    <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        @crochetdiaries
+                    </a></li>
+                    <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        @leathercraft
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2024 International Craft Club. Made with care.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        function handleNewsletter(event) {
+            event.preventDefault();
+            const email = event.target.querySelector('input[type="email"]').value;
+            alert('Thanks for subscribing! We\'ll send craft inspiration to ' + email);
+            event.target.reset();
+        }
+
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
