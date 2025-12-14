@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - International Craft Club</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --terracotta: #A0695F;
+            --dark-brown: #3C2F2F;
+            --cream: #F5F1E8;
+            --light-beige: #EDE8DC;
+            --text-dark: #2C2C2C;
+            --text-muted: #6B6B6B;
+            --background: #FAF8F4;
+            --sage-green: rgba(134, 168, 153, 0.15);
+            --sage-green-dark: #86A899;
+            --gold: #d4af37;
+            --love: #BE7C68;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: var(--background);
+        }
+        
+        h1, h2, h3 { 
+            font-family: 'Playfair Display', serif; 
+            font-weight: 500; 
+        }
+        
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--cream);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(160, 105, 95, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+        
+        .nav-links { 
+            display: flex; 
+            gap: 3rem; 
+            align-items: center; 
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover { 
+            color: var(--terracotta); 
+        }
+        
+        /* Breadcrumb */
+        .breadcrumb {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 8rem 3rem 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+        
+        .breadcrumb a:hover {
+            color: var(--terracotta);
+        }
+        
+        /* Product Container */
+        .product-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 3rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        
+        /* Image Gallery */
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .main-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--light-beige);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .thumbnail-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.75rem;
+        }
+        
+        .thumbnail {
+            aspect-ratio: 1;
+            background: var(--light-beige);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .thumbnail:hover {
+            border-color: var(--terracotta);
+        }
+        
+        .thumbnail.active {
+            border-color: var(--terracotta);
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* Product Details */
+        .product-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--dark-brown);
+        }
+        
+        .product-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .badge {
+            padding: 0.35rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        
+        .badge-digital {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+        
+        .badge-travel {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+        }
+        
+        .badge-mto {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold);
+        }
+        
+        .badge-category {
+            background: var(--sage-green);
+            color: var(--sage-green-dark);
+            text-transform: capitalize;
+        }
+        
+        .product-price {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--terracotta);
+            margin-bottom: 2rem;
+        }
+        
+        .product-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--light-beige);
+        }
+        
+        /* Travel Find Info */
+        .travel-find-info {
+            background: rgba(168, 85, 247, 0.08);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .countdown-display {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #a855f7;
+            margin-bottom: 0.75rem;
+        }
+        
+        .countdown-display svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .quantity-info {
+            color: var(--text-muted);
+            font-size: 0.9375rem;
+        }
+        
+        /* Quantity Selector */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .quantity-label {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            border: 1px solid var(--light-beige);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .quantity-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: white;
+            color: var(--text-dark);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quantity-btn:hover {
+            background: var(--cream);
+        }
+        
+        .quantity-value {
+            width: 50px;
+            text-align: center;
+            font-weight: 500;
+            border-left: 1px solid var(--light-beige);
+            border-right: 1px solid var(--light-beige);
+        }
+        
+        /* Action Buttons */
+        .product-actions {
+            margin-top: auto;
+            padding-top: 2rem;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn-primary {
+            background: var(--terracotta);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--dark-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(160, 105, 95, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            background: var(--light-beige);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Product Information Sections */
+        .info-section {
+            border-top: 1px solid var(--light-beige);
+            padding: 1.5rem 0;
+        }
+        
+        .info-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .info-header h3 {
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+        
+        .info-toggle {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+        }
+        
+        .info-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .info-content.active {
+            max-height: 1000px;
+            padding-top: 1rem;
+        }
+        
+        .info-content p {
+            line-height: 1.8;
+            color: var(--text-muted);
+        }
+        
+        /* Recommendations */
+        .recommendations {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 0 3rem;
+        }
+        
+        .recommendations h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+        
+        .product-card-image {
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--light-beige);
+            overflow: hidden;
+        }
+        
+        .product-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-card-info {
+            padding: 1.5rem;
+        }
+        
+        .product-card-title {
+            font-size: 1.125rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--dark-brown);
+        }
+        
+        .product-card-price {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--terracotta);
+        }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.125rem;
+            color: var(--text-muted);
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--light-beige);
+            border-top-color: var(--terracotta);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-brown);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            text-align: center;
+        }
+        
+        .footer-content p {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">International Craft Club</a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="craftmarket-branded.html">Shop</a>
+                <a href="member-area.html">My Account</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="breadcrumb">
+        <a href="index.html">HOME</a> / <a href="craftmarket-branded.html">SHOP</a> / <span id="breadcrumb-product">PRODUCT</span>
+    </div>
+
+    <div id="loadingContainer" class="loading">
+        <div class="spinner"></div>
+        <p>Loading product...</p>
+    </div>
+
+    <div id="productContainer" class="product-container" style="display: none;"></div>
+
+    <div class="recommendations">
+        <h2>You May Also Like</h2>
+        <div id="recommendationsGrid" class="recommendations-grid"></div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 International Craft Club. Celebrating makers worldwide.</p>
+        </div>
+    </footer>
+
+    <script>
+        const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentProduct = null;
+        let quantity = 1;
+
+        // Get product ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        if (!productId) {
+            window.location.href = 'craftmarket-branded.html';
+        }
+
+        // Load product
+        async function loadProduct() {
+            try {
+                const { data: product, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .eq('id', productId)
+                    .single();
+
+                if (error) throw error;
+                if (!product) throw new Error('Product not found');
+
+                // Fetch seller info
+                if (product.seller_id) {
+                    const { data: seller } = await supabase
+                        .from('profiles')
+                        .select('id, username, display_name, full_name')
+                        .eq('id', product.seller_id)
+                        .single();
+                    
+                    product.seller = seller;
+                }
+
+                currentProduct = product;
+                renderProduct(product);
+                loadRecommendations(product.category, productId);
+
+                document.getElementById('loadingContainer').style.display = 'none';
+                document.getElementById('productContainer').style.display = 'grid';
+            } catch (error) {
+                console.error('Error loading product:', error);
+                document.getElementById('loadingContainer').innerHTML = `
+                    <p style="color: var(--love);">Product not found</p>
+                    <p><a href="craftmarket-branded.html" style="color: var(--terracotta);">Return to shop</a></p>
+                `;
+            }
+        }
+
+        function renderProduct(product) {
+            const images = product.images || [];
+            const mainImage = product.thumbnail_url || images[0] || '/api/placeholder/600/600';
+            
+            // Update breadcrumb
+            document.getElementById('breadcrumb-product').textContent = product.title.toUpperCase();
+            document.title = `${product.title} - International Craft Club`;
+
+            // Badges
+            let badges = '';
+            badges += `<span class="badge badge-category">${product.category || 'Handmade'}</span>`;
+            if (product.is_digital) badges += '<span class="badge badge-digital">📄 Digital Pattern</span>';
+            if (product.is_travel_find) badges += '<span class="badge badge-travel">✈️ Travel Find</span>';
+            if (product.is_made_to_order) badges += '<span class="badge badge-mto">📦 Made to Order</span>';
+
+            // Travel find info
+            let travelFindInfo = '';
+            if (product.is_travel_find && product.is_available) {
+                const countdown = product.order_until_date ? getCountdown(product.order_until_date) : '';
+                const remaining = product.max_quantity ? (product.max_quantity - (product.current_quantity || 0)) : 0;
+                
+                travelFindInfo = `
+                    <div class="travel-find-info">
+                        ${countdown ? `
+                            <div class="countdown-display">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <span>${countdown}</span>
+                            </div>
+                        ` : ''}
+                        ${remaining > 0 ? `<div class="quantity-info">${remaining}/${product.max_quantity} available</div>` : '<div class="quantity-info" style="color: var(--love);">Sold out</div>'}
+                    </div>
+                `;
+            }
+
+            // Action button
+            let actionButton = '';
+            const isAvailable = product.is_available && product.stock_status !== 'deadline_passed';
+            
+            if (!isAvailable) {
+                actionButton = '<button class="btn btn-primary" disabled>Not Available</button>';
+            } else if (product.is_made_to_order) {
+                actionButton = '<button class="btn btn-primary" onclick="addToCart()">Request Custom Order</button>';
+            } else if (product.is_digital) {
+                actionButton = '<button class="btn btn-primary" onclick="addToCart()">Purchase Pattern</button>';
+            } else {
+                actionButton = '<button class="btn btn-primary" onclick="addToCart()">Add to Cart</button>';
+            }
+
+            const container = document.getElementById('productContainer');
+            container.innerHTML = `
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img id="mainImage" src="${mainImage}" alt="${product.title}">
+                    </div>
+                    ${images.length > 0 ? `
+                        <div class="thumbnail-gallery">
+                            ${images.map((img, idx) => `
+                                <div class="thumbnail ${idx === 0 ? 'active' : ''}" onclick="changeImage('${img}', ${idx})">
+                                    <img src="${img}" alt="${product.title}">
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+
+                <div class="product-details">
+                    <h1 class="product-title">${product.title}</h1>
+                    ${product.seller ? `<p style="font-size: 1rem; color: var(--text-muted); margin-bottom: 1rem;">by <strong>${product.seller.display_name || product.seller.full_name || product.seller.username || 'Independent Maker'}</strong></p>` : ''}
+                    
+                    <div class="product-meta">
+                        ${badges}
+                    </div>
+
+                    <div class="product-price">${formatPrice(product.price, product.currency)}</div>
+
+                    <div class="product-description">
+                        ${product.description || 'Beautifully handcrafted with care and attention to detail.'}
+                    </div>
+
+                    ${travelFindInfo}
+
+                    <div class="quantity-selector">
+                        <span class="quantity-label">Quantity:</span>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="changeQuantity(-1)">−</button>
+                            <div class="quantity-value" id="quantityValue">1</div>
+                            <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="product-actions">
+                        ${actionButton}
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-header" onclick="toggleInfo('details')">
+                            <h3>Product Details</h3>
+                            <span class="info-toggle" id="toggle-details">+</span>
+                        </div>
+                        <div class="info-content" id="content-details">
+                            <p>Handcrafted with traditional techniques and premium materials. Each piece is unique and made with attention to detail.</p>
+                            ${product.is_made_to_order ? '<p><strong>Made to Order:</strong> This item will be created specifically for you after purchase.</p>' : ''}
+                            ${product.is_digital ? '<p><strong>Digital Product:</strong> You will receive a downloadable file after purchase.</p>' : ''}
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <div class="info-header" onclick="toggleInfo('shipping')">
+                            <h3>Shipping & Returns</h3>
+                            <span class="info-toggle" id="toggle-shipping">+</span>
+                        </div>
+                        <div class="info-content" id="content-shipping">
+                            <p>We ship worldwide. Processing time: 1-3 business days. Delivery: 5-10 business days.</p>
+                            <p>Returns accepted within 14 days of delivery. Item must be in original condition.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function changeImage(src, idx) {
+            document.getElementById('mainImage').src = src;
+            document.querySelectorAll('.thumbnail').forEach((t, i) => {
+                t.classList.toggle('active', i === idx);
+            });
+        }
+
+        function changeQuantity(delta) {
+            quantity = Math.max(1, quantity + delta);
+            document.getElementById('quantityValue').textContent = quantity;
+        }
+
+        function toggleInfo(section) {
+            const content = document.getElementById(`content-${section}`);
+            const toggle = document.getElementById(`toggle-${section}`);
+            
+            content.classList.toggle('active');
+            toggle.textContent = content.classList.contains('active') ? '−' : '+';
+        }
+
+        function addToCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            
+            const sellerName = currentProduct.seller 
+                ? (currentProduct.seller.display_name || currentProduct.seller.full_name || currentProduct.seller.username || 'Independent Maker')
+                : 'Independent Maker';
+            
+            const existingItem = cart.find(item => item.id === currentProduct.id);
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: currentProduct.id,
+                    title: currentProduct.title,
+                    price: currentProduct.price,
+                    currency: currentProduct.currency,
+                    image: currentProduct.thumbnail_url || currentProduct.images[0],
+                    seller: sellerName,
+                    quantity: quantity
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`✅ Added ${quantity} ${currentProduct.title} to cart!`);
+        }
+
+        async function loadRecommendations(category, excludeId) {
+            try {
+                const { data: products } = await supabase
+                    .from('products')
+                    .select('*')
+                    .eq('is_active', true)
+                    .eq('category', category)
+                    .neq('id', excludeId)
+                    .limit(4);
+
+                const grid = document.getElementById('recommendationsGrid');
+                
+                if (!products || products.length === 0) {
+                    grid.innerHTML = '<p style="text-align: center; grid-column: 1/-1; color: var(--text-muted);">No similar products found</p>';
+                    return;
+                }
+
+                grid.innerHTML = products.map(product => {
+                    const image = product.thumbnail_url || (product.images && product.images[0]) || '/api/placeholder/300/300';
+                    return `
+                        <div class="product-card" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                            <div class="product-card-image">
+                                <img src="${image}" alt="${product.title}">
+                            </div>
+                            <div class="product-card-info">
+                                <h3 class="product-card-title">${product.title}</h3>
+                                <div class="product-card-price">${formatPrice(product.price, product.currency)}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading recommendations:', error);
+            }
+        }
+
+        function formatPrice(price, currency = 'EUR') {
+            const symbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : currency === 'GBP' ? '£' : currency;
+            return `${symbol}${parseFloat(price).toFixed(2)}`;
+        }
+
+        function getCountdown(deadline) {
+            const now = new Date();
+            const end = new Date(deadline);
+            const diff = end - now;
+            
+            if (diff <= 0) return 'Deadline passed';
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days > 1) return `${days} days left to order`;
+            if (days === 1) return '1 day left to order';
+            
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            if (hours > 1) return `${hours} hours left to order`;
+            
+            return 'Less than 1 hour left';
+        }
+
+        // Load product on page load
+        loadProduct();
+    </script>
+</body>
+</html>
