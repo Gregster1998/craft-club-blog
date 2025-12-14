@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CMS Admin | International Craft Club</title>
     
-    <!-- Load Supabase FIRST -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
@@ -133,7 +132,7 @@
         }
         .modal-content {
             background: white;
-            max-width: 800px;
+            max-width: 1000px;
             margin: 2rem auto;
             padding: 2rem;
             border-radius: 8px;
@@ -184,7 +183,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .action-bar-left { display: flex; gap: 1rem; }
-        .producer-avatar, .animal-thumb, .image-thumb {
+        .producer-avatar {
             background: #e5e5e5;
             background-size: cover;
             background-position: center;
@@ -194,7 +193,7 @@
         .upload-area {
             border: 2px dashed var(--light-beige);
             border-radius: 8px;
-            padding: 2rem;
+            padding: 1.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
@@ -205,29 +204,25 @@
             background: #f5f5f5;
         }
         .upload-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
             color: var(--text-muted);
         }
         .image-preview {
             margin-top: 1rem;
             max-width: 100%;
-            max-height: 200px;
+            max-height: 150px;
             border-radius: 8px;
             display: none;
         }
-        .image-preview.show {
-            display: block;
-        }
+        .image-preview.show { display: block; }
         .image-info {
             margin-top: 0.5rem;
             font-size: 0.875rem;
             color: var(--text-muted);
             display: none;
         }
-        .image-info.show {
-            display: block;
-        }
+        .image-info.show { display: block; }
         .remove-image-btn {
             margin-top: 0.5rem;
             padding: 0.5rem 1rem;
@@ -239,8 +234,70 @@
             font-size: 0.875rem;
             display: none;
         }
-        .remove-image-btn.show {
-            display: inline-block;
+        .remove-image-btn.show { display: inline-block; }
+        
+        /* Section Headers */
+        .section-header {
+            background: var(--cream);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0 1rem;
+            border-left: 4px solid var(--terracotta);
+        }
+        .section-header h3 {
+            font-size: 1.25rem;
+            color: var(--dark-brown);
+        }
+        
+        /* Animals List in Modal */
+        .animals-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .animal-item {
+            background: #fafafa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-beige);
+        }
+        .animal-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .animal-item-header h4 {
+            font-size: 1.1rem;
+            color: var(--dark-brown);
+        }
+        .animal-preview {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1rem;
+            align-items: start;
+        }
+        .animal-preview-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            background: #e5e5e5;
+            background-size: cover;
+            background-position: center;
+        }
+        .animal-preview-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .animal-preview-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .animal-preview-info strong {
+            color: var(--text-dark);
         }
     </style>
 </head>
@@ -256,7 +313,7 @@
 
         <div class="tabs">
             <button class="tab active" data-tab="posts" onclick="switchTab('posts')">📝 Posts</button>
-            <button class="tab" data-tab="producers" onclick="switchTab('producers')">🐑 Producers</button>
+            <button class="tab" data-tab="producers" onclick="switchTab('producers')">🐑 Producers & Animals</button>
         </div>
 
         <!-- POSTS TAB -->
@@ -279,6 +336,7 @@
             <div class="stats-grid">
                 <div class="stat-card"><h3>Total Producers</h3><div class="number" id="totalProducers">0</div></div>
                 <div class="stat-card"><h3>Active</h3><div class="number" id="activeProducers">0</div></div>
+                <div class="stat-card"><h3>Total Animals</h3><div class="number" id="totalAnimalsCount">0</div></div>
             </div>
             <div class="action-bar">
                 <div class="action-bar-left">
@@ -289,7 +347,7 @@
         </div>
     </div>
 
-    <!-- Post Modal -->
+    <!-- Post Modal (simplified version from before) -->
     <div id="postModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -325,18 +383,17 @@
                     <textarea id="postExcerpt" rows="3" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Content (Markdown supported) *</label>
-                    <textarea id="postContent" rows="15" required></textarea>
+                    <label>Content *</label>
+                    <textarea id="postContent" rows="10" required></textarea>
                 </div>
                 <div class="form-group">
                     <label>Featured Image</label>
-                    <div class="upload-area" id="postImageUpload" onclick="document.getElementById('postImageFile').click()">
+                    <div class="upload-area" onclick="document.getElementById('postImageFile').click()">
                         <div class="upload-icon">📷</div>
-                        <p>Click to upload or drag and drop</p>
-                        <small style="color: var(--text-muted);">PNG, JPG, WebP up to 5MB</small>
+                        <p>Click to upload image</p>
                     </div>
                     <input type="file" id="postImageFile" accept="image/*" style="display: none;" onchange="handlePostImageUpload(event)">
-                    <img id="postImagePreview" class="image-preview" alt="Image preview">
+                    <img id="postImagePreview" class="image-preview">
                     <div id="postImageInfo" class="image-info"></div>
                     <button type="button" id="postRemoveImage" class="remove-image-btn" onclick="removePostImage()">Remove Image</button>
                 </div>
@@ -346,7 +403,7 @@
                         <input type="text" id="postAuthor" required>
                     </div>
                     <div class="form-group">
-                        <label>Read Time (minutes) *</label>
+                        <label>Read Time (min) *</label>
                         <input type="number" id="postReadTime" min="1" required>
                     </div>
                 </div>
@@ -365,7 +422,7 @@
         </div>
     </div>
 
-    <!-- Producer Modal -->
+    <!-- Producer Modal with Animals -->
     <div id="producerModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -374,23 +431,106 @@
             </div>
             <form id="producerForm">
                 <input type="hidden" id="producerId">
+                <input type="hidden" id="producerAvatarUrl">
+                <input type="hidden" id="producerHeroUrl">
+                
+                <!-- PRODUCER DETAILS -->
+                <div class="section-header">
+                    <h3>📝 Producer Details</h3>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" id="producerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Slug *</label>
+                        <input type="text" id="producerSlug" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Location *</label>
+                        <input type="text" id="producerLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Country *</label>
+                        <input type="text" id="producerCountry" required>
+                    </div>
+                </div>
                 
                 <div class="form-group">
-                    <label>Name *</label>
-                    <input type="text" id="producerName" required>
-                </div>
-                <div class="form-group">
-                    <label>Location *</label>
-                    <input type="text" id="producerLocation" required>
-                </div>
-                <div class="form-group">
-                    <label>Description *</label>
+                    <label>Short Description *</label>
                     <textarea id="producerDescription" rows="3" required></textarea>
                 </div>
                 
-                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                <div class="form-group">
+                    <label>Full Story</label>
+                    <textarea id="producerStory" rows="6"></textarea>
+                </div>
+                
+                <!-- IMAGES -->
+                <div class="section-header">
+                    <h3>🖼️ Images</h3>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Avatar (Profile Picture)</label>
+                        <div class="upload-area" onclick="document.getElementById('producerAvatarFile').click()">
+                            <div class="upload-icon">👤</div>
+                            <p>Upload Avatar</p>
+                        </div>
+                        <input type="file" id="producerAvatarFile" accept="image/*" style="display: none;" onchange="handleProducerAvatarUpload(event)">
+                        <img id="producerAvatarPreview" class="image-preview">
+                        <div id="producerAvatarInfo" class="image-info"></div>
+                        <button type="button" id="producerAvatarRemove" class="remove-image-btn" onclick="removeProducerAvatar()">Remove</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Image (Banner)</label>
+                        <div class="upload-area" onclick="document.getElementById('producerHeroFile').click()">
+                            <div class="upload-icon">🖼️</div>
+                            <p>Upload Hero</p>
+                        </div>
+                        <input type="file" id="producerHeroFile" accept="image/*" style="display: none;" onchange="handleProducerHeroUpload(event)">
+                        <img id="producerHeroPreview" class="image-preview">
+                        <div id="producerHeroInfo" class="image-info"></div>
+                        <button type="button" id="producerHeroRemove" class="remove-image-btn" onclick="removeProducerHero()">Remove</button>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Rating (0-5) *</label>
+                        <input type="number" id="producerRating" min="0" max="5" step="0.1" value="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Review Count *</label>
+                        <input type="number" id="producerReviews" min="0" value="0" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><input type="checkbox" id="producerActive" checked> Active</label>
+                    <label><input type="checkbox" id="producerSustainable" checked> Sustainable</label>
+                </div>
+                
+                <!-- ANIMALS -->
+                <div class="section-header">
+                    <h3>🐑 Animals</h3>
+                </div>
+                
+                <div id="animalsContainer" class="animals-list">
+                    <!-- Animals will be added here -->
+                </div>
+                
+                <button type="button" class="btn btn-secondary" style="margin-top: 1rem;" onclick="addAnimal()">+ Add Animal</button>
+                
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; padding-top: 2rem; border-top: 2px solid var(--light-beige);">
                     <button type="button" class="btn btn-secondary" onclick="closeProducerModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Producer</button>
+                    <button type="submit" class="btn btn-primary">Save Producer & Animals</button>
                 </div>
             </form>
         </div>
@@ -401,9 +541,6 @@
         const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log('✅ Supabase initialized');
-
-        // Storage bucket name
         const STORAGE_BUCKET = 'site-images';
 
         // Global state
@@ -411,22 +548,18 @@
         let producers = [];
         let currentPostEditId = null;
         let currentProducerEditId = null;
+        let producerAnimals = []; // Animals for current producer being edited
+        let animalIdCounter = 0; // For temporary IDs
 
-        // ==================== IMAGE UPLOAD FUNCTIONS ====================
-        
+        // ==================== IMAGE UPLOAD ====================
         async function uploadImage(file, folder = '') {
             try {
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${folder}${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
                 
-                console.log('Uploading:', fileName);
-                
                 const { data, error } = await supabase.storage
                     .from(STORAGE_BUCKET)
-                    .upload(fileName, file, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
+                    .upload(fileName, file, { cacheControl: '3600', upsert: false });
 
                 if (error) throw error;
 
@@ -434,25 +567,23 @@
                     .from(STORAGE_BUCKET)
                     .getPublicUrl(fileName);
 
-                console.log('✅ Upload successful:', publicUrl);
                 return publicUrl;
             } catch (error) {
-                console.error('❌ Upload error:', error);
-                alert('Error uploading image: ' + error.message + '\n\nMake sure you have created a public bucket named "site-images" in Supabase Storage!');
+                console.error('Upload error:', error);
+                alert('Error uploading: ' + error.message);
                 throw error;
             }
         }
 
-        // Post Image Upload
+        // Post image handlers
         async function handlePostImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
-
+            
             const preview = document.getElementById('postImagePreview');
             const info = document.getElementById('postImageInfo');
             const removeBtn = document.getElementById('postRemoveImage');
             
-            // Show preview immediately
             const reader = new FileReader();
             reader.onload = (e) => {
                 preview.src = e.target.result;
@@ -461,112 +592,195 @@
                 info.classList.add('show');
             };
             reader.readAsDataURL(file);
-
+            
             try {
                 const url = await uploadImage(file, 'posts/');
                 document.getElementById('postImageUrl').value = url;
-                info.textContent = '✅ Image uploaded successfully!';
+                info.textContent = '✅ Uploaded!';
                 removeBtn.classList.add('show');
-                console.log('✅ Post image uploaded, URL set:', url);
             } catch (error) {
                 info.textContent = '❌ Upload failed';
                 preview.classList.remove('show');
-                removeBtn.classList.remove('show');
             }
         }
 
-        // Remove post image
         function removePostImage() {
             document.getElementById('postImageUrl').value = '';
             document.getElementById('postImagePreview').classList.remove('show');
-            document.getElementById('postImagePreview').src = '';
             document.getElementById('postImageInfo').classList.remove('show');
             document.getElementById('postRemoveImage').classList.remove('show');
             document.getElementById('postImageFile').value = '';
-            console.log('✅ Post image removed');
         }
 
-        // ==================== POSTS MANAGER ====================
+        // Producer image handlers
+        async function handleProducerAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const preview = document.getElementById('producerAvatarPreview');
+            const info = document.getElementById('producerAvatarInfo');
+            const removeBtn = document.getElementById('producerAvatarRemove');
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('show');
+                info.textContent = 'Uploading...';
+                info.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+            
+            try {
+                const url = await uploadImage(file, 'producers/avatars/');
+                document.getElementById('producerAvatarUrl').value = url;
+                info.textContent = '✅ Uploaded!';
+                removeBtn.classList.add('show');
+            } catch (error) {
+                info.textContent = '❌ Failed';
+                preview.classList.remove('show');
+            }
+        }
+
+        function removeProducerAvatar() {
+            document.getElementById('producerAvatarUrl').value = '';
+            document.getElementById('producerAvatarPreview').classList.remove('show');
+            document.getElementById('producerAvatarInfo').classList.remove('show');
+            document.getElementById('producerAvatarRemove').classList.remove('show');
+            document.getElementById('producerAvatarFile').value = '';
+        }
+
+        async function handleProducerHeroUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const preview = document.getElementById('producerHeroPreview');
+            const info = document.getElementById('producerHeroInfo');
+            const removeBtn = document.getElementById('producerHeroRemove');
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('show');
+                info.textContent = 'Uploading...';
+                info.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+            
+            try {
+                const url = await uploadImage(file, 'producers/heroes/');
+                document.getElementById('producerHeroUrl').value = url;
+                info.textContent = '✅ Uploaded!';
+                removeBtn.classList.add('show');
+            } catch (error) {
+                info.textContent = '❌ Failed';
+                preview.classList.remove('show');
+            }
+        }
+
+        function removeProducerHero() {
+            document.getElementById('producerHeroUrl').value = '';
+            document.getElementById('producerHeroPreview').classList.remove('show');
+            document.getElementById('producerHeroInfo').classList.remove('show');
+            document.getElementById('producerHeroRemove').classList.remove('show');
+            document.getElementById('producerHeroFile').value = '';
+        }
+
+        // Animal image upload
+        async function handleAnimalImageUpload(event, animalId) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const preview = document.getElementById(`animalPreview${animalId}`);
+            const info = document.getElementById(`animalInfo${animalId}`);
+            const removeBtn = document.getElementById(`animalRemove${animalId}`);
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('show');
+                info.textContent = 'Uploading...';
+                info.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+            
+            try {
+                const url = await uploadImage(file, 'animals/');
+                document.getElementById(`animalImageUrl${animalId}`).value = url;
+                info.textContent = '✅ Uploaded!';
+                removeBtn.classList.add('show');
+            } catch (error) {
+                info.textContent = '❌ Failed';
+                preview.classList.remove('show');
+            }
+        }
+
+        function removeAnimalImage(animalId) {
+            document.getElementById(`animalImageUrl${animalId}`).value = '';
+            document.getElementById(`animalPreview${animalId}`).classList.remove('show');
+            document.getElementById(`animalInfo${animalId}`).classList.remove('show');
+            document.getElementById(`animalRemove${animalId}`).classList.remove('show');
+            document.getElementById(`animalImageFile${animalId}`).value = '';
+        }
+
+        // ==================== POSTS MANAGER (same as before) ====================
         async function loadPosts() {
             try {
-                console.log('Loading posts from Supabase...');
-                const { data, error } = await supabase
-                    .from('posts')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
+                const { data, error } = await supabase.from('posts').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 posts = data || [];
-                console.log('✅ Loaded', posts.length, 'posts');
                 renderPostsList();
                 updatePostsStats();
             } catch (error) {
-                console.error('❌ Error loading posts:', error);
-                alert('Error loading posts: ' + error.message);
+                console.error('Error loading posts:', error);
             }
         }
 
         function renderPostsList() {
             const container = document.getElementById('postsList');
             if (posts.length === 0) {
-                container.innerHTML = '<div class="empty-state"><h3>No posts yet</h3><p>Create your first blog post!</p></div>';
+                container.innerHTML = '<div class="empty-state"><h3>No posts yet</h3></div>';
                 return;
             }
-
             container.innerHTML = posts.map(post => `
                 <div class="post-item">
                     <div class="post-info">
                         <div>
-                            <div class="post-category">${post.category?.toUpperCase() || 'GENERAL'}</div>
+                            <div class="post-category">${post.category?.toUpperCase()}</div>
                             <h3>${post.title}</h3>
                             <div class="post-meta">
                                 <span>By ${post.author}</span>
                                 <span>•</span>
                                 <span>${new Date(post.created_at).toLocaleDateString()}</span>
-                                <span>•</span>
-                                <span>${post.read_time} min read</span>
-                                <span>•</span>
-                                <span style="color: ${post.status === 'published' ? '#5CB85C' : '#F0AD4E'}">${post.status}</span>
-                                ${post.image ? '<span>•</span><span>📷 Has image</span>' : ''}
                             </div>
                         </div>
                     </div>
                     <div class="post-actions">
                         <button class="btn btn-small btn-secondary" onclick="editPost('${post.id}')">Edit</button>
                         <button class="btn btn-small btn-danger" onclick="deletePost('${post.id}')">Delete</button>
-                        <a href="post.html?slug=${post.slug}" target="_blank" class="btn btn-small btn-secondary">View</a>
                     </div>
                 </div>
             `).join('');
         }
 
         function updatePostsStats() {
-            const total = posts.length;
-            const published = posts.filter(p => p.status === 'published').length;
-            const drafts = posts.filter(p => p.status === 'draft').length;
-            document.getElementById('totalPosts').textContent = total;
-            document.getElementById('publishedPosts').textContent = published;
-            document.getElementById('draftPosts').textContent = drafts;
+            document.getElementById('totalPosts').textContent = posts.length;
+            document.getElementById('publishedPosts').textContent = posts.filter(p => p.status === 'published').length;
+            document.getElementById('draftPosts').textContent = posts.filter(p => p.status === 'draft').length;
         }
 
         function openNewPostModal() {
             currentPostEditId = null;
             document.getElementById('modalTitle').textContent = 'New Post';
             document.getElementById('postForm').reset();
-            document.getElementById('postId').value = '';
-            document.getElementById('postImageUrl').value = '';
-            removePostImage(); // Clear image preview
+            removePostImage();
             document.getElementById('postModal').style.display = 'block';
-            console.log('✅ Opened new post modal, cleared image');
         }
 
         async function editPost(id) {
             const post = posts.find(p => p.id === id);
             if (!post) return;
-
-            currentPostEditId = id;
-            console.log('✅ Editing post:', id, 'Image URL:', post.image);
             
+            currentPostEditId = id;
             document.getElementById('modalTitle').textContent = 'Edit Post';
             document.getElementById('postId').value = post.id;
             document.getElementById('postTitle').value = post.title;
@@ -579,112 +793,84 @@
             document.getElementById('postReadTime').value = post.read_time;
             document.getElementById('postStatus').value = post.status;
             
-            // Show existing image
-            const preview = document.getElementById('postImagePreview');
-            const info = document.getElementById('postImageInfo');
-            const removeBtn = document.getElementById('postRemoveImage');
-            
             if (post.image) {
-                preview.src = post.image;
-                preview.classList.add('show');
-                info.textContent = '✅ Current image';
-                info.classList.add('show');
-                removeBtn.classList.add('show');
-                console.log('✅ Showing existing image:', post.image);
-            } else {
-                removePostImage();
-                console.log('✅ No existing image');
+                document.getElementById('postImagePreview').src = post.image;
+                document.getElementById('postImagePreview').classList.add('show');
+                document.getElementById('postImageInfo').textContent = '✅ Current image';
+                document.getElementById('postImageInfo').classList.add('show');
+                document.getElementById('postRemoveImage').classList.add('show');
             }
             
             document.getElementById('postModal').style.display = 'block';
         }
 
         async function deletePost(id) {
-            if (!confirm('Are you sure you want to delete this post?')) return;
+            if (!confirm('Delete this post?')) return;
             try {
                 const { error } = await supabase.from('posts').delete().eq('id', id);
                 if (error) throw error;
                 await loadPosts();
-                alert('Post deleted successfully!');
+                alert('Post deleted!');
             } catch (error) {
-                console.error('Error deleting post:', error);
-                alert('Error deleting post: ' + error.message);
+                alert('Error: ' + error.message);
             }
         }
 
         function closePostModal() {
             document.getElementById('postModal').style.display = 'none';
-            currentPostEditId = null;
-            console.log('✅ Closed post modal');
         }
 
         document.getElementById('postForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const imageUrl = document.getElementById('postImageUrl').value || null;
-            console.log('💾 Saving post with image URL:', imageUrl);
-
+            
             const postData = {
                 title: document.getElementById('postTitle').value,
                 slug: document.getElementById('postSlug').value,
                 category: document.getElementById('postCategory').value,
                 excerpt: document.getElementById('postExcerpt').value,
                 content: document.getElementById('postContent').value,
-                image: imageUrl,
+                image: document.getElementById('postImageUrl').value || null,
                 author: document.getElementById('postAuthor').value,
                 read_time: parseInt(document.getElementById('postReadTime').value),
                 status: document.getElementById('postStatus').value,
                 updated_at: new Date().toISOString()
             };
-
+            
             try {
                 if (currentPostEditId) {
-                    const { error } = await supabase
-                        .from('posts')
-                        .update(postData)
-                        .eq('id', currentPostEditId);
+                    const { error } = await supabase.from('posts').update(postData).eq('id', currentPostEditId);
                     if (error) throw error;
-                    console.log('✅ Post updated with image:', imageUrl);
-                    alert('Post updated successfully!');
+                    alert('Post updated!');
                 } else {
-                    const { error } = await supabase
-                        .from('posts')
-                        .insert([postData]);
+                    const { error } = await supabase.from('posts').insert([postData]);
                     if (error) throw error;
-                    console.log('✅ Post created with image:', imageUrl);
-                    alert('Post created successfully!');
+                    alert('Post created!');
                 }
                 closePostModal();
                 await loadPosts();
             } catch (error) {
-                console.error('Error saving post:', error);
-                alert('Error saving post: ' + error.message);
+                alert('Error: ' + error.message);
             }
         });
 
-        // Auto-generate slug from title
         document.getElementById('postTitle').addEventListener('input', (e) => {
             if (!currentPostEditId) {
-                const slug = e.target.value
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-|-$/g, '');
-                document.getElementById('postSlug').value = slug;
+                document.getElementById('postSlug').value = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
             }
         });
 
-        // ==================== PRODUCERS MANAGER (SIMPLIFIED) ====================
+        // ==================== PRODUCERS & ANIMALS MANAGER ====================
         async function loadProducers() {
             try {
-                const { data, error } = await supabase
-                    .from('producers')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
+                const { data, error } = await supabase.from('producers').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 producers = data || [];
+                
+                // Count total animals
+                const { count } = await supabase.from('animals').select('*', { count: 'exact', head: true });
+                
                 renderProducersList();
-                updateProducersStats();
+                updateProducersStats(count || 0);
             } catch (error) {
                 console.error('Error loading producers:', error);
             }
@@ -693,51 +879,336 @@
         function renderProducersList() {
             const container = document.getElementById('producersList');
             if (producers.length === 0) {
-                container.innerHTML = '<div class="empty-state"><h3>No producers yet</h3><p>Add your first producer!</p></div>';
+                container.innerHTML = '<div class="empty-state"><h3>No producers yet</h3></div>';
                 return;
             }
-
+            
             container.innerHTML = producers.map(producer => `
                 <div class="post-item">
                     <div class="post-info">
+                        <div class="producer-avatar" style="width: 60px; height: 60px; border-radius: 50%; background-image: url('${producer.avatar_url || ''}');"></div>
                         <div>
                             <h3>${producer.name}</h3>
                             <div class="post-meta">
-                                <span>${producer.location}</span>
+                                <span>${producer.location}, ${producer.country}</span>
+                                <span>•</span>
+                                <span>${producer.animals_available || 0} animals</span>
                             </div>
                         </div>
                     </div>
                     <div class="post-actions">
+                        <button class="btn btn-small btn-primary" onclick="editProducer('${producer.id}')">Edit & Manage Animals</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteProducer('${producer.id}')">Delete</button>
                         <a href="producer-profile.html?slug=${producer.slug}" target="_blank" class="btn btn-small btn-secondary">View</a>
                     </div>
                 </div>
             `).join('');
         }
 
-        function updateProducersStats() {
-            const total = producers.length;
-            const active = producers.filter(p => p.is_active).length;
-            document.getElementById('totalProducers').textContent = total;
-            document.getElementById('activeProducers').textContent = active;
+        function updateProducersStats(totalAnimals) {
+            document.getElementById('totalProducers').textContent = producers.length;
+            document.getElementById('activeProducers').textContent = producers.filter(p => p.is_active).length;
+            document.getElementById('totalAnimalsCount').textContent = totalAnimals;
         }
 
         function openNewProducerModal() {
-            alert('Use the full CMS (cms-with-uploads.html) to manage producers with all features!');
+            currentProducerEditId = null;
+            producerAnimals = [];
+            animalIdCounter = 0;
+            
+            document.getElementById('producerModalTitle').textContent = 'New Producer';
+            document.getElementById('producerForm').reset();
+            document.getElementById('producerId').value = '';
+            removeProducerAvatar();
+            removeProducerHero();
+            document.getElementById('animalsContainer').innerHTML = '';
+            document.getElementById('producerModal').style.display = 'block';
+        }
+
+        async function editProducer(id) {
+            const producer = producers.find(p => p.id === id);
+            if (!producer) return;
+            
+            currentProducerEditId = id;
+            document.getElementById('producerModalTitle').textContent = 'Edit Producer & Animals';
+            document.getElementById('producerId').value = producer.id;
+            document.getElementById('producerName').value = producer.name;
+            document.getElementById('producerSlug').value = producer.slug;
+            document.getElementById('producerLocation').value = producer.location;
+            document.getElementById('producerCountry').value = producer.country;
+            document.getElementById('producerDescription').value = producer.description;
+            document.getElementById('producerStory').value = producer.story || '';
+            document.getElementById('producerAvatarUrl').value = producer.avatar_url || '';
+            document.getElementById('producerHeroUrl').value = producer.hero_image_url || '';
+            document.getElementById('producerRating').value = producer.rating;
+            document.getElementById('producerReviews').value = producer.review_count;
+            document.getElementById('producerActive').checked = producer.is_active;
+            document.getElementById('producerSustainable').checked = producer.is_sustainable;
+            
+            // Show existing images
+            if (producer.avatar_url) {
+                document.getElementById('producerAvatarPreview').src = producer.avatar_url;
+                document.getElementById('producerAvatarPreview').classList.add('show');
+                document.getElementById('producerAvatarInfo').textContent = '✅ Current';
+                document.getElementById('producerAvatarInfo').classList.add('show');
+                document.getElementById('producerAvatarRemove').classList.add('show');
+            }
+            if (producer.hero_image_url) {
+                document.getElementById('producerHeroPreview').src = producer.hero_image_url;
+                document.getElementById('producerHeroPreview').classList.add('show');
+                document.getElementById('producerHeroInfo').textContent = '✅ Current';
+                document.getElementById('producerHeroInfo').classList.add('show');
+                document.getElementById('producerHeroRemove').classList.add('show');
+            }
+            
+            // Load animals for this producer
+            try {
+                const { data: animals, error } = await supabase
+                    .from('animals')
+                    .select('*')
+                    .eq('producer_id', id)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                producerAnimals = animals || [];
+                animalIdCounter = 0;
+                renderAnimals();
+            } catch (error) {
+                console.error('Error loading animals:', error);
+                producerAnimals = [];
+            }
+            
+            document.getElementById('producerModal').style.display = 'block';
+        }
+
+        async function deleteProducer(id) {
+            if (!confirm('Delete producer and all their animals?')) return;
+            try {
+                const { error } = await supabase.from('producers').delete().eq('id', id);
+                if (error) throw error;
+                await loadProducers();
+                alert('Producer deleted!');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
         }
 
         function closeProducerModal() {
             document.getElementById('producerModal').style.display = 'none';
+            producerAnimals = [];
         }
+
+        // Auto-generate slug
+        document.getElementById('producerName').addEventListener('input', (e) => {
+            if (!currentProducerEditId) {
+                document.getElementById('producerSlug').value = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            }
+        });
+
+        // ==================== ANIMALS MANAGEMENT ====================
+        function addAnimal() {
+            const tempId = `temp${animalIdCounter++}`;
+            producerAnimals.push({
+                tempId: tempId,
+                name: '',
+                animal_type: '',
+                breed: '',
+                age: null,
+                color: '',
+                personality: '',
+                image_url: '',
+                price_per_year: 0,
+                currency: 'EUR',
+                is_available: true,
+                is_new: true
+            });
+            renderAnimals();
+        }
+
+        function renderAnimals() {
+            const container = document.getElementById('animalsContainer');
+            if (producerAnimals.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No animals yet. Click "Add Animal" to add one.</p>';
+                return;
+            }
+            
+            container.innerHTML = producerAnimals.map((animal, index) => {
+                const animalId = animal.tempId || animal.id;
+                return `
+                    <div class="animal-item" id="animal${animalId}">
+                        <div class="animal-item-header">
+                            <h4>Animal #${index + 1}: ${animal.name || 'Unnamed'}</h4>
+                            <button type="button" class="btn btn-small btn-danger" onclick="removeAnimal('${animalId}')">Remove</button>
+                        </div>
+                        
+                        <input type="hidden" id="animalId${animalId}" value="${animal.id || ''}">
+                        <input type="hidden" id="animalImageUrl${animalId}" value="${animal.image_url || ''}">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Name *</label>
+                                <input type="text" id="animalName${animalId}" value="${animal.name || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Type *</label>
+                                <input type="text" id="animalType${animalId}" value="${animal.animal_type || ''}" placeholder="Sheep, Alpaca, Goat" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Breed</label>
+                                <input type="text" id="animalBreed${animalId}" value="${animal.breed || ''}" placeholder="Shetland, Huacaya, etc.">
+                            </div>
+                            <div class="form-group">
+                                <label>Age (years)</label>
+                                <input type="number" id="animalAge${animalId}" value="${animal.age || ''}" min="0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Color</label>
+                            <input type="text" id="animalColor${animalId}" value="${animal.color || ''}" placeholder="Moorit, White, Black, etc.">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Personality / Story</label>
+                            <textarea id="animalPersonality${animalId}" rows="3" placeholder="Describe this animal's personality, temperament, or unique characteristics...">${animal.personality || ''}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Animal Photo</label>
+                            <div class="upload-area" onclick="document.getElementById('animalImageFile${animalId}').click()">
+                                <div class="upload-icon">🐑</div>
+                                <p>Upload Photo</p>
+                            </div>
+                            <input type="file" id="animalImageFile${animalId}" accept="image/*" style="display: none;" onchange="handleAnimalImageUpload(event, '${animalId}')">
+                            <img id="animalPreview${animalId}" class="image-preview" src="${animal.image_url || ''}" ${animal.image_url ? 'style="display:block"' : ''}>
+                            <div id="animalInfo${animalId}" class="image-info" ${animal.image_url ? 'style="display:block"' : ''}>${animal.image_url ? '✅ Current image' : ''}</div>
+                            <button type="button" id="animalRemove${animalId}" class="remove-image-btn" ${animal.image_url ? 'style="display:inline-block"' : ''} onclick="removeAnimalImage('${animalId}')">Remove</button>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Price per Year *</label>
+                                <input type="number" id="animalPrice${animalId}" value="${animal.price_per_year || 0}" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Currency *</label>
+                                <select id="animalCurrency${animalId}" required>
+                                    <option value="EUR" ${animal.currency === 'EUR' ? 'selected' : ''}>EUR (€)</option>
+                                    <option value="USD" ${animal.currency === 'USD' ? 'selected' : ''}>USD ($)</option>
+                                    <option value="GBP" ${animal.currency === 'GBP' ? 'selected' : ''}>GBP (£)</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><input type="checkbox" id="animalAvailable${animalId}" ${animal.is_available ? 'checked' : ''}> Available for Adoption</label>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function removeAnimal(animalId) {
+            producerAnimals = producerAnimals.filter(a => (a.tempId || a.id) !== animalId);
+            renderAnimals();
+        }
+
+        function collectAnimalData() {
+            return producerAnimals.map(animal => {
+                const animalId = animal.tempId || animal.id;
+                return {
+                    id: document.getElementById(`animalId${animalId}`).value || null,
+                    name: document.getElementById(`animalName${animalId}`).value,
+                    animal_type: document.getElementById(`animalType${animalId}`).value,
+                    breed: document.getElementById(`animalBreed${animalId}`).value || null,
+                    age: parseInt(document.getElementById(`animalAge${animalId}`).value) || null,
+                    color: document.getElementById(`animalColor${animalId}`).value || null,
+                    personality: document.getElementById(`animalPersonality${animalId}`).value || null,
+                    image_url: document.getElementById(`animalImageUrl${animalId}`).value || null,
+                    price_per_year: parseFloat(document.getElementById(`animalPrice${animalId}`).value),
+                    currency: document.getElementById(`animalCurrency${animalId}`).value,
+                    is_available: document.getElementById(`animalAvailable${animalId}`).checked,
+                    is_featured: false
+                };
+            });
+        }
+
+        document.getElementById('producerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const producerData = {
+                name: document.getElementById('producerName').value,
+                slug: document.getElementById('producerSlug').value,
+                location: document.getElementById('producerLocation').value,
+                country: document.getElementById('producerCountry').value,
+                description: document.getElementById('producerDescription').value,
+                story: document.getElementById('producerStory').value || null,
+                avatar_url: document.getElementById('producerAvatarUrl').value || null,
+                hero_image_url: document.getElementById('producerHeroUrl').value || null,
+                rating: parseFloat(document.getElementById('producerRating').value),
+                review_count: parseInt(document.getElementById('producerReviews').value),
+                is_active: document.getElementById('producerActive').checked,
+                is_sustainable: document.getElementById('producerSustainable').checked,
+                updated_at: new Date().toISOString()
+            };
+            
+            try {
+                let producerId;
+                
+                // Save producer
+                if (currentProducerEditId) {
+                    const { error } = await supabase.from('producers').update(producerData).eq('id', currentProducerEditId);
+                    if (error) throw error;
+                    producerId = currentProducerEditId;
+                } else {
+                    const { data, error } = await supabase.from('producers').insert([producerData]).select();
+                    if (error) throw error;
+                    producerId = data[0].id;
+                }
+                
+                // Save animals
+                const animalsData = collectAnimalData();
+                
+                // Delete removed animals (if editing)
+                if (currentProducerEditId) {
+                    const existingAnimalIds = producerAnimals.filter(a => a.id).map(a => a.id);
+                    await supabase.from('animals').delete().eq('producer_id', producerId).not('id', 'in', `(${existingAnimalIds.join(',')})`);
+                }
+                
+                // Update or insert animals
+                for (const animal of animalsData) {
+                    animal.producer_id = producerId;
+                    
+                    if (animal.id) {
+                        const { error } = await supabase.from('animals').update(animal).eq('id', animal.id);
+                        if (error) throw error;
+                    } else {
+                        delete animal.id;
+                        const { error } = await supabase.from('animals').insert([animal]);
+                        if (error) throw error;
+                    }
+                }
+                
+                // Update animals count
+                const availableCount = animalsData.filter(a => a.is_available).length;
+                await supabase.from('producers').update({ animals_available: availableCount }).eq('id', producerId);
+                
+                alert('Producer and animals saved successfully!');
+                closeProducerModal();
+                await loadProducers();
+            } catch (error) {
+                console.error('Error saving:', error);
+                alert('Error: ' + error.message);
+            }
+        });
 
         // ==================== TAB SWITCHING ====================
         function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             
             document.getElementById(tabName + '-tab').classList.add('active');
             document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
@@ -749,23 +1220,18 @@
         // ==================== INITIALIZATION ====================
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                console.log('🚀 Initializing CMS...');
                 await loadPosts();
-                console.log('✅ CMS initialized successfully!');
+                console.log('✅ CMS initialized!');
             } catch (error) {
-                console.error('❌ Initialization error:', error);
-                alert('Error connecting to database. Check console for details.');
+                console.error('❌ Error:', error);
             }
         });
 
-        // Close modals when clicking outside
         window.onclick = function(event) {
             const modals = ['postModal', 'producerModal'];
             modals.forEach(modalId => {
                 const modal = document.getElementById(modalId);
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
+                if (event.target === modal) modal.style.display = 'none';
             });
         }
     </script>
