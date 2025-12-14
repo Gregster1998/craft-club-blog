@@ -4388,7 +4388,56 @@
                         </div>
                     </div>
                 </div>
-                
+                <!-- ADD THIS SECTION BEFORE THE IMAGE UPLOAD SECTION IN PRODUCT MODAL -->
+
+<!-- Sizing Options -->
+<div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--light-beige);">
+    <h3 style="margin-bottom: 1rem; color: var(--terracotta);">📏 Sizing</h3>
+    <div style="margin-bottom: 1rem;">
+        <label style="display: flex; align-items: center; cursor: pointer;">
+            <input type="checkbox" id="productHasSizes" onchange="document.getElementById('sizeSelector').style.display = this.checked ? 'block' : 'none';" style="width: 20px; height: 20px; margin-right: 0.75rem; cursor: pointer;">
+            <span style="font-weight: 500;">This product comes in different sizes</span>
+        </label>
+    </div>
+    
+    <div id="sizeSelector" style="display: none; margin-top: 1rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Available Sizes:</label>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <label style="padding: 0.5rem 1rem; border: 2px solid var(--light-beige); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                <input type="checkbox" name="sizes" value="XS" style="margin-right: 0.5rem;">XS
+            </label>
+            <label style="padding: 0.5rem 1rem; border: 2px solid var(--light-beige); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                <input type="checkbox" name="sizes" value="S" style="margin-right: 0.5rem;">S
+            </label>
+            <label style="padding: 0.5rem 1rem; border: 2px solid var(--light-beige); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                <input type="checkbox" name="sizes" value="M" style="margin-right: 0.5rem;">M
+            </label>
+            <label style="padding: 0.5rem 1rem; border: 2px solid var(--light-beige); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                <input type="checkbox" name="sizes" value="L" style="margin-right: 0.5rem;">L
+            </label>
+            <label style="padding: 0.5rem 1rem; border: 2px solid var(--light-beige); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                <input type="checkbox" name="sizes" value="XL" style="margin-right: 0.5rem;">XL
+            </label>
+            <label style="padding: 0.5rem 1rem; border: 2px solid var(--light-beige); border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                <input type="checkbox" name="sizes" value="XXL" style="margin-right: 0.5rem;">XXL
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- Product Details -->
+<div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--light-beige);">
+    <h3 style="margin-bottom: 1rem; color: var(--terracotta);">📝 Product Details</h3>
+    <p style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem;">Materials, dimensions, care instructions, etc.</p>
+    <textarea id="productDetailsText" rows="4" placeholder="e.g., Made from 100% organic cotton. Hand wash cold. Dimensions: 10x8 inches." style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+</div>
+
+<!-- Shipping & Returns -->
+<div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--light-beige);">
+    <h3 style="margin-bottom: 1rem; color: var(--terracotta);">📦 Shipping & Returns</h3>
+    <p style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem;">Let buyers know your shipping and return policy</p>
+    <textarea id="shippingInfoText" rows="3" placeholder="e.g., Ships within 3-5 business days. Returns accepted within 14 days in original condition." style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+</div>
                 <!-- Product Images -->
                 <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--light-beige);">
                     <h3 style="margin-bottom: 1rem; color: var(--terracotta);">📸 Product Images</h3>
