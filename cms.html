@@ -204,10 +204,6 @@
             border-color: var(--terracotta);
             background: #f5f5f5;
         }
-        .upload-area.dragging {
-            border-color: var(--terracotta);
-            background: var(--cream);
-        }
         .upload-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
@@ -223,29 +219,28 @@
         .image-preview.show {
             display: block;
         }
-        .upload-progress {
-            margin-top: 1rem;
-            display: none;
-        }
-        .upload-progress.show {
-            display: block;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--light-beige);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: var(--terracotta);
-            transition: width 0.3s;
-        }
-        .upload-status {
+        .image-info {
             margin-top: 0.5rem;
             font-size: 0.875rem;
             color: var(--text-muted);
+            display: none;
+        }
+        .image-info.show {
+            display: block;
+        }
+        .remove-image-btn {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: none;
+        }
+        .remove-image-btn.show {
+            display: inline-block;
         }
     </style>
 </head>
@@ -262,8 +257,6 @@
         <div class="tabs">
             <button class="tab active" data-tab="posts" onclick="switchTab('posts')">📝 Posts</button>
             <button class="tab" data-tab="producers" onclick="switchTab('producers')">🐑 Producers</button>
-            <button class="tab" data-tab="animals" onclick="switchTab('animals')">🦙 Animals</button>
-            <button class="tab" data-tab="images" onclick="switchTab('images')">🖼️ Site Images</button>
         </div>
 
         <!-- POSTS TAB -->
@@ -286,7 +279,6 @@
             <div class="stats-grid">
                 <div class="stat-card"><h3>Total Producers</h3><div class="number" id="totalProducers">0</div></div>
                 <div class="stat-card"><h3>Active</h3><div class="number" id="activeProducers">0</div></div>
-                <div class="stat-card"><h3>Total Animals</h3><div class="number" id="totalAnimals">0</div></div>
             </div>
             <div class="action-bar">
                 <div class="action-bar-left">
@@ -294,36 +286,6 @@
                 </div>
             </div>
             <div id="producersList"></div>
-        </div>
-
-        <!-- ANIMALS TAB -->
-        <div id="animals-tab" class="tab-content">
-            <div class="stats-grid">
-                <div class="stat-card"><h3>Total Animals</h3><div class="number" id="totalAnimalCount">0</div></div>
-                <div class="stat-card"><h3>Available</h3><div class="number" id="availableAnimals">0</div></div>
-                <div class="stat-card"><h3>Adopted</h3><div class="number" id="adoptedAnimals">0</div></div>
-            </div>
-            <div class="action-bar">
-                <div class="action-bar-left">
-                    <button class="btn btn-primary" onclick="openNewAnimalModal()">+ New Animal</button>
-                </div>
-            </div>
-            <div id="animalsList"></div>
-        </div>
-
-        <!-- SITE IMAGES TAB -->
-        <div id="images-tab" class="tab-content">
-            <div class="stats-grid">
-                <div class="stat-card"><h3>Total Images</h3><div class="number" id="totalImages">0</div></div>
-                <div class="stat-card"><h3>Active Images</h3><div class="number" id="activeImages">0</div></div>
-                <div class="stat-card"><h3>Pages</h3><div class="number" id="pagesWithImages">0</div></div>
-            </div>
-            <div class="action-bar">
-                <div class="action-bar-left">
-                    <button class="btn btn-primary" onclick="openNewImageModal()">+ New Image</button>
-                </div>
-            </div>
-            <div id="siteImagesList"></div>
         </div>
     </div>
 
@@ -374,11 +336,9 @@
                         <small style="color: var(--text-muted);">PNG, JPG, WebP up to 5MB</small>
                     </div>
                     <input type="file" id="postImageFile" accept="image/*" style="display: none;" onchange="handlePostImageUpload(event)">
-                    <img id="postImagePreview" class="image-preview">
-                    <div id="postImageProgress" class="upload-progress">
-                        <div class="progress-bar"><div class="progress-fill" id="postImageProgressFill"></div></div>
-                        <div class="upload-status" id="postImageStatus">Uploading...</div>
-                    </div>
+                    <img id="postImagePreview" class="image-preview" alt="Image preview">
+                    <div id="postImageInfo" class="image-info"></div>
+                    <button type="button" id="postRemoveImage" class="remove-image-btn" onclick="removePostImage()">Remove Image</button>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -414,241 +374,23 @@
             </div>
             <form id="producerForm">
                 <input type="hidden" id="producerId">
-                <input type="hidden" id="producerAvatarUrlHidden">
-                <input type="hidden" id="producerHeroUrlHidden">
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Name *</label>
-                        <input type="text" id="producerName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Slug *</label>
-                        <input type="text" id="producerSlug" required>
-                    </div>
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" id="producerName" required>
                 </div>
                 <div class="form-group">
-                    <label>Tagline</label>
-                    <input type="text" id="producerTagline">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Location *</label>
-                        <input type="text" id="producerLocation" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Country *</label>
-                        <input type="text" id="producerCountry" required>
-                    </div>
+                    <label>Location *</label>
+                    <input type="text" id="producerLocation" required>
                 </div>
                 <div class="form-group">
                     <label>Description *</label>
                     <textarea id="producerDescription" rows="3" required></textarea>
                 </div>
-                <div class="form-group">
-                    <label>Story</label>
-                    <textarea id="producerStory" rows="5"></textarea>
-                </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Avatar Image</label>
-                        <div class="upload-area" onclick="document.getElementById('producerAvatarFile').click()">
-                            <div class="upload-icon">👤</div>
-                            <p>Upload Avatar</p>
-                        </div>
-                        <input type="file" id="producerAvatarFile" accept="image/*" style="display: none;" onchange="handleProducerAvatarUpload(event)">
-                        <img id="producerAvatarPreview" class="image-preview">
-                    </div>
-                    <div class="form-group">
-                        <label>Hero Image</label>
-                        <div class="upload-area" onclick="document.getElementById('producerHeroFile').click()">
-                            <div class="upload-icon">🖼️</div>
-                            <p>Upload Hero Image</p>
-                        </div>
-                        <input type="file" id="producerHeroFile" accept="image/*" style="display: none;" onchange="handleProducerHeroUpload(event)">
-                        <img id="producerHeroPreview" class="image-preview">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Rating (0-5) *</label>
-                        <input type="number" id="producerRating" min="0" max="5" step="0.1" value="5" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Review Count *</label>
-                        <input type="number" id="producerReviews" min="0" value="0" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <h4 style="margin-bottom: 1rem;">Certifications</h4>
-                    <label><input type="checkbox" id="producerSustainable" checked> Sustainable</label><br>
-                    <label><input type="checkbox" id="producerOrganic"> Organic Certified</label><br>
-                    <label><input type="checkbox" id="producerAnimalWelfare"> Animal Welfare Approved</label><br>
-                    <label><input type="checkbox" id="producerHeritage"> Heritage Breed Preservation</label>
-                </div>
-                <h4 style="margin: 2rem 0 1rem;">What You'll Receive</h4>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Shearing Frequency</label>
-                        <input type="text" id="producerShearing" placeholder="e.g., 1x per year">
-                    </div>
-                    <div class="form-group">
-                        <label>Average Yield</label>
-                        <input type="text" id="producerYield" placeholder="e.g., 1.5-2 kg raw fleece">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Wool Type</label>
-                    <input type="text" id="producerWoolType" placeholder="e.g., Fine, soft, natural colors">
-                </div>
-                <div class="form-group">
-                    <label>Processing Options (comma-separated)</label>
-                    <input type="text" id="producerProcessing" placeholder="e.g., Raw fleece, Washed, Carded">
-                </div>
-                <div class="form-group">
-                    <label><input type="checkbox" id="producerActive" checked> Active</label>
-                </div>
                 <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
                     <button type="button" class="btn btn-secondary" onclick="closeProducerModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save Producer</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Animal Modal -->
-    <div id="animalModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="animalModalTitle">New Animal</h2>
-                <button class="close-btn" onclick="closeAnimalModal()">×</button>
-            </div>
-            <form id="animalForm">
-                <input type="hidden" id="animalId">
-                <input type="hidden" id="animalImageUrlHidden">
-                
-                <div class="form-group">
-                    <label>Producer *</label>
-                    <select id="animalProducer" required>
-                        <option value="">Select a producer...</option>
-                    </select>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Name *</label>
-                        <input type="text" id="animalName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Animal Type *</label>
-                        <input type="text" id="animalType" placeholder="e.g., Sheep, Alpaca, Goat" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Breed *</label>
-                        <input type="text" id="animalBreed" placeholder="e.g., Shetland, Huacaya" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Age (years)</label>
-                        <input type="number" id="animalAge" min="0">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Color</label>
-                    <input type="text" id="animalColor" placeholder="e.g., Moorit (brown), White">
-                </div>
-                <div class="form-group">
-                    <label>Personality</label>
-                    <textarea id="animalPersonality" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Animal Image</label>
-                    <div class="upload-area" onclick="document.getElementById('animalImageFile').click()">
-                        <div class="upload-icon">🐑</div>
-                        <p>Upload Animal Photo</p>
-                    </div>
-                    <input type="file" id="animalImageFile" accept="image/*" style="display: none;" onchange="handleAnimalImageUpload(event)">
-                    <img id="animalImagePreview" class="image-preview">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Price per Year *</label>
-                        <input type="number" id="animalPrice" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Currency *</label>
-                        <select id="animalCurrency" required>
-                            <option value="EUR">EUR (€)</option>
-                            <option value="USD">USD ($)</option>
-                            <option value="GBP">GBP (£)</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label><input type="checkbox" id="animalAvailable" checked> Available for Adoption</label><br>
-                    <label><input type="checkbox" id="animalFeatured"> Featured Animal</label>
-                </div>
-                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
-                    <button type="button" class="btn btn-secondary" onclick="closeAnimalModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Animal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Site Image Modal -->
-    <div id="imageModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="imageModalTitle">New Site Image</h2>
-                <button class="close-btn" onclick="closeImageModal()">×</button>
-            </div>
-            <form id="imageForm">
-                <input type="hidden" id="imageId">
-                <input type="hidden" id="siteImageUrlHidden">
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Page *</label>
-                        <select id="imagePage" required>
-                            <option value="">Select a page...</option>
-                            <option value="index">Homepage</option>
-                            <option value="landing-page">Landing Page</option>
-                            <option value="journal">Journal</option>
-                            <option value="fiber-producers">Fiber Producers</option>
-                            <option value="producer-profile">Producer Profile</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Section *</label>
-                        <input type="text" id="imageSection" required placeholder="e.g., hero-background">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <input type="text" id="imageDescription" placeholder="What is this image for?">
-                </div>
-                <div class="form-group">
-                    <label>Upload Image *</label>
-                    <div class="upload-area" onclick="document.getElementById('siteImageFile').click()">
-                        <div class="upload-icon">🖼️</div>
-                        <p>Click to upload site image</p>
-                    </div>
-                    <input type="file" id="siteImageFile" accept="image/*" style="display: none;" onchange="handleSiteImageUpload(event)">
-                    <img id="siteImagePreview" class="image-preview">
-                </div>
-                <div class="form-group">
-                    <label>Alt Text</label>
-                    <input type="text" id="imageAltText" placeholder="Describe the image for accessibility">
-                </div>
-                <div class="form-group">
-                    <label><input type="checkbox" id="imageActive" checked> Active</label>
-                </div>
-                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
-                    <button type="button" class="btn btn-secondary" onclick="closeImageModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Image</button>
                 </div>
             </form>
         </div>
@@ -667,24 +409,18 @@
         // Global state
         let posts = [];
         let producers = [];
-        let animals = [];
-        let siteImages = [];
         let currentPostEditId = null;
         let currentProducerEditId = null;
-        let currentAnimalEditId = null;
-        let currentImageEditId = null;
 
         // ==================== IMAGE UPLOAD FUNCTIONS ====================
         
         async function uploadImage(file, folder = '') {
             try {
-                // Generate unique filename
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${folder}${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
                 
                 console.log('Uploading:', fileName);
                 
-                // Upload to Supabase Storage
                 const { data, error } = await supabase.storage
                     .from(STORAGE_BUCKET)
                     .upload(fileName, file, {
@@ -694,7 +430,6 @@
 
                 if (error) throw error;
 
-                // Get public URL
                 const { data: { publicUrl } } = supabase.storage
                     .from(STORAGE_BUCKET)
                     .getPublicUrl(fileName);
@@ -714,105 +449,44 @@
             if (!file) return;
 
             const preview = document.getElementById('postImagePreview');
-            const progress = document.getElementById('postImageProgress');
+            const info = document.getElementById('postImageInfo');
+            const removeBtn = document.getElementById('postRemoveImage');
             
-            // Show preview
+            // Show preview immediately
             const reader = new FileReader();
             reader.onload = (e) => {
                 preview.src = e.target.result;
                 preview.classList.add('show');
+                info.textContent = 'Uploading...';
+                info.classList.add('show');
             };
             reader.readAsDataURL(file);
-
-            // Show progress
-            progress.classList.add('show');
 
             try {
                 const url = await uploadImage(file, 'posts/');
                 document.getElementById('postImageUrl').value = url;
-                progress.classList.remove('show');
+                info.textContent = '✅ Image uploaded successfully!';
+                removeBtn.classList.add('show');
+                console.log('✅ Post image uploaded, URL set:', url);
             } catch (error) {
-                progress.classList.remove('show');
+                info.textContent = '❌ Upload failed';
+                preview.classList.remove('show');
+                removeBtn.classList.remove('show');
             }
         }
 
-        // Producer Avatar Upload
-        async function handleProducerAvatarUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const preview = document.getElementById('producerAvatarPreview');
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.src = e.target.result;
-                preview.classList.add('show');
-            };
-            reader.readAsDataURL(file);
-
-            try {
-                const url = await uploadImage(file, 'producers/avatars/');
-                document.getElementById('producerAvatarUrlHidden').value = url;
-            } catch (error) {}
+        // Remove post image
+        function removePostImage() {
+            document.getElementById('postImageUrl').value = '';
+            document.getElementById('postImagePreview').classList.remove('show');
+            document.getElementById('postImagePreview').src = '';
+            document.getElementById('postImageInfo').classList.remove('show');
+            document.getElementById('postRemoveImage').classList.remove('show');
+            document.getElementById('postImageFile').value = '';
+            console.log('✅ Post image removed');
         }
 
-        // Producer Hero Upload
-        async function handleProducerHeroUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const preview = document.getElementById('producerHeroPreview');
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.src = e.target.result;
-                preview.classList.add('show');
-            };
-            reader.readAsDataURL(file);
-
-            try {
-                const url = await uploadImage(file, 'producers/heroes/');
-                document.getElementById('producerHeroUrlHidden').value = url;
-            } catch (error) {}
-        }
-
-        // Animal Image Upload
-        async function handleAnimalImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const preview = document.getElementById('animalImagePreview');
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.src = e.target.result;
-                preview.classList.add('show');
-            };
-            reader.readAsDataURL(file);
-
-            try {
-                const url = await uploadImage(file, 'animals/');
-                document.getElementById('animalImageUrlHidden').value = url;
-            } catch (error) {}
-        }
-
-        // Site Image Upload
-        async function handleSiteImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const preview = document.getElementById('siteImagePreview');
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                preview.src = e.target.result;
-                preview.classList.add('show');
-            };
-            reader.readAsDataURL(file);
-
-            try {
-                const url = await uploadImage(file, 'site/');
-                document.getElementById('siteImageUrlHidden').value = url;
-            } catch (error) {}
-        }
-
-        // ==================== POSTS MANAGER (keeping same as before) ====================
+        // ==================== POSTS MANAGER ====================
         async function loadPosts() {
             try {
                 console.log('Loading posts from Supabase...');
@@ -853,6 +527,7 @@
                                 <span>${post.read_time} min read</span>
                                 <span>•</span>
                                 <span style="color: ${post.status === 'published' ? '#5CB85C' : '#F0AD4E'}">${post.status}</span>
+                                ${post.image ? '<span>•</span><span>📷 Has image</span>' : ''}
                             </div>
                         </div>
                     </div>
@@ -880,8 +555,9 @@
             document.getElementById('postForm').reset();
             document.getElementById('postId').value = '';
             document.getElementById('postImageUrl').value = '';
-            document.getElementById('postImagePreview').classList.remove('show');
+            removePostImage(); // Clear image preview
             document.getElementById('postModal').style.display = 'block';
+            console.log('✅ Opened new post modal, cleared image');
         }
 
         async function editPost(id) {
@@ -889,6 +565,8 @@
             if (!post) return;
 
             currentPostEditId = id;
+            console.log('✅ Editing post:', id, 'Image URL:', post.image);
+            
             document.getElementById('modalTitle').textContent = 'Edit Post';
             document.getElementById('postId').value = post.id;
             document.getElementById('postTitle').value = post.title;
@@ -902,9 +580,20 @@
             document.getElementById('postStatus').value = post.status;
             
             // Show existing image
+            const preview = document.getElementById('postImagePreview');
+            const info = document.getElementById('postImageInfo');
+            const removeBtn = document.getElementById('postRemoveImage');
+            
             if (post.image) {
-                document.getElementById('postImagePreview').src = post.image;
-                document.getElementById('postImagePreview').classList.add('show');
+                preview.src = post.image;
+                preview.classList.add('show');
+                info.textContent = '✅ Current image';
+                info.classList.add('show');
+                removeBtn.classList.add('show');
+                console.log('✅ Showing existing image:', post.image);
+            } else {
+                removePostImage();
+                console.log('✅ No existing image');
             }
             
             document.getElementById('postModal').style.display = 'block';
@@ -925,13 +614,15 @@
 
         function closePostModal() {
             document.getElementById('postModal').style.display = 'none';
-            document.getElementById('postForm').reset();
-            document.getElementById('postImagePreview').classList.remove('show');
             currentPostEditId = null;
+            console.log('✅ Closed post modal');
         }
 
         document.getElementById('postForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const imageUrl = document.getElementById('postImageUrl').value || null;
+            console.log('💾 Saving post with image URL:', imageUrl);
 
             const postData = {
                 title: document.getElementById('postTitle').value,
@@ -939,7 +630,7 @@
                 category: document.getElementById('postCategory').value,
                 excerpt: document.getElementById('postExcerpt').value,
                 content: document.getElementById('postContent').value,
-                image: document.getElementById('postImageUrl').value || null,
+                image: imageUrl,
                 author: document.getElementById('postAuthor').value,
                 read_time: parseInt(document.getElementById('postReadTime').value),
                 status: document.getElementById('postStatus').value,
@@ -953,12 +644,14 @@
                         .update(postData)
                         .eq('id', currentPostEditId);
                     if (error) throw error;
+                    console.log('✅ Post updated with image:', imageUrl);
                     alert('Post updated successfully!');
                 } else {
                     const { error } = await supabase
                         .from('posts')
                         .insert([postData]);
                     if (error) throw error;
+                    console.log('✅ Post created with image:', imageUrl);
                     alert('Post created successfully!');
                 }
                 closePostModal();
@@ -980,10 +673,9 @@
             }
         });
 
-        // ==================== PRODUCERS MANAGER ====================
+        // ==================== PRODUCERS MANAGER (SIMPLIFIED) ====================
         async function loadProducers() {
             try {
-                console.log('Loading producers...');
                 const { data, error } = await supabase
                     .from('producers')
                     .select('*')
@@ -991,42 +683,31 @@
                 
                 if (error) throw error;
                 producers = data || [];
-                console.log('✅ Loaded', producers.length, 'producers');
                 renderProducersList();
                 updateProducersStats();
             } catch (error) {
-                console.error('❌ Error loading producers:', error);
-                alert('Error loading producers: ' + error.message);
+                console.error('Error loading producers:', error);
             }
         }
 
         function renderProducersList() {
             const container = document.getElementById('producersList');
             if (producers.length === 0) {
-                container.innerHTML = '<div class="empty-state"><h3>No producers yet</h3><p>Add your first fiber producer!</p></div>';
+                container.innerHTML = '<div class="empty-state"><h3>No producers yet</h3><p>Add your first producer!</p></div>';
                 return;
             }
 
             container.innerHTML = producers.map(producer => `
                 <div class="post-item">
                     <div class="post-info">
-                        <div class="producer-avatar" style="width: 60px; height: 60px; border-radius: 50%; background-image: url('${producer.avatar_url || ''}');"></div>
                         <div>
                             <h3>${producer.name}</h3>
                             <div class="post-meta">
-                                <span>${producer.location}, ${producer.country}</span>
-                                <span>•</span>
-                                <span>⭐ ${producer.rating} (${producer.review_count})</span>
-                                <span>•</span>
-                                <span>${producer.animals_available || 0} animals</span>
-                                <span>•</span>
-                                <span style="color: ${producer.is_active ? '#5CB85C' : '#999'}">${producer.is_active ? 'Active' : 'Inactive'}</span>
+                                <span>${producer.location}</span>
                             </div>
                         </div>
                     </div>
                     <div class="post-actions">
-                        <button class="btn btn-small btn-secondary" onclick="editProducer('${producer.id}')">Edit</button>
-                        <button class="btn btn-small btn-danger" onclick="deleteProducer('${producer.id}')">Delete</button>
                         <a href="producer-profile.html?slug=${producer.slug}" target="_blank" class="btn btn-small btn-secondary">View</a>
                     </div>
                 </div>
@@ -1036,513 +717,17 @@
         function updateProducersStats() {
             const total = producers.length;
             const active = producers.filter(p => p.is_active).length;
-            const totalAnimals = producers.reduce((sum, p) => sum + (p.animals_available || 0), 0);
             document.getElementById('totalProducers').textContent = total;
             document.getElementById('activeProducers').textContent = active;
-            document.getElementById('totalAnimals').textContent = totalAnimals;
         }
 
         function openNewProducerModal() {
-            currentProducerEditId = null;
-            document.getElementById('producerModalTitle').textContent = 'New Producer';
-            document.getElementById('producerForm').reset();
-            document.getElementById('producerId').value = '';
-            document.getElementById('producerAvatarUrlHidden').value = '';
-            document.getElementById('producerHeroUrlHidden').value = '';
-            document.getElementById('producerAvatarPreview').classList.remove('show');
-            document.getElementById('producerHeroPreview').classList.remove('show');
-            document.getElementById('producerSustainable').checked = true;
-            document.getElementById('producerActive').checked = true;
-            document.getElementById('producerModal').style.display = 'block';
-        }
-
-        async function editProducer(id) {
-            const producer = producers.find(p => p.id === id);
-            if (!producer) return;
-
-            currentProducerEditId = id;
-            document.getElementById('producerModalTitle').textContent = 'Edit Producer';
-            document.getElementById('producerId').value = producer.id;
-            document.getElementById('producerName').value = producer.name;
-            document.getElementById('producerSlug').value = producer.slug;
-            document.getElementById('producerTagline').value = producer.tagline || '';
-            document.getElementById('producerLocation').value = producer.location;
-            document.getElementById('producerCountry').value = producer.country;
-            document.getElementById('producerDescription').value = producer.description;
-            document.getElementById('producerStory').value = producer.story || '';
-            document.getElementById('producerAvatarUrlHidden').value = producer.avatar_url || '';
-            document.getElementById('producerHeroUrlHidden').value = producer.hero_image_url || '';
-            document.getElementById('producerRating').value = producer.rating;
-            document.getElementById('producerReviews').value = producer.review_count;
-            document.getElementById('producerSustainable').checked = producer.is_sustainable;
-            document.getElementById('producerOrganic').checked = producer.is_organic;
-            document.getElementById('producerAnimalWelfare').checked = producer.is_animal_welfare_approved;
-            document.getElementById('producerHeritage').checked = producer.is_heritage_breed;
-            document.getElementById('producerShearing').value = producer.shearing_frequency || '';
-            document.getElementById('producerYield').value = producer.avg_yield || '';
-            document.getElementById('producerWoolType').value = producer.wool_type || '';
-            document.getElementById('producerProcessing').value = producer.processing_options ? producer.processing_options.join(', ') : '';
-            document.getElementById('producerActive').checked = producer.is_active;
-            
-            // Show existing images
-            if (producer.avatar_url) {
-                document.getElementById('producerAvatarPreview').src = producer.avatar_url;
-                document.getElementById('producerAvatarPreview').classList.add('show');
-            }
-            if (producer.hero_image_url) {
-                document.getElementById('producerHeroPreview').src = producer.hero_image_url;
-                document.getElementById('producerHeroPreview').classList.add('show');
-            }
-            
-            document.getElementById('producerModal').style.display = 'block';
-        }
-
-        async function deleteProducer(id) {
-            if (!confirm('Are you sure? This will also delete all associated animals.')) return;
-            try {
-                const { error } = await supabase.from('producers').delete().eq('id', id);
-                if (error) throw error;
-                await loadProducers();
-                alert('Producer deleted successfully!');
-            } catch (error) {
-                console.error('Error deleting producer:', error);
-                alert('Error deleting producer: ' + error.message);
-            }
+            alert('Use the full CMS (cms-with-uploads.html) to manage producers with all features!');
         }
 
         function closeProducerModal() {
             document.getElementById('producerModal').style.display = 'none';
-            document.getElementById('producerForm').reset();
-            document.getElementById('producerAvatarPreview').classList.remove('show');
-            document.getElementById('producerHeroPreview').classList.remove('show');
-            currentProducerEditId = null;
         }
-
-        document.getElementById('producerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const processingOptions = document.getElementById('producerProcessing').value
-                .split(',')
-                .map(opt => opt.trim())
-                .filter(opt => opt);
-
-            const producerData = {
-                name: document.getElementById('producerName').value,
-                slug: document.getElementById('producerSlug').value,
-                tagline: document.getElementById('producerTagline').value || null,
-                location: document.getElementById('producerLocation').value,
-                country: document.getElementById('producerCountry').value,
-                description: document.getElementById('producerDescription').value,
-                story: document.getElementById('producerStory').value || null,
-                avatar_url: document.getElementById('producerAvatarUrlHidden').value || null,
-                hero_image_url: document.getElementById('producerHeroUrlHidden').value || null,
-                rating: parseFloat(document.getElementById('producerRating').value),
-                review_count: parseInt(document.getElementById('producerReviews').value),
-                is_sustainable: document.getElementById('producerSustainable').checked,
-                is_organic: document.getElementById('producerOrganic').checked,
-                is_animal_welfare_approved: document.getElementById('producerAnimalWelfare').checked,
-                is_heritage_breed: document.getElementById('producerHeritage').checked,
-                shearing_frequency: document.getElementById('producerShearing').value || null,
-                avg_yield: document.getElementById('producerYield').value || null,
-                wool_type: document.getElementById('producerWoolType').value || null,
-                processing_options: processingOptions,
-                is_active: document.getElementById('producerActive').checked,
-                updated_at: new Date().toISOString()
-            };
-
-            try {
-                if (currentProducerEditId) {
-                    const { error } = await supabase
-                        .from('producers')
-                        .update(producerData)
-                        .eq('id', currentProducerEditId);
-                    if (error) throw error;
-                    alert('Producer updated successfully!');
-                } else {
-                    const { error } = await supabase
-                        .from('producers')
-                        .insert([producerData]);
-                    if (error) throw error;
-                    alert('Producer created successfully!');
-                }
-                closeProducerModal();
-                await loadProducers();
-            } catch (error) {
-                console.error('Error saving producer:', error);
-                alert('Error saving producer: ' + error.message);
-            }
-        });
-
-        // Auto-generate slug from producer name
-        document.getElementById('producerName').addEventListener('input', (e) => {
-            if (!currentProducerEditId) {
-                const slug = e.target.value
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-|-$/g, '');
-                document.getElementById('producerSlug').value = slug;
-            }
-        });
-
-        // ==================== ANIMALS MANAGER ====================
-        async function loadAnimals() {
-            try {
-                console.log('Loading animals...');
-                const { data, error } = await supabase
-                    .from('animals')
-                    .select(`
-                        *,
-                        producer:producers(name, slug)
-                    `)
-                    .order('created_at', { ascending: false });
-                
-                if (error) throw error;
-                animals = data || [];
-                console.log('✅ Loaded', animals.length, 'animals');
-                renderAnimalsList();
-                updateAnimalsStats();
-            } catch (error) {
-                console.error('❌ Error loading animals:', error);
-                alert('Error loading animals: ' + error.message);
-            }
-        }
-
-        function renderAnimalsList() {
-            const container = document.getElementById('animalsList');
-            if (animals.length === 0) {
-                container.innerHTML = '<div class="empty-state"><h3>No animals yet</h3><p>Add your first animal for adoption!</p></div>';
-                return;
-            }
-
-            container.innerHTML = animals.map(animal => `
-                <div class="post-item">
-                    <div class="post-info">
-                        <div class="animal-thumb" style="width: 80px; height: 80px; border-radius: 8px; background-image: url('${animal.image_url || ''}');"></div>
-                        <div>
-                            <h3>${animal.name}</h3>
-                            <div class="post-meta">
-                                <span>${animal.producer?.name || 'Unknown'}</span>
-                                <span>•</span>
-                                <span>${animal.animal_type} • ${animal.breed}</span>
-                                <span>•</span>
-                                <span>${animal.age || '?'} years • ${animal.color || ''}</span>
-                                <span>•</span>
-                                <span>${animal.currency}${animal.price_per_year}/year</span>
-                                <span>•</span>
-                                <span style="color: ${animal.is_available ? '#5CB85C' : '#999'}">${animal.is_available ? 'Available' : 'Adopted'}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="post-actions">
-                        <button class="btn btn-small btn-secondary" onclick="editAnimal('${animal.id}')">Edit</button>
-                        <button class="btn btn-small btn-danger" onclick="deleteAnimal('${animal.id}')">Delete</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function updateAnimalsStats() {
-            const total = animals.length;
-            const available = animals.filter(a => a.is_available).length;
-            const adopted = animals.filter(a => !a.is_available).length;
-            document.getElementById('totalAnimalCount').textContent = total;
-            document.getElementById('availableAnimals').textContent = available;
-            document.getElementById('adoptedAnimals').textContent = adopted;
-        }
-
-        async function openNewAnimalModal() {
-            currentAnimalEditId = null;
-            document.getElementById('animalModalTitle').textContent = 'New Animal';
-            document.getElementById('animalForm').reset();
-            document.getElementById('animalId').value = '';
-            document.getElementById('animalImageUrlHidden').value = '';
-            document.getElementById('animalImagePreview').classList.remove('show');
-            await loadProducersDropdown();
-            document.getElementById('animalAvailable').checked = true;
-            document.getElementById('animalCurrency').value = 'EUR';
-            document.getElementById('animalModal').style.display = 'block';
-        }
-
-        async function loadProducersDropdown() {
-            try {
-                const { data, error } = await supabase
-                    .from('producers')
-                    .select('id, name')
-                    .eq('is_active', true)
-                    .order('name');
-                
-                if (error) throw error;
-                
-                const select = document.getElementById('animalProducer');
-                select.innerHTML = '<option value="">Select a producer...</option>' +
-                    data.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-            } catch (error) {
-                console.error('Error loading producers:', error);
-            }
-        }
-
-        async function editAnimal(id) {
-            const animal = animals.find(a => a.id === id);
-            if (!animal) return;
-
-            currentAnimalEditId = id;
-            await loadProducersDropdown();
-            
-            document.getElementById('animalModalTitle').textContent = 'Edit Animal';
-            document.getElementById('animalId').value = animal.id;
-            document.getElementById('animalProducer').value = animal.producer_id;
-            document.getElementById('animalName').value = animal.name;
-            document.getElementById('animalType').value = animal.animal_type;
-            document.getElementById('animalBreed').value = animal.breed;
-            document.getElementById('animalAge').value = animal.age || '';
-            document.getElementById('animalColor').value = animal.color || '';
-            document.getElementById('animalPersonality').value = animal.personality || '';
-            document.getElementById('animalImageUrlHidden').value = animal.image_url || '';
-            document.getElementById('animalPrice').value = animal.price_per_year;
-            document.getElementById('animalCurrency').value = animal.currency;
-            document.getElementById('animalAvailable').checked = animal.is_available;
-            document.getElementById('animalFeatured').checked = animal.is_featured;
-            
-            // Show existing image
-            if (animal.image_url) {
-                document.getElementById('animalImagePreview').src = animal.image_url;
-                document.getElementById('animalImagePreview').classList.add('show');
-            }
-            
-            document.getElementById('animalModal').style.display = 'block';
-        }
-
-        async function deleteAnimal(id) {
-            if (!confirm('Are you sure you want to delete this animal?')) return;
-            try {
-                const { error } = await supabase.from('animals').delete().eq('id', id);
-                if (error) throw error;
-                await loadAnimals();
-                await loadProducers();
-                alert('Animal deleted successfully!');
-            } catch (error) {
-                console.error('Error deleting animal:', error);
-                alert('Error deleting animal: ' + error.message);
-            }
-        }
-
-        function closeAnimalModal() {
-            document.getElementById('animalModal').style.display = 'none';
-            document.getElementById('animalForm').reset();
-            document.getElementById('animalImagePreview').classList.remove('show');
-            currentAnimalEditId = null;
-        }
-
-        document.getElementById('animalForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const animalData = {
-                producer_id: document.getElementById('animalProducer').value,
-                name: document.getElementById('animalName').value,
-                animal_type: document.getElementById('animalType').value,
-                breed: document.getElementById('animalBreed').value,
-                age: parseInt(document.getElementById('animalAge').value) || null,
-                color: document.getElementById('animalColor').value || null,
-                personality: document.getElementById('animalPersonality').value || null,
-                image_url: document.getElementById('animalImageUrlHidden').value || null,
-                price_per_year: parseFloat(document.getElementById('animalPrice').value),
-                currency: document.getElementById('animalCurrency').value,
-                is_available: document.getElementById('animalAvailable').checked,
-                is_featured: document.getElementById('animalFeatured').checked,
-                updated_at: new Date().toISOString()
-            };
-
-            if (!animalData.producer_id) {
-                alert('Please select a producer!');
-                return;
-            }
-
-            try {
-                if (currentAnimalEditId) {
-                    const { error } = await supabase
-                        .from('animals')
-                        .update(animalData)
-                        .eq('id', currentAnimalEditId);
-                    if (error) throw error;
-                    alert('Animal updated successfully!');
-                } else {
-                    const { error } = await supabase
-                        .from('animals')
-                        .insert([animalData]);
-                    if (error) throw error;
-                    alert('Animal created successfully!');
-                }
-                closeAnimalModal();
-                await loadAnimals();
-                await loadProducers();
-            } catch (error) {
-                console.error('Error saving animal:', error);
-                alert('Error saving animal: ' + error.message);
-            }
-        });
-
-        // ==================== SITE IMAGES MANAGER ====================
-        async function loadSiteImages() {
-            try {
-                console.log('Loading site images...');
-                const { data, error } = await supabase
-                    .from('site_images')
-                    .select('*')
-                    .order('page', { ascending: true });
-                
-                if (error) throw error;
-                siteImages = data || [];
-                console.log('✅ Loaded', siteImages.length, 'site images');
-                renderSiteImagesList();
-                updateImagesStats();
-            } catch (error) {
-                console.error('❌ Error loading site images:', error);
-                alert('Error loading site images: ' + error.message);
-            }
-        }
-
-        function renderSiteImagesList() {
-            const container = document.getElementById('siteImagesList');
-            if (siteImages.length === 0) {
-                container.innerHTML = '<div class="empty-state"><h3>No site images yet</h3><p>Add images to customize your site!</p></div>';
-                return;
-            }
-
-            const groupedByPage = siteImages.reduce((acc, img) => {
-                if (!acc[img.page]) acc[img.page] = [];
-                acc[img.page].push(img);
-                return acc;
-            }, {});
-
-            container.innerHTML = Object.entries(groupedByPage).map(([page, images]) => `
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="margin-bottom: 1rem; text-transform: capitalize;">${page.replace('-', ' ')}</h3>
-                    ${images.map(img => `
-                        <div class="post-item" style="margin-bottom: 1rem;">
-                            <div class="post-info">
-                                <div class="image-thumb" style="width: 120px; height: 80px; border-radius: 8px; background-image: url('${img.image_url}');"></div>
-                                <div>
-                                    <h4 style="margin-bottom: 0.25rem;">${img.section}</h4>
-                                    <div class="post-meta">
-                                        <span>${img.description || 'No description'}</span>
-                                        <span>•</span>
-                                        <span style="color: ${img.is_active ? '#5CB85C' : '#999'}">${img.is_active ? 'Active' : 'Inactive'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="post-actions">
-                                <button class="btn btn-small btn-secondary" onclick="editSiteImage('${img.id}')">Edit</button>
-                                <button class="btn btn-small btn-danger" onclick="deleteSiteImage('${img.id}')">Delete</button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `).join('');
-        }
-
-        function updateImagesStats() {
-            const total = siteImages.length;
-            const active = siteImages.filter(i => i.is_active).length;
-            const pages = new Set(siteImages.map(i => i.page)).size;
-            document.getElementById('totalImages').textContent = total;
-            document.getElementById('activeImages').textContent = active;
-            document.getElementById('pagesWithImages').textContent = pages;
-        }
-
-        function openNewImageModal() {
-            currentImageEditId = null;
-            document.getElementById('imageModalTitle').textContent = 'New Site Image';
-            document.getElementById('imageForm').reset();
-            document.getElementById('imageId').value = '';
-            document.getElementById('siteImageUrlHidden').value = '';
-            document.getElementById('siteImagePreview').classList.remove('show');
-            document.getElementById('imageActive').checked = true;
-            document.getElementById('imageModal').style.display = 'block';
-        }
-
-        async function editSiteImage(id) {
-            const image = siteImages.find(i => i.id === id);
-            if (!image) return;
-
-            currentImageEditId = id;
-            document.getElementById('imageModalTitle').textContent = 'Edit Site Image';
-            document.getElementById('imageId').value = image.id;
-            document.getElementById('imagePage').value = image.page;
-            document.getElementById('imageSection').value = image.section;
-            document.getElementById('imageDescription').value = image.description || '';
-            document.getElementById('siteImageUrlHidden').value = image.image_url;
-            document.getElementById('imageAltText').value = image.alt_text || '';
-            document.getElementById('imageActive').checked = image.is_active;
-            
-            // Show existing image
-            if (image.image_url) {
-                document.getElementById('siteImagePreview').src = image.image_url;
-                document.getElementById('siteImagePreview').classList.add('show');
-            }
-            
-            document.getElementById('imageModal').style.display = 'block';
-        }
-
-        async function deleteSiteImage(id) {
-            if (!confirm('Are you sure you want to delete this image?')) return;
-            try {
-                const { error } = await supabase.from('site_images').delete().eq('id', id);
-                if (error) throw error;
-                await loadSiteImages();
-                alert('Image deleted successfully!');
-            } catch (error) {
-                console.error('Error deleting image:', error);
-                alert('Error deleting image: ' + error.message);
-            }
-        }
-
-        function closeImageModal() {
-            document.getElementById('imageModal').style.display = 'none';
-            document.getElementById('imageForm').reset();
-            document.getElementById('siteImagePreview').classList.remove('show');
-            currentImageEditId = null;
-        }
-
-        document.getElementById('imageForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const imageData = {
-                page: document.getElementById('imagePage').value,
-                section: document.getElementById('imageSection').value,
-                description: document.getElementById('imageDescription').value || null,
-                image_url: document.getElementById('siteImageUrlHidden').value,
-                alt_text: document.getElementById('imageAltText').value || null,
-                is_active: document.getElementById('imageActive').checked,
-                updated_at: new Date().toISOString()
-            };
-
-            if (!imageData.image_url) {
-                alert('Please upload an image first!');
-                return;
-            }
-
-            try {
-                if (currentImageEditId) {
-                    const { error } = await supabase
-                        .from('site_images')
-                        .update(imageData)
-                        .eq('id', currentImageEditId);
-                    if (error) throw error;
-                    alert('Image updated successfully!');
-                } else {
-                    const { error } = await supabase
-                        .from('site_images')
-                        .insert([imageData]);
-                    if (error) throw error;
-                    alert('Image created successfully!');
-                }
-                closeImageModal();
-                await loadSiteImages();
-            } catch (error) {
-                console.error('Error saving image:', error);
-                alert('Error saving image: ' + error.message);
-            }
-        });
 
         // ==================== TAB SWITCHING ====================
         function switchTab(tabName) {
@@ -1559,34 +744,12 @@
             
             if (tabName === 'posts') loadPosts();
             else if (tabName === 'producers') loadProducers();
-            else if (tabName === 'animals') loadAnimals();
-            else if (tabName === 'images') loadSiteImages();
         }
 
         // ==================== INITIALIZATION ====================
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 console.log('🚀 Initializing CMS...');
-                
-                // Check if storage bucket exists
-                const { data: buckets } = await supabase.storage.listBuckets();
-                const hasBucket = buckets?.some(b => b.name === STORAGE_BUCKET);
-                
-                if (!hasBucket) {
-                    console.warn('⚠️  Storage bucket "site-images" not found!');
-                    console.log('📝 Creating bucket...');
-                    const { error } = await supabase.storage.createBucket(STORAGE_BUCKET, {
-                        public: true,
-                        fileSizeLimit: 5242880 // 5MB
-                    });
-                    if (error) {
-                        console.error('❌ Could not create bucket:', error);
-                        alert('Please create a public storage bucket named "site-images" in Supabase Storage.');
-                    } else {
-                        console.log('✅ Bucket created successfully!');
-                    }
-                }
-                
                 await loadPosts();
                 console.log('✅ CMS initialized successfully!');
             } catch (error) {
@@ -1597,7 +760,7 @@
 
         // Close modals when clicking outside
         window.onclick = function(event) {
-            const modals = ['postModal', 'producerModal', 'animalModal', 'imageModal'];
+            const modals = ['postModal', 'producerModal'];
             modals.forEach(modalId => {
                 const modal = document.getElementById(modalId);
                 if (event.target === modal) {
