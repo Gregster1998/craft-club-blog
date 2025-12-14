@@ -3905,6 +3905,15 @@
             // Initialize image upload grid
             initializeImageUploadGrid();
             
+            // Reset sizing and details fields
+            document.getElementById('productDetailsText').value = '';
+            document.getElementById('shippingInfoText').value = '';
+            document.getElementById('productHasSizes').checked = false;
+            document.getElementById('sizeSelector').style.display = 'none';
+            document.querySelectorAll('input[name="sizes"]').forEach(cb => {
+                cb.checked = false;
+            });
+            
             document.getElementById('productModal').style.display = 'block';
         }
 
@@ -3952,6 +3961,22 @@
                         document.getElementById('orderUntilDate').value = date.toISOString().split('T')[0];
                     }
                     document.getElementById('maxQuantity').value = product.max_quantity || '';
+                }
+                
+                // Load sizing and details fields
+                document.getElementById('productDetailsText').value = product.product_details || '';
+                document.getElementById('shippingInfoText').value = product.shipping_info || '';
+                document.getElementById('productHasSizes').checked = product.has_sizes || false;
+                document.getElementById('sizeSelector').style.display = product.has_sizes ? 'block' : 'none';
+                
+                if (product.available_sizes && product.available_sizes.length > 0) {
+                    document.querySelectorAll('input[name="sizes"]').forEach(cb => {
+                        cb.checked = product.available_sizes.includes(cb.value);
+                    });
+                } else {
+                    document.querySelectorAll('input[name="sizes"]').forEach(cb => {
+                        cb.checked = false;
+                    });
                 }
                 
                 document.getElementById('productModal').style.display = 'block';
@@ -4117,7 +4142,13 @@
                     is_digital: productType === 'digital',
                     is_travel_find: productType === 'travel_find',
                     images: uploadedImages.filter(img => img !== null),
-                    thumbnail_url: uploadedImages[0] || null
+                    thumbnail_url: uploadedImages[0] || null,
+                    product_details: document.getElementById('productDetailsText')?.value || null,
+                    shipping_info: document.getElementById('shippingInfoText')?.value || null,
+                    has_sizes: document.getElementById('productHasSizes')?.checked || false,
+                    available_sizes: document.getElementById('productHasSizes')?.checked 
+                        ? Array.from(document.querySelectorAll('input[name="sizes"]:checked')).map(cb => cb.value)
+                        : null
                 };
                 
                 // Add type-specific fields
@@ -4138,7 +4169,16 @@
                     productData.current_quantity = 0;
                 }
                 
-                console.log('Saving product:', productData);
+                // DEBUG: Check what we're about to save
+                console.log('==========================================');
+                console.log('SAVING PRODUCT TO DATABASE');
+                console.log('==========================================');
+                console.log('product_details field value:', document.getElementById('productDetailsText')?.value);
+                console.log('shipping_info field value:', document.getElementById('shippingInfoText')?.value);
+                console.log('has_sizes checkbox checked:', document.getElementById('productHasSizes')?.checked);
+                console.log('selected sizes:', Array.from(document.querySelectorAll('input[name="sizes"]:checked')).map(cb => cb.value));
+                console.log('Full productData object:', productData);
+                console.log('==========================================');
                 
                 // Save or update
                 let result;
