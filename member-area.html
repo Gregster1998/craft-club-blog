@@ -58,7 +58,10 @@
             align-items: center;
             gap: 1.5rem;
         }
-
+        .product-type-option.selected {
+            border-color: var(--terracotta);
+            background: rgba(160, 105, 95, 0.08);
+}
         .icon-btn {
             position: relative;
             width: 40px;
@@ -3869,8 +3872,20 @@
                 }
                 
                 const { error } = await supabase
-                    .from('products')
-                    .insert([productData]);
+  .from('products')
+  .insert({
+    user_id: currentUser.id,
+    title,
+    description,
+    product_type: document.getElementById('product-type').value,
+    price
+  });
+
+if (error) {
+  console.error(error);
+  alert(error.message);
+}
+
                 
                 if (error) throw error;
                 
@@ -3909,6 +3924,16 @@
         function closeProductModal() {
             document.getElementById('productModal').style.display = 'none';
         }
+        function selectProductType(type) {
+    document.getElementById('product-type').value = type;
+
+    document.querySelectorAll('.product-type-option')
+        .forEach(el => el.classList.remove('selected'));
+
+    document
+        .querySelector(`.product-type-option[data-type="${type}"]`)
+        .classList.add('selected');
+}
 
         function formatStorePrice(price, currency = 'EUR') {
             const symbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : currency === 'GBP' ? '£' : currency;
