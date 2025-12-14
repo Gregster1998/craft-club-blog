@@ -295,6 +295,7 @@
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let allProducers = [];
+        let producerReviews = {}; // Store reviews by producer_id
         let showingAll = false;
         const INITIAL_SHOW = 3;
 
@@ -316,6 +317,10 @@
 
                 if (producers && producers.length > 0) {
                     allProducers = producers;
+                    
+                    // Load reviews for all producers
+                    await loadAllReviews();
+                    
                     renderProducers(false); // Show only first 3
                 } else {
                     console.warn('No producers found');
@@ -325,6 +330,59 @@
                 console.error('Error loading producers:', error);
                 document.getElementById('producersGrid').innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 4rem; color: #999;">Error loading producers. Please refresh the page.</p>';
             }
+        }
+
+        async function loadAllReviews() {
+            try {
+                console.log('Loading reviews...');
+                const { data: reviews, error } = await supabase
+                    .from('producer_reviews')
+                    .select('producer_id, rating');
+
+                if (error) throw error;
+
+                // Group reviews by producer_id and calculate stats
+                producerReviews = {};
+                if (reviews && reviews.length > 0) {
+                    reviews.forEach(review => {
+                        if (!producerReviews[review.producer_id]) {
+                            producerReviews[review.producer_id] = {
+                                ratings: [],
+                                count: 0,
+                                average: 0
+                            };
+                        }
+                        producerReviews[review.producer_id].ratings.push(review.rating);
+                    });
+
+                    // Calculate averages
+                    Object.keys(producerReviews).forEach(producerId => {
+                        const data = producerReviews[producerId];
+                        data.count = data.ratings.length;
+                        data.average = data.ratings.reduce((a, b) => a + b, 0) / data.count;
+                        data.average = Math.round(data.average * 10) / 10; // Round to 1 decimal
+                    });
+                }
+
+                console.log('✅ Loaded reviews:', producerReviews);
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+                producerReviews = {};
+            }
+        }
+
+        function getProducerReviewStats(producerId) {
+            const stats = producerReviews[producerId];
+            if (stats) {
+                return {
+                    average: stats.average,
+                    count: stats.count
+                };
+            }
+            return {
+                average: 0,
+                count: 0
+            };
         }
 
         function renderProducers(showAll = false) {
@@ -338,6 +396,11 @@
             
             grid.innerHTML = producersToShow.map((producer, index) => {
                 const availableCount = producer.animals_available || 0;
+                
+                // Get dynamic review stats from database
+                const reviewStats = getProducerReviewStats(producer.id);
+                const displayRating = reviewStats.count > 0 ? reviewStats.average : 'New';
+                const displayCount = reviewStats.count;
                 
                 // Infer animal type
                 let animalBadge = 'Livestock • Mixed';
@@ -387,7 +450,7 @@
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                                     </svg>
-                                    ${producer.rating} (${producer.review_count})
+                                    ${displayRating}${displayCount > 0 ? ` (${displayCount})` : ''}
                                 </div>
                                 <div class="available">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

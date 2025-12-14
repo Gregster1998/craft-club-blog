@@ -472,7 +472,16 @@
 
                 if (reviewsError) throw reviewsError;
 
-                renderPage(producer, animals || [], reviews || []);
+                // Calculate dynamic review stats
+                let avgRating = 0;
+                let reviewCount = 0;
+                if (reviews && reviews.length > 0) {
+                    reviewCount = reviews.length;
+                    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+                    avgRating = Math.round((totalRating / reviewCount) * 10) / 10; // Round to 1 decimal
+                }
+
+                renderPage(producer, animals || [], reviews || [], avgRating, reviewCount);
                 
             } catch (error) {
                 console.error('Error loading producer:', error);
@@ -486,7 +495,7 @@
             }
         }
 
-        function renderPage(producer, animals, reviews) {
+        function renderPage(producer, animals, reviews, avgRating, reviewCount) {
             const animalCards = animals.map(animal => {
                 const currency = animal.currency === 'EUR' ? '€' : animal.currency === 'USD' ? '$' : animal.currency === 'GBP' ? '£' : animal.currency;
                 
@@ -572,7 +581,7 @@
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                                     </svg>
-                                    ${producer.rating} (${producer.review_count} reviews)
+                                    ${avgRating > 0 ? avgRating : 'New'} ${reviewCount > 0 ? `(${reviewCount} ${reviewCount === 1 ? 'review' : 'reviews'})` : '(No reviews yet)'}
                                 </div>
                             </div>
                             <p class="profile-description">${producer.description}</p>
