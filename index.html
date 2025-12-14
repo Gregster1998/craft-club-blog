@@ -44,49 +44,86 @@
             font-style: italic;
         }
 
-        /* Header */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
+        /* Header/Navigation */
+        /* Header/Navigation */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: var(--cream);
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(160, 105, 95, 0.1);
+}
 
-        .logo {
-            font-size: 1.125rem;
-            font-weight: 400;
-            letter-spacing: 0.02em;
-        }
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        nav {
-            display: flex;
-            gap: 2rem;
-        }
+.logo-section {
+    display: flex;
+    flex-direction: column;
+}
 
-        nav a {
-            color: var(--text-dark);
-            text-decoration: none;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
+.logo {
+    font-family: 'Georgia', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    text-decoration: none;
+    line-height: 1.2;
+}
 
-        nav a:hover {
-            color: var(--terracotta);
-        }
+.tagline {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-weight: 300;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.nav-links {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-weight: 400;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--terracotta);
+}
+
+.nav-cta {
+    background: var(--terracotta);
+    color: white !important;
+    padding: 0.75rem 1.75rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.nav-cta:hover {
+    background: var(--dark-brown);
+}
 
         /* Hero Section */
         .hero {
+            position: relative;
             height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><rect fill="%23C4A68A"/></svg>');
+            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), 
+                        url('hero-background.jpg');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -95,7 +132,7 @@
             align-items: center;
             text-align: center;
             padding: 2rem;
-            color: white;
+            color: var(--text-dark);
         }
 
         .hero-content {
@@ -106,16 +143,18 @@
             font-size: clamp(2.5rem, 8vw, 5rem);
             margin-bottom: 1.5rem;
             line-height: 1.2;
+            color: var(--text-dark);
         }
 
         .hero h1 .accent {
             color: var(--terracotta);
+            font-style: italic;
         }
 
         .hero p {
+            color: var(--text-muted);
             font-size: clamp(1rem, 2vw, 1.25rem);
             margin-bottom: 2.5rem;
-            opacity: 0.95;
             line-height: 1.8;
         }
 
@@ -127,14 +166,18 @@
         }
 
         .btn {
-            padding: 0.875rem 2rem;
+            padding: 1rem 2rem;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 1rem;
             border: none;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 8px;
+            font-weight: 500;
         }
 
         .btn-primary {
@@ -148,14 +191,211 @@
         }
 
         .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--terracotta);
+            border: 2px solid var(--terracotta);
         }
 
         .btn-secondary:hover {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .btn-tertiary {
+            background: rgba(134, 168, 153, 0.8);
+            color: white;
+        }
+
+        .btn-tertiary:hover {
+            background: rgba(134, 168, 153, 1);
+            transform: translateY(-2px);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: var(--text-muted);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 6rem 3rem;
             background: white;
-            color: var(--text-dark);
+        }
+
+        .steps-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-icon-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+        }
+
+        .step-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--terracotta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--terracotta);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: var(--terracotta);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Georgia', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .step h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .step p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Beginners Section */
+        .beginners-section {
+            padding: 6rem 3rem;
+            background: var(--light-beige);
+        }
+
+        .beginners-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .beginners-content h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+            font-weight: 500;
+        }
+
+        .beginners-content h2 .italic-accent {
+            font-style: italic;
+            color: var(--terracotta);
+        }
+
+        .beginners-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .beginners-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .beginners-buttons .btn {
+            padding: 1rem 2rem;
+        }
+
+        .beginners-buttons .btn-primary {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .beginners-buttons .btn-secondary {
+            background: transparent;
+            color: var(--terracotta);
+            border: 2px solid var(--terracotta);
+        }
+
+        .beginners-buttons .btn-secondary:hover {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .beginners-features {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .feature-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(160, 105, 95, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .feature-text p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
         }
 
         /* Section Styles */
@@ -266,14 +506,6 @@
             background: linear-gradient(135deg, #E8D5C4, #C4A68A);
             border-radius: 8px;
             margin-bottom: 1.5rem;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .maker-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .maker-name {
@@ -454,20 +686,46 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            header {
-                padding: 1rem;
+            .nav-container {
+                padding: 0 1.5rem;
             }
 
-            nav {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 1.5rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
                 gap: 1rem;
             }
 
-            nav a {
-                font-size: 0.85rem;
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
             }
 
             section {
                 padding: 4rem 1.5rem;
+            }
+
+            .steps-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .beginners-container {
+                grid-template-columns: 1fr;
+            }
+
+            .beginners-content h2 {
+                font-size: 2rem;
             }
 
             .email-form {
@@ -505,192 +763,11 @@
             content: "👥";
             margin-right: 0.25rem;
         }
-
-        /* Cart Link */
-        .cart-link {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            color: var(--text-dark);
-            transition: color 0.3s;
-            cursor: pointer;
-        }
-        
-        .cart-link:hover {
-            color: var(--terracotta);
-        }
-        
-        .cart-badge {
-            background: var(--terracotta);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Shopping Cart Sidebar */
-        .cart-sidebar {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 400px;
-            height: 100vh;
-            background: white;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-            transition: right 0.3s ease;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .cart-sidebar.open {
-            right: 0;
-        }
-        
-        .cart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem;
-            border-bottom: 1px solid var(--light-beige);
-        }
-        
-        .cart-header h2 {
-            font-size: 1.5rem;
-            color: var(--dark-brown);
-        }
-        
-        .close-cart {
-            background: none;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            line-height: 1;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .close-cart:hover {
-            color: var(--dark-brown);
-        }
-        
-        .cart-items {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.5rem;
-        }
-        
-        .cart-item {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--light-beige);
-        }
-        
-        .cart-item-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: var(--light-beige);
-        }
-        
-        .cart-item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .cart-item-info {
-            flex: 1;
-        }
-        
-        .cart-item-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-        
-        .cart-item-seller {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-        
-        .cart-item-price {
-            color: var(--terracotta);
-            font-weight: 600;
-        }
-        
-        .cart-item-remove {
-            background: none;
-            border: none;
-            color: var(--love);
-            cursor: pointer;
-            font-size: 0.875rem;
-            padding: 0.25rem 0;
-        }
-        
-        .cart-empty {
-            text-align: center;
-            padding: 3rem 2rem;
-            color: var(--text-muted);
-        }
-        
-        .cart-footer {
-            padding: 2rem;
-            border-top: 1px solid var(--light-beige);
-            background: var(--cream);
-        }
-        
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.25rem;
-        }
-        
-        .cart-total-label {
-            font-family: 'Playfair Display', serif;
-            color: var(--dark-brown);
-        }
-        
-        .cart-total-amount {
-            font-weight: 600;
-            color: var(--terracotta);
-        }
-        
-        .cart-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(60, 47, 47, 0.5);
-            z-index: 1000;
-            display: none;
-        }
-        
-        .cart-overlay.show {
-            display: block;
-        }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <!-- Header -->
+<!-- Header -->
 <header>
     <div class="nav-container">
         <div class="logo-section">
@@ -702,10 +779,6 @@
             <a href="fiber-producers.html">Adopt an Animal</a>
             <a href="craftmarket-branded.html">Store</a>
             <a href="landing-page.html">About Members Area</a>
-            <a href="#" class="cart-link" onclick="toggleCart(); return false;">
-                Cart
-                <div class="cart-badge" id="cartBadge">0</div>
-            </a>
             <a href="login.html" class="nav-cta">Login / Join</a>
         </div>
     </div>
@@ -719,10 +792,89 @@
                 Learn. Create.<br>
                 <span class="accent">Connect.</span>
             </h1>
-            <p>Rediscover the joy of slow creativity. Join a global community celebrating traditional crafts, authentic skills, and the makers who keep them alive.</p>
+            <p>A global community where makers share projects, track their learning journeys, and discover crafts from around the world.</p>
             <div class="hero-buttons">
-                <a href="#join" class="btn btn-primary">Join the Club</a>
-                <a href="#about" class="btn btn-secondary">Our Story</a>
+                <a href="#diaries" class="btn btn-primary">🎨 Explore Projects</a>
+                <a href="member-area-ultimate.html" class="btn btn-secondary">👥 Join the Community</a>
+                <a href="member-area-ultimate.html" class="btn btn-tertiary">📖 Start a Learning Diary</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="section-header">
+            <h2>How International Craft Club <span class="italic">Works</span></h2>
+        </div>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-icon-wrapper">
+                    <div class="step-circle">👥</div>
+                    <div class="step-number">1</div>
+                </div>
+                <h3>Join for free</h3>
+                <p>Create a maker profile and become part of our global community.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon-wrapper">
+                    <div class="step-circle">📷</div>
+                    <div class="step-number">2</div>
+                </div>
+                <h3>Share your projects</h3>
+                <p>Post updates, photos, and materials used as you create.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon-wrapper">
+                    <div class="step-circle">🤝</div>
+                    <div class="step-number">3</div>
+                </div>
+                <h3>Follow maker journeys</h3>
+                <p>Explore learning diaries and connect with other creators.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Start Your Journey Section -->
+    <section class="beginners-section">
+        <div class="beginners-container">
+            <div class="beginners-content">
+                <p class="section-label">NEW TO CRAFTING?</p>
+                <h2>Start Your Journey<br><span class="italic-accent">Here</span></h2>
+                <p>
+                    Everyone starts somewhere. Whether you've never picked up a needle or you're rediscovering a childhood hobby, our community welcomes you with open arms and helpful hands.
+                </p>
+                <div class="beginners-buttons">
+                    <a href="member-area-ultimate.html" class="btn btn-primary">Browse Tutorials</a>
+                    <a href="member-area-ultimate.html" class="btn btn-secondary">Meet Fellow Beginners</a>
+                </div>
+            </div>
+            <div class="beginners-features">
+                <div class="feature-item">
+                    <div class="feature-icon">📖</div>
+                    <div class="feature-text">
+                        <h3>Step-by-Step Guides</h3>
+                        <p>Clear tutorials written for complete beginners, with photos at every step.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <h3>Find Your Craft</h3>
+                        <p>Not sure where to start? Explore different crafts and discover what calls to you.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">❤️</div>
+                    <div class="feature-text">
+                        <h3>Supportive Community</h3>
+                        <p>Ask questions without judgment. We all remember our first project.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -777,11 +929,27 @@
             <h2>Meet the <span class="italic">Makers</span></h2>
             <p>The artisans, teachers, and passionate hobbyists who inspire us to slow down and create with intention.</p>
         </div>
-        <div class="makers-grid" id="makersGrid">
-            <!-- Makers will be loaded dynamically -->
+        <div class="makers-grid">
             <div class="maker-card">
                 <div class="maker-image"></div>
-                <h3 class="maker-name">Loading makers...</h3>
+                <h3 class="maker-name">Elena Rosetti</h3>
+                <p class="maker-craft">Traditional Embroidery</p>
+                <p class="maker-location icon-location">Tuscany, Italy</p>
+                <p class="maker-quote">"Every stitch carries the memory of hands that came before mine."</p>
+            </div>
+            <div class="maker-card">
+                <div class="maker-image"></div>
+                <h3 class="maker-name">Hans Müller</h3>
+                <p class="maker-craft">Wood Carving</p>
+                <p class="maker-location icon-location">Black Forest, Germany</p>
+                <p class="maker-quote">"The wood teaches you patience. You cannot rush what takes a tree decades to grow."</p>
+            </div>
+            <div class="maker-card">
+                <div class="maker-image"></div>
+                <h3 class="maker-name">Maya Chen</h3>
+                <p class="maker-craft">Natural Dyeing</p>
+                <p class="maker-location icon-location">Portland, Oregon</p>
+                <p class="maker-quote">"Color is a conversation between the maker and the earth."</p>
             </div>
         </div>
     </section>
@@ -830,32 +998,23 @@
         </div>
     </footer>
 
-
-    <!-- Cart Overlay -->
-    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-
-    <!-- Shopping Cart Sidebar -->
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h2>Your Cart</h2>
-            <button class="close-cart" onclick="toggleCart()">×</button>
-        </div>
-        <div class="cart-items" id="cartItems">
-            <div class="cart-empty">
-                <h3>Your cart is empty</h3>
-                <p>Add some handmade treasures!</p>
-            </div>
-        </div>
-        <div class="cart-footer" id="cartFooter" style="display: none;">
-            <div class="cart-total">
-                <span class="cart-total-label">Total</span>
-                <span class="cart-total-amount" id="cartTotal">€0.00</span>
-            </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="alert('Checkout coming soon!')">Checkout</button>
-        </div>
-    </div>
-
     <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const navLinks = document.getElementById('navLinks');
+            
+            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        });
+
         // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -877,62 +1036,6 @@
             alert(`Thank you! We'll notify you at ${email} when we launch.`);
             event.target.reset();
         }
-
-        // Supabase connection
-        const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Load latest members
-        async function loadMakers() {
-            try {
-                const { data: makers, error } = await supabase
-                    .from('profiles')
-                    .select('id, username, display_name, full_name, bio, location, avatar_url, profile_picture_url, created_at')
-                    .not('bio', 'is', null)
-                    .order('created_at', { ascending: false })
-                    .limit(6);
-
-                if (error) {
-                    console.error('Error loading makers:', error);
-                    return;
-                }
-
-                if (!makers || makers.length === 0) {
-                    document.getElementById('makersGrid').innerHTML = '<p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">No makers yet. Be the first to join!</p>';
-                    return;
-                }
-
-                const grid = document.getElementById('makersGrid');
-                grid.innerHTML = makers.map(maker => {
-                    const name = maker.display_name || maker.full_name || maker.username || 'Anonymous Maker';
-                    const bio = maker.bio || 'A passionate maker in our community.';
-                    const location = maker.location || 'Location not specified';
-                    const avatar = maker.avatar_url || maker.profile_picture_url || '';
-                    
-                    // Extract craft from bio (first sentence or first 50 chars)
-                    const craft = bio.split('.')[0].substring(0, 50) + (bio.length > 50 ? '...' : '');
-                    
-                    return `
-                        <div class="maker-card">
-                            <div class="maker-image">
-                                ${avatar ? `<img src="${avatar}" alt="${name}" onerror="this.style.display='none'">` : ''}
-                            </div>
-                            <h3 class="maker-name">${name}</h3>
-                            <p class="maker-craft">${craft}</p>
-                            <p class="maker-location icon-location">${location}</p>
-                            <p class="maker-quote">"${bio}"</p>
-                        </div>
-                    `;
-                }).join('');
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('makersGrid').innerHTML = '<p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">Loading makers...</p>';
-            }
-        }
-
-        // Load makers when page loads
-        window.addEventListener('DOMContentLoaded', loadMakers);
 
         // Header scroll effect
         let lastScroll = 0;
