@@ -633,22 +633,24 @@
 </head>
 <body>
     <!-- Header -->
-<!-- Header -->
-<header>
-    <div class="nav-container">
-        <div class="logo-section">
-            <a href="index.html" class="logo">International Craft Club</a>
-            <span class="tagline">A Home for Makers Worldwide</span>
-        </div>
-        <div class="nav-links">
-            <a href="journal.html">Journal</a>
-            <a href="fiber-producers.html">Adopt an Animal</a>
-            <a href="craftmarket-branded.html">Store</a>
-            <a href="landing-page.html">About Members Area</a>
-            <a href="login.html" class="nav-cta">Login / Join</a>
-        </div>
-    </div>
-</header>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <a href="index.html" class="logo">International Craft Club</a>
+                <div class="nav-links">
+                    <a href="journal.html">Journal</a>
+                    <a href="fiber-producers.html">Adopt an Animal</a>
+                    <a href="craftmarket.html" class="active">Makers' Market</a>
+                    <a href="about-members.html">About Members Area</a>
+                    <a href="#" class="cart-link" onclick="toggleCart(); return false;">
+                        Cart
+                        <div class="cart-badge" id="cartBadge">0</div>
+                    </a>
+                    <a href="member-area-ultimate.html" class="nav-cta">Login / Join</a>
+                </div>
+            </div>
+        </nav>
+    </header>
 
     <!-- Hero -->
     <div class="hero">
@@ -761,19 +763,22 @@
         let currentFilter = 'all';
 
         // Load products
+        // Load products
         async function loadProducts() {
             try {
                 const { data: products, error } = await supabase
                     .from('products')
-                    .select(`
-                        *,
-                        seller:users!seller_id(id, username, display_name)
-                    `)
+                    .select('*')
                     .eq('is_active', true)
                     .order('created_at', { ascending: false });
 
-                if (error) throw error;
+                if (error) {
+                    console.error('Supabase error:', error);
+                    throw error;
+                }
 
+                console.log('Loaded products:', products);
+                console.log('Product categories:', products.map(p => p.category));
                 allProducts = products || [];
                 filteredProducts = allProducts;
                 
@@ -784,7 +789,7 @@
             } catch (error) {
                 console.error('Error loading products:', error);
                 document.getElementById('productsGrid').innerHTML = 
-                    '<div class="empty-state"><h3>Unable to load products</h3><p>Please refresh the page or try again later</p></div>';
+                    '<div class="empty-state"><h3>Unable to load products</h3><p>Error: ' + error.message + '</p></div>';
             }
         }
 
@@ -800,7 +805,7 @@
                     }
                 }
                 
-                if (product.is_travel_find && product.current_quantity >= product.max_quantity) {
+                if (product.is_travel_find && product.max_quantity && product.current_quantity >= product.max_quantity) {
                     product.is_available = false;
                     product.stock_status = 'sold_out';
                 }
@@ -817,7 +822,8 @@
             if (category === 'all') {
                 filteredProducts = allProducts;
             } else {
-                filteredProducts = allProducts.filter(p => p.category === category);
+                filteredProducts = allProducts.filter(p => p.category && p.category.toLowerCase() === category.toLowerCase());
+                console.log('Filtering by:', category, 'Found:', filteredProducts.length, 'products');
             }
             
             renderProducts();
@@ -825,32 +831,67 @@
 
         // Render products
         function renderProducts() {
+            console.log('Rendering', filteredProducts.length, 'products');
             const grid = document.getElementById('productsGrid');
             
             if (filteredProducts.length === 0) {
-                grid.innerHTML = '<div class="empty-state"><h3>No makers found in this category yet</h3><p>Check back soon as more makers join our community</p></div>';
+                grid.innerHTML = '<div class="empty-state"><h3>No products in this category yet</h3><p>Check back soon as more products are added</p></div>';
                 return;
             }
             
             grid.innerHTML = filteredProducts.map(product => {
                 const price = formatPrice(product.price, product.currency);
-                const sellerName = product.seller?.display_name || product.seller?.username || 'Independent Maker';
-                const image = product.thumbnail_url || (product.images && product.images[0]) || 'placeholder.jpg';
+                const image = product.thumbnail_url || (product.images && product.images.length > 0 ? product.images[0] : '') || '/api/placeholder/400/300';
                 const isAvailable = product.is_available && product.stock_status !== 'deadline_passed';
                 
-                let countdown = '';
-                if (product.is_travel_find && product.order_until_date && isAvailable) {
-                    countdown = getCountdown(product.order_until_date);
+                // Product type badge
+                let typeBadge = '';
+                if (product.is_digital) {
+                    typeBadge = '<span style="background: rgba(59, 130, 246, 0.15); color: #3b82f6; padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 500; margin-right: 0.5rem;">📄 Digital</span>';
+                } else if (product.is_travel_find) {
+                    typeBadge = '<span style="background: rgba(168, 85, 247, 0.15); color: #a855f7; padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 500; margin-right: 0.5rem;">✈️ Travel Find</span>';
                 }
                 
+                // Made to order badge
+                let mtoABadge = '';
+                if (product.is_made_to_order) {
+                    mtoABadge = '<span style="background: rgba(212, 175, 55, 0.15); color: #d4af37; padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 500;">📦 Made to Order</span>';
+                }
+                
+                // Travel find info
+                let travelFindInfo = '';
+                if (product.is_travel_find && isAvailable) {
+                    let countdown = '';
+                    if (product.order_until_date) {
+                        countdown = getCountdown(product.order_until_date);
+                    }
+                    
+                    let quantityInfo = '';
+                    if (product.max_quantity) {
+                        const remaining = product.max_quantity - (product.current_quantity || 0);
+                        quantityInfo = `${remaining}/${product.max_quantity} available`;
+                    }
+                    
+                    travelFindInfo = `
+                        <div style="background: rgba(168, 85, 247, 0.1); padding: 0.75rem; border-radius: 8px; margin: 0.75rem 0; font-size: 0.875rem;">
+                            ${countdown ? `<div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                                <strong>${countdown}</strong>
+                            </div>` : ''}
+                            ${quantityInfo ? `<div style="color: var(--text-muted);">${quantityInfo}</div>` : ''}
+                        </div>
+                    `;
+                }
+                
+                // Action button
                 let actionButton = '';
                 if (!isAvailable) {
                     actionButton = `
-                        <button class="btn btn-secondary" onclick="notifyMe('${product.id}')">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                            </svg>
-                            Notify Me When Available
+                        <button class="btn btn-secondary" style="opacity: 0.6; cursor: not-allowed;" disabled>
+                            Not Available
                         </button>
                     `;
                 } else if (product.is_made_to_order) {
@@ -869,25 +910,20 @@
                                     <div class="not-available-badge">Not Available</div>
                                 </div>
                             ` : ''}
-                            <img src="${image}" alt="${product.title}">
+                            <img src="${image}" alt="${product.title}" onerror="this.src='/api/placeholder/400/300'">
                             <div class="category-badge">${product.category || 'handmade'}</div>
                         </div>
                         <div class="product-info">
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                ${typeBadge}
+                                ${mtoABadge}
+                            </div>
                             <h3 class="product-title">${product.title}</h3>
-                            <p class="product-description">${product.description || ''}</p>
+                            <p class="product-description">${product.description ? (product.description.length > 120 ? product.description.substring(0, 120) + '...' : product.description) : ''}</p>
+                            ${travelFindInfo}
                             <div class="product-meta">
                                 <div class="product-price">${price}</div>
-                                <div class="product-seller">by <strong>${sellerName}</strong></div>
                             </div>
-                            ${countdown ? `
-                                <div class="countdown" data-deadline="${product.order_until_date}">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
-                                    <span class="countdown-text">${countdown}</span>
-                                </div>
-                            ` : ''}
                             <div class="product-actions">
                                 ${actionButton}
                             </div>
@@ -934,7 +970,6 @@
                 });
             }, 60000);
         }
-
         // Add to cart
         function addToCart(productId) {
             const product = allProducts.find(p => p.id === productId);
