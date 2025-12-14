@@ -496,11 +496,76 @@
             to { transform: rotate(360deg); }
         }
         
+        /* Footer */
         footer {
             background: var(--dark-brown);
             color: white;
-            padding: 3rem 0 2rem;
-            text-align: center;
+            padding: 4rem 3rem 2rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-brand h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .footer-brand p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+        }
+        
+        .footer-tagline {
+            font-style: italic;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        .footer-section h4 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-section a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255,255,255,0.5);
         }
     </style>
 </head>
@@ -540,8 +605,48 @@
     </div>
 
     <footer>
-        <div class="footer-content">
-            <p>&copy; 2024 International Craft Club. Celebrating makers worldwide.</p>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>International<br>Craft Club</h3>
+                <p class="footer-tagline">A Home for Makers Worldwide</p>
+                <p>A global community celebrating slow creativity, traditional skills, and the makers who keep them alive.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>START HERE</h4>
+                <ul>
+                    <li><a href="about-members.html">About Members Area</a></li>
+                    <li><a href="journal.html">Journal</a></li>
+                    <li><a href="fiber-producers.html">Adopt an Animal</a></li>
+                    <li><a href="craftmarket-branded.html">Makers' Market</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>CRAFTS</h4>
+                <ul>
+                    <li><a href="craftmarket-branded.html">Sewing</a></li>
+                    <li><a href="craftmarket-branded.html">Crochet</a></li>
+                    <li><a href="craftmarket-branded.html">Knitting</a></li>
+                    <li><a href="craftmarket-branded.html">Leather</a></li>
+                    <li><a href="craftmarket-branded.html">Embroidery</a></li>
+                    <li><a href="craftmarket-branded.html">Pottery</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>CONNECT</h4>
+                <ul>
+                    <li><a href="member-area.html">Login / Join</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2024 International Craft Club. Made with care.</p>
+            <a href="#" style="color: rgba(255,255,255,0.5); text-decoration: none;">Privacy Policy</a>
         </div>
     </footer>
 
@@ -622,6 +727,14 @@
         function renderProduct(product) {
             const images = product.images || [];
             const mainImage = product.thumbnail_url || images[0] || '/api/placeholder/600/600';
+            
+            console.log('=== PRODUCT DATA ===');
+            console.log('Product:', product);
+            console.log('Has product_details?', product.product_details);
+            console.log('Has shipping_info?', product.shipping_info);
+            console.log('Has sizes?', product.has_sizes);
+            console.log('Available sizes?', product.available_sizes);
+            console.log('===================');
             
             document.getElementById('breadcrumb-product').textContent = product.title.toUpperCase();
             document.title = product.title;
@@ -714,16 +827,25 @@
         }
 
         function renderSeller(seller) {
-            if (!seller) return;
+            if (!seller) {
+                console.log('No seller data provided');
+                return;
+            }
+            
+            console.log('Rendering seller:', seller);
             
             const name = seller.display_name || seller.full_name || seller.username || 'Independent Maker';
             const bio = seller.bio || 'A passionate maker in our community.';
-            const avatar = seller.profile_picture_url || '/api/placeholder/100/100';
+            // Try both possible field names for avatar
+            const avatar = seller.avatar_url || seller.profile_picture_url || '/api/placeholder/100/100';
+            
+            console.log('Seller avatar URL:', avatar);
+            console.log('Seller bio:', bio);
             
             document.getElementById('sellerContainer').innerHTML = `
                 <div class="seller-card">
                     <div class="seller-avatar">
-                        <img src="${avatar}" alt="${name}" onerror="this.src='/api/placeholder/100/100'">
+                        <img src="${avatar}" alt="${name}" onerror="this.src='/api/placeholder/100/100'; console.error('Failed to load avatar');">
                     </div>
                     <div class="seller-info">
                         <h3>About ${name}</h3>
