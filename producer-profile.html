@@ -953,6 +953,243 @@
                 navLinks.classList.remove('active');
             }
         });
+
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
+
+        let supabase;
+
+        // Initialize Supabase
+        async function initSupabase() {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+            
+            return new Promise((resolve, reject) => {
+                script.onload = () => {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    resolve();
+                };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // Get slug from URL
+        function getProducerSlug() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('slug') || urlParams.get('id') || 'highland-meadows';
+        }
+
+        // Load producer data
+        async function loadProducer() {
+            try {
+                const slug = getProducerSlug();
+                
+                // Load producer
+                const { data: producer, error: producerError } = await supabase
+                    .from('producers')
+                    .select('*')
+                    .eq('slug', slug)
+                    .eq('is_active', true)
+                    .single();
+
+                if (producerError) throw producerError;
+
+                // Load animals for this producer
+                const { data: animals, error: animalsError } = await supabase
+                    .from('animals')
+                    .select('*')
+                    .eq('producer_id', producer.id)
+                    .order('is_available', { ascending: false });
+
+                if (animalsError) throw animalsError;
+
+                // Render everything
+                renderProducer(producer);
+                renderAnimals(animals);
+                
+            } catch (error) {
+                console.error('Error loading producer:', error);
+                document.querySelector('.main-content').innerHTML = `
+                    <div style="text-align: center; padding: 4rem;">
+                        <h2>Producer not found</h2>
+                        <p>The producer you're looking for doesn't exist or is no longer active.</p>
+                        <a href="fiber-producers.html" class="btn-primary" style="margin-top: 2rem; display: inline-block; padding: 1rem 2rem; background: #A0695F; color: white; text-decoration: none; border-radius: 8px;">← Back to Producers</a>
+                    </div>
+                `;
+            }
+        }
+
+        // Render producer details
+        function renderProducer(producer) {
+            // Update hero image
+            const heroImage = document.querySelector('.hero-banner img');
+            if (heroImage && producer.hero_image_url) {
+                heroImage.src = producer.hero_image_url;
+            }
+
+            // Update avatar
+            const avatar = document.querySelector('.profile-avatar');
+            if (avatar && producer.avatar_url) {
+                avatar.style.backgroundImage = `url('${producer.avatar_url}')`;
+                avatar.style.backgroundSize = 'cover';
+            }
+
+            // Update profile info
+            document.querySelector('.profile-info h1').textContent = producer.name;
+            document.querySelector('.producer-location').innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                ${producer.location}, ${producer.country}
+            `;
+            
+            document.querySelector('.rating').innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                ${producer.rating} (${producer.review_count} reviews)
+            `;
+
+            document.querySelector('.profile-description').textContent = producer.description;
+
+            // Update story
+            const storySection = document.querySelector('.story-section p');
+            if (storySection && producer.story) {
+                storySection.textContent = producer.story;
+            }
+
+            // Update sustainable badge visibility
+            const sustainableBadge = document.querySelector('.sustainable-badge');
+            if (sustainableBadge && !producer.is_sustainable) {
+                sustainableBadge.style.display = 'none';
+            }
+
+            // Update "What You'll Receive" section
+            updateWhatYoullReceive(producer);
+            
+            // Update certifications
+            updateCertifications(producer);
+        }
+
+        // Update "What You'll Receive" section
+        function updateWhatYoullReceive(producer) {
+            const container = document.querySelector('.info-card');
+            if (!container) return;
+
+            const rows = container.querySelectorAll('.info-row');
+            if (rows.length >= 3) {
+                rows[0].querySelector('.info-value').textContent = producer.shearing_frequency || '1x per year';
+                rows[1].querySelector('.info-value').textContent = producer.avg_yield || 'N/A';
+                rows[2].querySelector('.info-value').textContent = producer.wool_type || 'N/A';
+            }
+
+            // Update processing options
+            const processingContainer = container.querySelector('.processing-options');
+            if (processingContainer && producer.processing_options) {
+                processingContainer.innerHTML = producer.processing_options.map(opt => 
+                    `<span class="processing-tag">${opt}</span>`
+                ).join('');
+            }
+        }
+
+        // Update certifications
+        function updateCertifications(producer) {
+            const certsList = document.querySelector('.certifications-list');
+            if (!certsList) return;
+
+            const certs = [];
+            if (producer.is_organic) certs.push('Organic Certified');
+            if (producer.is_animal_welfare_approved) certs.push('Animal Welfare Approved');
+            if (producer.is_heritage_breed) certs.push('Heritage Breed Preservation');
+
+            certsList.innerHTML = certs.map(cert => `
+                <div class="cert-item">
+                    <div class="cert-icon">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <span>${cert}</span>
+                </div>
+            `).join('');
+        }
+
+        // Render animals
+        function renderAnimals(animals) {
+            const animalsSection = document.querySelector('.animals-section');
+            if (!animalsSection) return;
+
+            const container = animalsSection.querySelector('div');
+            if (!container) {
+                const newContainer = document.createElement('div');
+                animalsSection.appendChild(newContainer);
+            }
+
+            const animalCards = animals.map(animal => {
+                const currency = animal.currency === 'EUR' ? '€' : 
+                               animal.currency === 'USD' ? '$' : 
+                               animal.currency === 'GBP' ? '£' : animal.currency;
+
+                return `
+                    <div class="animal-card">
+                        <div class="animal-image">
+                            <img src="${animal.image_url || 'hero-background.jpg'}" alt="${animal.name}">
+                        </div>
+                        <div class="animal-info">
+                            <h3>${animal.name}</h3>
+                            <div class="animal-meta">
+                                <span>${animal.age ? animal.age + ' years' : ''}</span>
+                                ${animal.age && animal.color ? '<span>•</span>' : ''}
+                                <span>${animal.color || ''}</span>
+                            </div>
+                            <p class="animal-description">${animal.personality || ''}</p>
+                        </div>
+                        <div class="animal-actions">
+                            ${animal.is_available ? `
+                                <div class="animal-price">${currency}${animal.price_per_year}/year</div>
+                                <button class="adopt-btn" onclick="adoptAnimal('${animal.name}')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                    Adopt ${animal.name}
+                                </button>
+                            ` : `
+                                <span class="adopted-badge">Adopted</span>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Find or create the container after the h2
+            const h2 = animalsSection.querySelector('h2');
+            let cardsContainer = h2.nextElementSibling;
+            
+            if (!cardsContainer || !cardsContainer.classList) {
+                cardsContainer = document.createElement('div');
+                h2.after(cardsContainer);
+            }
+            
+            cardsContainer.innerHTML = animalCards;
+        }
+
+        // Adopt animal action
+        function adoptAnimal(animalName) {
+            alert(`Thank you for your interest in adopting ${animalName}! This would normally redirect to a checkout or contact form. Coming soon!`);
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await initSupabase();
+                await loadProducer();
+            } catch (error) {
+                console.error('Initialization error:', error);
+            }
+        });
     </script>
 </body>
 </html>

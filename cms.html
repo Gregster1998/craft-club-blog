@@ -26,39 +26,9 @@
             color: var(--text-dark);
         }
 
-        /* Login Screen */
-        .login-screen {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 2rem;
-        }
-
-        .login-box {
-            background: white;
-            padding: 3rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .login-box h1 {
-            font-family: 'Georgia', serif;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .login-box p {
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
-
         /* CMS Container */
         .cms-container {
-            display: none;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
@@ -67,8 +37,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
             border-bottom: 2px solid var(--light-beige);
         }
 
@@ -77,19 +47,79 @@
             font-size: 2rem;
         }
 
-        .cms-actions {
+        /* Tabs */
+        .tabs {
             display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--light-beige);
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--terracotta);
+            border-bottom-color: var(--terracotta);
+        }
+
+        .tab:hover {
+            color: var(--terracotta);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h3 {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--terracotta);
         }
 
         /* Buttons */
         .btn {
             padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
@@ -101,123 +131,77 @@
         }
 
         .btn-primary:hover {
-            background: #8D5A4F;
+            background: var(--dark-brown);
         }
 
         .btn-secondary {
-            background: white;
+            background: var(--light-beige);
             color: var(--text-dark);
-            border: 2px solid var(--text-dark);
         }
 
         .btn-secondary:hover {
-            background: var(--text-dark);
-            color: white;
+            background: #ddd;
         }
 
         .btn-danger {
-            background: #D9534F;
+            background: #dc3545;
             color: white;
         }
 
         .btn-danger:hover {
-            background: #C9302C;
+            background: #c82333;
         }
 
         .btn-small {
             padding: 0.5rem 1rem;
-            font-size: 0.85rem;
+            font-size: 0.875rem;
         }
 
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--light-beige);
-            border-radius: 4px;
-            font-size: 1rem;
-            font-family: inherit;
-        }
-
-        .form-group textarea {
-            min-height: 300px;
-            font-family: 'Georgia', serif;
-            line-height: 1.8;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--terracotta);
-        }
-
-        .form-group small {
-            display: block;
-            margin-top: 0.25rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        /* Posts List */
-        .posts-list {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
+        /* List Items */
         .post-item {
+            background: white;
             padding: 1.5rem;
-            border-bottom: 1px solid var(--light-beige);
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background 0.3s;
+            gap: 1rem;
         }
 
-        .post-item:hover {
-            background: var(--cream);
-        }
-
-        .post-item:last-child {
-            border-bottom: none;
+        .post-info {
+            flex: 1;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
         }
 
         .post-info h3 {
-            font-family: 'Georgia', serif;
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
         }
 
         .post-meta {
             display: flex;
-            gap: 1rem;
-            font-size: 0.85rem;
+            gap: 0.75rem;
             color: var(--text-muted);
-        }
-
-        .post-category {
-            color: var(--terracotta);
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
+            font-size: 0.9rem;
         }
 
         .post-actions {
             display: flex;
             gap: 0.5rem;
+        }
+
+        .post-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--light-beige);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
 
         /* Modal */
@@ -256,46 +240,56 @@
             font-size: 1.75rem;
         }
 
-        .close-modal {
+        .close-btn {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 2rem;
             cursor: pointer;
             color: var(--text-muted);
         }
 
-        .close-modal:hover {
+        .close-btn:hover {
             color: var(--text-dark);
         }
 
-        /* Stats */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-family: 'Georgia', serif;
-            font-size: 2.5rem;
-            color: var(--terracotta);
+        .form-group label {
+            display: block;
             margin-bottom: 0.5rem;
+            font-weight: 500;
         }
 
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.9rem;
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid var(--light-beige);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
         }
 
-        /* Empty State */
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -303,108 +297,171 @@
         }
 
         .empty-state h3 {
-            font-family: 'Georgia', serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
-        /* Loading indicator */
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
+        /* Action Bar */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .cms-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .cms-actions {
-                width: 100%;
-                flex-direction: column;
-            }
-
-            .post-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-
-            .modal-content {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-        }
-
-        .hidden {
-            display: none;
+        .action-bar-left {
+            display: flex;
+            gap: 1rem;
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-box">
-            <h1>CMS Admin</h1>
-            <p>Enter password to access the content management system.</p>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="passwordInput" required placeholder="Enter password">
-                    <small>Default: craftclub123 (change this in production!)</small>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- CMS Container -->
-    <div id="cmsContainer" class="cms-container">
+    <div class="cms-container">
         <!-- Header -->
         <div class="cms-header">
             <div>
-                <h1>Content Management</h1>
-                <p style="color: var(--text-muted); margin-top: 0.5rem;">Manage your blog posts with Supabase</p>
+                <h1>Content Management System</h1>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">International Craft Club</p>
             </div>
-            <div class="cms-actions">
-                <button class="btn btn-primary" onclick="openNewPostModal()">+ New Post</button>
-                <a href="index.html" class="btn btn-secondary">View Site</a>
-                <button class="btn btn-secondary" onclick="logout()">Logout</button>
-            </div>
+            <a href="index.html" class="btn btn-secondary">← Back to Site</a>
         </div>
 
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-card">
-                <div class="stat-number" id="totalPosts">-</div>
-                <div class="stat-label">Total Posts</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="publishedPosts">-</div>
-                <div class="stat-label">Published</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number" id="draftPosts">-</div>
-                <div class="stat-label">Drafts</div>
-            </div>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="posts" onclick="switchTab('posts')">📝 Posts</button>
+            <button class="tab" data-tab="producers" onclick="switchTab('producers')">🐑 Producers</button>
+            <button class="tab" data-tab="animals" onclick="switchTab('animals')">🦙 Animals</button>
+            <button class="tab" data-tab="images" onclick="switchTab('images')">🖼️ Site Images</button>
         </div>
 
-        <!-- Posts List -->
-        <div id="postsList" class="posts-list">
-            <div class="loading">Loading posts...</div>
+        <!-- POSTS TAB -->
+        <div id="posts-tab" class="tab-content active">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Posts</h3>
+                    <div class="number" id="totalPosts">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Published</h3>
+                    <div class="number" id="publishedPosts">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Drafts</h3>
+                    <div class="number" id="draftPosts">0</div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="action-bar-left">
+                    <button class="btn btn-primary" onclick="openNewPostModal()">+ New Post</button>
+                </div>
+            </div>
+
+            <!-- Posts List -->
+            <div id="postsList"></div>
+        </div>
+
+        <!-- PRODUCERS TAB -->
+        <div id="producers-tab" class="tab-content">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Producers</h3>
+                    <div class="number" id="totalProducers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active</h3>
+                    <div class="number" id="activeProducers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Animals</h3>
+                    <div class="number" id="totalAnimals">0</div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="action-bar-left">
+                    <button class="btn btn-primary" onclick="openNewProducerModal()">+ New Producer</button>
+                </div>
+            </div>
+
+            <!-- Producers List -->
+            <div id="producersList"></div>
+        </div>
+
+        <!-- ANIMALS TAB -->
+        <div id="animals-tab" class="tab-content">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Animals</h3>
+                    <div class="number" id="totalAnimalCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Available</h3>
+                    <div class="number" id="availableAnimals">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Adopted</h3>
+                    <div class="number" id="adoptedAnimals">0</div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="action-bar-left">
+                    <button class="btn btn-primary" onclick="openNewAnimalModal()">+ New Animal</button>
+                </div>
+            </div>
+
+            <!-- Animals List -->
+            <div id="animalsList"></div>
+        </div>
+
+        <!-- SITE IMAGES TAB -->
+        <div id="images-tab" class="tab-content">
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Images</h3>
+                    <div class="number" id="totalImages">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Images</h3>
+                    <div class="number" id="activeImages">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pages</h3>
+                    <div class="number" id="pagesWithImages">0</div>
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="action-bar-left">
+                    <button class="btn btn-primary" onclick="openNewImageModal()">+ New Image</button>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Manage all images used across your website</p>
+            </div>
+
+            <!-- Images List -->
+            <div id="siteImagesList"></div>
         </div>
     </div>
 
-    <!-- Post Editor Modal -->
+    <!-- MODALS -->
+    <!-- Post Modal -->
     <div id="postModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">New Post</h2>
-                <button class="close-modal" onclick="closeModal()">&times;</button>
+                <button class="close-btn" onclick="closeModal()">×</button>
             </div>
             <form id="postForm">
                 <input type="hidden" id="postId">
@@ -414,303 +471,384 @@
                     <input type="text" id="postTitle" required>
                 </div>
 
-                <div class="form-group">
-                    <label>Slug *</label>
-                    <input type="text" id="postSlug" required>
-                    <small>URL-friendly version (e.g., slow-stitching-meditation)</small>
-                </div>
-
-                <div class="form-group">
-                    <label>Category *</label>
-                    <select id="postCategory" required>
-                        <option value="">Select category...</option>
-                        <option value="slow-living">Slow Living</option>
-                        <option value="techniques">Techniques</option>
-                        <option value="tutorials">Tutorials</option>
-                        <option value="community">Community</option>
-                        <option value="leather-craft">Leather Craft</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Slug *</label>
+                        <input type="text" id="postSlug" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select id="postCategory" required>
+                            <option value="slow-living">Slow Living</option>
+                            <option value="techniques">Techniques</option>
+                            <option value="tutorials">Tutorials</option>
+                            <option value="community">Community</option>
+                            <option value="leather-craft">Leather Craft</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label>Excerpt *</label>
                     <textarea id="postExcerpt" rows="3" required></textarea>
-                    <small>Short description for the overview page (1-2 sentences)</small>
                 </div>
 
                 <div class="form-group">
-                    <label>Content *</label>
-                    <textarea id="postContent" required></textarea>
-                    <small>Full blog post content (Markdown supported)</small>
+                    <label>Content (Markdown supported) *</label>
+                    <textarea id="postContent" rows="15" required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label>Featured Image URL</label>
                     <input type="url" id="postImage">
-                    <small>Optional: Link to your image (can add later)</small>
                 </div>
 
-                <div class="form-group">
-                    <label>Author *</label>
-                    <input type="text" id="postAuthor" required value="International Craft Club">
-                </div>
-
-                <div class="form-group">
-                    <label>Read Time (minutes) *</label>
-                    <input type="number" id="postReadTime" required value="5" min="1">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Author *</label>
+                        <input type="text" id="postAuthor" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Read Time (minutes) *</label>
+                        <input type="number" id="postReadTime" min="1" required>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label>Status *</label>
                     <select id="postStatus" required>
-                        <option value="published">Published</option>
                         <option value="draft">Draft</option>
+                        <option value="published">Published</option>
                     </select>
                 </div>
 
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button type="submit" class="btn btn-primary" id="saveBtn">Save Post</button>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Post</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Load Supabase client -->
-    <script src="supabase-client.js"></script>
-    
-    <script>
-        // Simple password protection
-        const PASSWORD = 'craftclub123'; // CHANGE THIS!
-        let currentEditId = null;
-
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const password = document.getElementById('passwordInput').value;
-            
-            if (password === PASSWORD) {
-                sessionStorage.setItem('cmsAuth', 'true');
-                showCMS();
-            } else {
-                alert('Incorrect password!');
-            }
-        });
-
-        async function showCMS() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('cmsContainer').style.display = 'block';
-            
-            // Check if Supabase is configured
-            if (!isSupabaseConfigured()) {
-                alert('Please configure Supabase! Edit supabase-client.js with your credentials.');
-                return;
-            }
-            
-            // Initialize Supabase
-            try {
-                await initSupabase();
-                await loadPosts();
-                await updateStats();
-            } catch (error) {
-                handleDBError(error, 'Failed to initialize CMS');
-            }
-        }
-
-        function logout() {
-            sessionStorage.removeItem('cmsAuth');
-            location.reload();
-        }
-
-        // Check if already logged in
-        if (sessionStorage.getItem('cmsAuth') === 'true') {
-            showCMS();
-        }
-
-        // Load and render posts
-        async function loadPosts() {
-            try {
-                const posts = await PostsDB.getAll();
-                renderPostsList(posts);
-            } catch (error) {
-                handleDBError(error, 'Failed to load posts');
-            }
-        }
-
-        // Render posts list
-        function renderPostsList(posts) {
-            const container = document.getElementById('postsList');
-            
-            if (posts.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <h3>No posts yet</h3>
-                        <p>Create your first blog post to get started!</p>
+    <!-- Producer Modal -->
+    <div id="producerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="producerModalTitle">New Producer</h2>
+                <button class="close-btn" onclick="closeProducerModal()">×</button>
+            </div>
+            <form id="producerForm">
+                <input type="hidden" id="producerId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" id="producerName" required>
                     </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = posts.map(post => `
-                <div class="post-item">
-                    <div class="post-info">
-                        <div class="post-category">${getCategoryLabel(post.category)}</div>
-                        <h3>${post.title}</h3>
-                        <div class="post-meta">
-                            <span>By ${post.author}</span>
-                            <span>•</span>
-                            <span>${formatDate(post.created_at)}</span>
-                            <span>•</span>
-                            <span>${post.read_time} min read</span>
-                            <span>•</span>
-                            <span style="color: ${post.status === 'published' ? '#5CB85C' : '#F0AD4E'}">${post.status}</span>
-                        </div>
-                    </div>
-                    <div class="post-actions">
-                        <button class="btn btn-small btn-secondary" onclick="editPost('${post.id}')">Edit</button>
-                        <button class="btn btn-small btn-danger" onclick="deletePost('${post.id}')">Delete</button>
-                        <a href="post.html?id=${post.id}" target="_blank" class="btn btn-small btn-secondary">View</a>
+                    <div class="form-group">
+                        <label>Slug *</label>
+                        <input type="text" id="producerSlug" required>
                     </div>
                 </div>
-            `).join('');
-        }
 
-        // Update statistics
-        async function updateStats() {
-            try {
-                const stats = await PostsDB.getStats();
-                document.getElementById('totalPosts').textContent = stats.total;
-                document.getElementById('publishedPosts').textContent = stats.published;
-                document.getElementById('draftPosts').textContent = stats.drafts;
-            } catch (error) {
-                handleDBError(error, 'Failed to load statistics');
-            }
-        }
+                <div class="form-group">
+                    <label>Tagline</label>
+                    <input type="text" id="producerTagline">
+                </div>
 
-        // Open modal for new post
-        function openNewPostModal() {
-            currentEditId = null;
-            document.getElementById('modalTitle').textContent = 'New Post';
-            document.getElementById('postForm').reset();
-            document.getElementById('postId').value = '';
-            document.getElementById('postModal').style.display = 'block';
-        }
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Location *</label>
+                        <input type="text" id="producerLocation" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Country *</label>
+                        <input type="text" id="producerCountry" required>
+                    </div>
+                </div>
 
-        // Edit existing post
-        async function editPost(id) {
-            try {
-                const post = await PostsDB.getById(id);
-                if (!post) return;
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea id="producerDescription" rows="3" required></textarea>
+                </div>
 
-                currentEditId = id;
-                document.getElementById('modalTitle').textContent = 'Edit Post';
-                document.getElementById('postId').value = post.id;
-                document.getElementById('postTitle').value = post.title;
-                document.getElementById('postSlug').value = post.slug;
-                document.getElementById('postCategory').value = post.category;
-                document.getElementById('postExcerpt').value = post.excerpt;
-                document.getElementById('postContent').value = post.content;
-                document.getElementById('postImage').value = post.image || '';
-                document.getElementById('postAuthor').value = post.author;
-                document.getElementById('postReadTime').value = post.read_time;
-                document.getElementById('postStatus').value = post.status;
+                <div class="form-group">
+                    <label>Story</label>
+                    <textarea id="producerStory" rows="5"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Avatar URL</label>
+                        <input type="url" id="producerAvatarUrl">
+                    </div>
+                    <div class="form-group">
+                        <label>Hero Image URL</label>
+                        <input type="url" id="producerHeroUrl">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Rating (0-5) *</label>
+                        <input type="number" id="producerRating" min="0" max="5" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Review Count *</label>
+                        <input type="number" id="producerReviews" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <h4 style="margin-bottom: 1rem;">Certifications</h4>
+                    <label><input type="checkbox" id="producerSustainable"> Sustainable</label><br>
+                    <label><input type="checkbox" id="producerOrganic"> Organic Certified</label><br>
+                    <label><input type="checkbox" id="producerAnimalWelfare"> Animal Welfare Approved</label><br>
+                    <label><input type="checkbox" id="producerHeritage"> Heritage Breed Preservation</label>
+                </div>
+
+                <h4 style="margin: 2rem 0 1rem;">What You'll Receive</h4>
                 
-                document.getElementById('postModal').style.display = 'block';
-            } catch (error) {
-                handleDBError(error, 'Failed to load post');
-            }
-        }
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Shearing Frequency</label>
+                        <input type="text" id="producerShearing" placeholder="e.g., 1x per year">
+                    </div>
+                    <div class="form-group">
+                        <label>Average Yield</label>
+                        <input type="text" id="producerYield" placeholder="e.g., 1.5-2 kg raw fleece">
+                    </div>
+                </div>
 
-        // Delete post
-        async function deletePost(id) {
-            if (!confirm('Are you sure you want to delete this post?')) return;
-            
-            try {
-                await PostsDB.delete(id);
-                await loadPosts();
-                await updateStats();
-            } catch (error) {
-                handleDBError(error, 'Failed to delete post');
-            }
-        }
+                <div class="form-group">
+                    <label>Wool Type</label>
+                    <input type="text" id="producerWoolType" placeholder="e.g., Fine, soft, natural colors">
+                </div>
 
-        // Close modal
-        function closeModal() {
-            document.getElementById('postModal').style.display = 'none';
-            document.getElementById('postForm').reset();
-            currentEditId = null;
-        }
+                <div class="form-group">
+                    <label>Processing Options (comma-separated)</label>
+                    <input type="text" id="producerProcessing" placeholder="e.g., Raw fleece, Washed, Carded">
+                </div>
 
-        // Handle form submission
-        document.getElementById('postForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+                <div class="form-group">
+                    <label><input type="checkbox" id="producerActive" checked> Active</label>
+                </div>
 
-            const saveBtn = document.getElementById('saveBtn');
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Saving...';
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeProducerModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Producer</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            const postData = {
-                id: currentEditId || generateId(),
-                title: document.getElementById('postTitle').value,
-                slug: document.getElementById('postSlug').value,
-                category: document.getElementById('postCategory').value,
-                excerpt: document.getElementById('postExcerpt').value,
-                content: document.getElementById('postContent').value,
-                image: document.getElementById('postImage').value || null,
-                author: document.getElementById('postAuthor').value,
-                read_time: parseInt(document.getElementById('postReadTime').value),
-                status: document.getElementById('postStatus').value
-            };
+    <!-- Animal Modal -->
+    <div id="animalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="animalModalTitle">New Animal</h2>
+                <button class="close-btn" onclick="closeAnimalModal()">×</button>
+            </div>
+            <form id="animalForm">
+                <input type="hidden" id="animalId">
+                
+                <div class="form-group">
+                    <label>Producer *</label>
+                    <select id="animalProducer" required>
+                        <option value="">Select a producer...</option>
+                    </select>
+                </div>
 
-            try {
-                if (currentEditId) {
-                    await PostsDB.update(currentEditId, postData);
-                } else {
-                    await PostsDB.create(postData);
-                }
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" id="animalName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Animal Type *</label>
+                        <input type="text" id="animalType" placeholder="e.g., Sheep, Alpaca, Goat" required>
+                    </div>
+                </div>
 
-                closeModal();
-                await loadPosts();
-                await updateStats();
-            } catch (error) {
-                handleDBError(error, 'Failed to save post');
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.textContent = 'Save Post';
-            }
-        });
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Breed *</label>
+                        <input type="text" id="animalBreed" placeholder="e.g., Shetland, Huacaya" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Age (years)</label>
+                        <input type="number" id="animalAge" min="0">
+                    </div>
+                </div>
 
-        // Auto-generate slug from title
-        document.getElementById('postTitle').addEventListener('input', (e) => {
-            const slug = e.target.value
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-|-$/g, '');
-            document.getElementById('postSlug').value = slug;
-        });
+                <div class="form-group">
+                    <label>Color</label>
+                    <input type="text" id="animalColor" placeholder="e.g., Moorit (brown), White">
+                </div>
 
-        // Helper functions
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substr(2);
-        }
+                <div class="form-group">
+                    <label>Personality</label>
+                    <textarea id="animalPersonality" rows="3"></textarea>
+                </div>
 
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="url" id="animalImageUrl">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Price per Year *</label>
+                        <input type="number" id="animalPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Currency *</label>
+                        <select id="animalCurrency" required>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="USD">USD ($)</option>
+                            <option value="GBP">GBP (£)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><input type="checkbox" id="animalAvailable" checked> Available for Adoption</label><br>
+                    <label><input type="checkbox" id="animalFeatured"> Featured Animal</label>
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeAnimalModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Animal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Site Image Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="imageModalTitle">New Site Image</h2>
+                <button class="close-btn" onclick="closeImageModal()">×</button>
+            </div>
+            <form id="imageForm">
+                <input type="hidden" id="imageId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Page *</label>
+                        <select id="imagePage" required>
+                            <option value="">Select a page...</option>
+                            <option value="index">Homepage</option>
+                            <option value="landing-page">Landing Page</option>
+                            <option value="journal">Journal</option>
+                            <option value="fiber-producers">Fiber Producers</option>
+                            <option value="producer-profile">Producer Profile</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Section *</label>
+                        <select id="imageSection" required>
+                            <option value="">Select a page first...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="imageSectionCustom" style="display: none;">
+                    <label>Custom Section Name</label>
+                    <input type="text" id="imageSectionCustomInput" placeholder="e.g., about-section-bg">
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="imageDescription" placeholder="What is this image for?">
+                </div>
+
+                <div class="form-group">
+                    <label>Image URL *</label>
+                    <input type="url" id="imageUrl" required placeholder="https://...">
+                    <small style="color: var(--text-muted); display: block; margin-top: 0.5rem;">
+                        Upload your image to Supabase Storage or use an external URL
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>Alt Text</label>
+                    <input type="text" id="imageAltText" placeholder="Describe the image for accessibility">
+                </div>
+
+                <div class="form-group">
+                    <label><input type="checkbox" id="imageActive" checked> Active</label>
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeImageModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Image</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="supabase-client.js"></script>
+    <script src="posts-manager.js"></script>
+    <script src="producers-manager.js"></script>
+    <script src="animals-manager.js"></script>
+    <script src="site-images-manager.js"></script>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
             });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            // Load data for the selected tab
+            if (tabName === 'posts') {
+                loadPosts();
+            } else if (tabName === 'producers') {
+                loadProducers();
+            } else if (tabName === 'animals') {
+                loadAnimals();
+            } else if (tabName === 'images') {
+                loadSiteImages();
+            }
         }
 
-        function getCategoryLabel(category) {
-            const labels = {
-                'slow-living': 'SLOW LIVING',
-                'techniques': 'TECHNIQUES',
-                'tutorials': 'TUTORIALS',
-                'community': 'COMMUNITY',
-                'leather-craft': 'LEATHER CRAFT'
-            };
-            return labels[category] || category.toUpperCase();
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Initialize Supabase
+                await initSupabase();
+                
+                // Load initial data
+                await loadPosts();
+                await updateStats();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                alert('Error connecting to database. Please check your Supabase configuration.');
+            }
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = ['postModal', 'producerModal', 'animalModal', 'imageModal'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
