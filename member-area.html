@@ -858,6 +858,50 @@
                 max-height: 500px;
             }
         }
+
+        /* ========== STORE SECTION STYLES ========== */
+        .product-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .product-item-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--light-beige);
+        }
+
+        .product-type-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .product-type-option {
+            border: 2px solid var(--light-beige);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .product-type-option:hover {
+            border-color: var(--terracotta);
+            background: rgba(160, 105, 95, 0.05);
+        }
+
+        .product-type-option input[type="radio"]:checked + label {
+            border-color: var(--terracotta);
+        }
     </style>
 </head>
 <body>
@@ -980,7 +1024,6 @@
                 <h1 style="margin-bottom: 2rem;">💬 Messages</h1>
                 <div id="chat-area"></div>
             </section>
-        </main>
 
             <section id="my-store" class="content-section">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
@@ -1706,95 +1749,6 @@
             <form class="chat-widget-input-form" onsubmit="sendWidgetMessage(event)">
                 <input type="text" class="chat-widget-input" id="chat-widget-input" placeholder="Type a message..." required>
                 <button type="submit" class="chat-widget-send">➤</button>
-            </form>
-        </div>
-    </div>
-
-
-    <!-- Product Modal -->
-    <div id="productModal" class="modal" style="display: none;">
-        <div class="modal-content" style="max-width: 900px;">
-            <div class="modal-header">
-                <h2 id="productModalTitle">Create New Listing</h2>
-                <button class="modal-close" onclick="closeProductModal()">&times;</button>
-            </div>
-            
-            <form id="productForm" onsubmit="saveProduct(event); return false;">
-                <input type="hidden" id="productId">
-                
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="margin-bottom: 1rem;">Basic Information</h3>
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: block; margin-bottom: 0.5rem;">Title *</label>
-                        <input type="text" id="productTitle" required placeholder="e.g., Handwoven Crochet Blanket" style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px;">
-                    </div>
-                    
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: block; margin-bottom: 0.5rem;">Description *</label>
-                        <textarea id="productDescription" rows="4" required placeholder="Tell the story behind your creation..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px;"></textarea>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem;">Price *</label>
-                            <input type="number" id="productPrice" step="0.01" min="0" required placeholder="0.00" style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px;">
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 0.5rem;">Currency *</label>
-                            <select id="productCurrency" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px;">
-                                <option value="EUR">EUR (€)</option>
-                                <option value="USD">USD ($)</option>
-                                <option value="GBP">GBP (£)</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label style="display: block; margin-bottom: 0.5rem;">Category *</label>
-                        <select id="productCategory" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px;">
-                            <option value="">Select category...</option>
-                            <option value="crochet">Crochet</option>
-                            <option value="sewing">Sewing</option>
-                            <option value="leatherwork">Leatherwork</option>
-                            <option value="knitting">Knitting</option>
-                            <option value="embroidery">Embroidery</option>
-                            <option value="woodwork">Woodwork</option>
-                            <option value="pottery">Pottery</option>
-                            <option value="weaving">Weaving</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div style="margin-bottom: 2rem;">
-                    <h3 style="margin-bottom: 1rem;">Product Type</h3>
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-                        <label style="border: 2px solid var(--light-beige); padding: 1.5rem; border-radius: 12px; text-align: center; cursor: pointer;">
-                            <input type="radio" name="productType" value="handmade" checked style="display: none;">
-                            <div style="font-size: 2rem;">✋</div>
-                            <div style="font-weight: 600; margin-top: 0.5rem;">Handmade</div>
-                            <div style="font-size: 0.875rem; color: var(--text-muted);">Custom made-to-order</div>
-                        </label>
-                        
-                        <label style="border: 2px solid var(--light-beige); padding: 1.5rem; border-radius: 12px; text-align: center; cursor: pointer;">
-                            <input type="radio" name="productType" value="digital" style="display: none;">
-                            <div style="font-size: 2rem;">📄</div>
-                            <div style="font-weight: 600; margin-top: 0.5rem;">Digital</div>
-                            <div style="font-size: 0.875rem; color: var(--text-muted);">Patterns, guides</div>
-                        </label>
-                        
-                        <label style="border: 2px solid var(--light-beige); padding: 1.5rem; border-radius: 12px; text-align: center; cursor: pointer;">
-                            <input type="radio" name="productType" value="travel_find" style="display: none;">
-                            <div style="font-size: 2rem;">✈️</div>
-                            <div style="font-weight: 600; margin-top: 0.5rem;">Travel Find</div>
-                            <div style="font-size: 0.875rem; color: var(--text-muted);">Limited batch orders</div>
-                        </label>
-                    </div>
-                </div>
-                
-                <div style="text-align: right; padding-top: 1rem; border-top: 1px solid var(--light-beige);">
-                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()" style="margin-right: 1rem;">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Listing</button>
-                </div>
             </form>
         </div>
     </div>
@@ -3793,23 +3747,9 @@
             document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('show'));
         }
 
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                const onclickAttr = item.getAttribute('onclick');
-                if (onclickAttr && onclickAttr.includes(`'${sectionId}'`)) {
-                    item.classList.add('active');
-                }
-            });
-            
 
         // ========== STORE FUNCTIONS ==========
         let userProducts = [];
-        let productImages = [null, null, null, null, null];
         let currentEditProductId = null;
 
         async function loadUserProducts() {
@@ -3849,21 +3789,21 @@
             }
 
             container.innerHTML = userProducts.map(product => {
-                const price = formatPrice(product.price, product.currency);
+                const price = formatStorePrice(product.price, product.currency);
                 const image = product.thumbnail_url || (product.images && product.images[0]) || '';
                 const statusBadge = product.is_active ? 
-                    '<span style="background: rgba(92, 139, 90, 0.15); color: var(--success); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.8125rem;">Active</span>' : 
-                    '<span style="background: var(--light-beige); color: var(--text-muted); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.8125rem;">Inactive</span>';
+                    '<span style="background: rgba(92, 139, 90, 0.15); color: var(--success); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.8125rem; font-weight: 500;">Active</span>' : 
+                    '<span style="background: var(--light-beige); color: var(--text-muted); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.8125rem; font-weight: 500;">Inactive</span>';
                 
                 let typeLabel = 'Handmade';
                 if (product.is_digital) typeLabel = 'Digital';
                 else if (product.is_travel_find) typeLabel = 'Travel Find';
                 
                 return `
-                    <div style="display: grid; grid-template-columns: 120px 1fr auto; gap: 1.5rem; padding: 1.5rem; background: var(--cream); border-radius: 12px; margin-bottom: 1rem; align-items: center;">
-                        <img src="${image}" alt="${product.title}" style="width: 120px; height: 120px; border-radius: 8px; object-fit: cover; background: var(--light-beige);">
+                    <div class="product-item">
+                        <img src="${image || '/api/placeholder/120/120'}" alt="${product.title}" class="product-item-image">
                         <div>
-                            <h4 style="font-size: 1.125rem; margin-bottom: 0.5rem;">${product.title}</h4>
+                            <h4 style="font-size: 1.125rem; margin-bottom: 0.5rem; color: var(--dark-brown);">${product.title}</h4>
                             <div style="display: flex; gap: 1rem; color: var(--text-muted); font-size: 0.875rem; margin-bottom: 0.5rem;">
                                 <span>${product.category}</span>
                                 <span>•</span>
@@ -3874,8 +3814,8 @@
                             <div style="font-size: 1.25rem; font-weight: 600; color: var(--terracotta);">${price}</div>
                         </div>
                         <div style="display: flex; gap: 0.5rem;">
-                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem;" onclick="editProduct('${product.id}')">Edit</button>
-                            <button class="btn" style="padding: 0.5rem 1rem; background: var(--love); color: white;" onclick="deleteProduct('${product.id}')">Delete</button>
+                            <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="editProduct('${product.id}')">Edit</button>
+                            <button class="btn" style="padding: 0.5rem 1rem; font-size: 0.875rem; background: var(--love); color: white;" onclick="deleteProduct('${product.id}')">Delete</button>
                         </div>
                     </div>
                 `;
@@ -3893,7 +3833,6 @@
             currentEditProductId = null;
             document.getElementById('productModalTitle').textContent = 'Create New Listing';
             document.getElementById('productForm').reset();
-            productImages = [null, null, null, null, null];
             document.getElementById('productModal').style.display = 'block';
         }
 
@@ -3902,7 +3841,10 @@
             
             try {
                 const { data: { user } } = await supabase.auth.getUser();
-                if (!user) return;
+                if (!user) {
+                    alert('Please log in to create listings');
+                    return;
+                }
 
                 const productType = document.querySelector('input[name="productType"]:checked').value;
                 
@@ -3915,9 +3857,7 @@
                     category: document.getElementById('productCategory').value,
                     product_type: productType,
                     is_active: true,
-                    is_available: true,
-                    images: productImages.filter(img => img !== null),
-                    thumbnail_url: productImages[0]
+                    is_available: true
                 };
                 
                 if (productType === 'handmade') {
@@ -3928,33 +3868,27 @@
                     productData.is_travel_find = true;
                 }
                 
-                if (currentEditProductId) {
-                    const { error } = await supabase
-                        .from('products')
-                        .update(productData)
-                        .eq('id', currentEditProductId);
-                    
-                    if (error) throw error;
-                    alert('Listing updated!');
-                } else {
-                    const { error } = await supabase
-                        .from('products')
-                        .insert([productData]);
-                    
-                    if (error) throw error;
-                    alert('Listing created!');
-                }
+                const { error } = await supabase
+                    .from('products')
+                    .insert([productData]);
                 
+                if (error) throw error;
+                
+                alert('✅ Listing created successfully!');
                 closeProductModal();
                 await loadUserProducts();
             } catch (error) {
                 console.error('Error saving product:', error);
-                alert('Error: ' + error.message);
+                alert('Error creating listing: ' + error.message);
             }
         }
 
+        async function editProduct(id) {
+            alert('Edit functionality coming soon!');
+        }
+
         async function deleteProduct(id) {
-            if (!confirm('Delete this listing?')) return;
+            if (!confirm('Are you sure you want to delete this listing?')) return;
             
             try {
                 const { error } = await supabase
@@ -3976,12 +3910,11 @@
             document.getElementById('productModal').style.display = 'none';
         }
 
-        function formatPrice(price, currency = 'EUR') {
+        function formatStorePrice(price, currency = 'EUR') {
             const symbol = currency === 'EUR' ? '€' : currency === 'USD' ? '$' : currency === 'GBP' ? '£' : currency;
             return `${symbol}${parseFloat(price).toFixed(2)}`;
         }
 
-        // Modified showSection function
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
@@ -3997,10 +3930,10 @@
             
             if (sectionId === 'chat' && !currentChatUser) {
                 loadConversations();
-            }
             
             if (sectionId === 'my-store') {
                 loadUserProducts();
+            }
             }
         }
 
@@ -4040,5 +3973,93 @@
 
         checkAuth();
     </script>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2 id="productModalTitle">Create New Listing</h2>
+                <button class="modal-close" onclick="closeProductModal()">&times;</button>
+            </div>
+            
+            <form id="productForm" onsubmit="saveProduct(event); return false;">
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Basic Information</h3>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Title *</label>
+                        <input type="text" id="productTitle" required placeholder="e.g., Handwoven Crochet Blanket" style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px; font-family: inherit;">
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Description *</label>
+                        <textarea id="productDescription" rows="4" required placeholder="Tell the story behind your creation..." style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Price *</label>
+                            <input type="number" id="productPrice" step="0.01" min="0" required placeholder="0.00" style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px; font-family: inherit;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Currency *</label>
+                            <select id="productCurrency" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px; font-family: inherit;">
+                                <option value="EUR">EUR (€)</option>
+                                <option value="USD">USD ($)</option>
+                                <option value="GBP">GBP (£)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Category *</label>
+                        <select id="productCategory" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--light-beige); border-radius: 8px; font-family: inherit;">
+                            <option value="">Select category...</option>
+                            <option value="crochet">Crochet</option>
+                            <option value="sewing">Sewing</option>
+                            <option value="leatherwork">Leatherwork</option>
+                            <option value="knitting">Knitting</option>
+                            <option value="embroidery">Embroidery</option>
+                            <option value="woodwork">Woodwork</option>
+                            <option value="pottery">Pottery</option>
+                            <option value="weaving">Weaving</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="margin-bottom: 1rem;">Product Type</h3>
+                    <div class="product-type-selector">
+                        <label class="product-type-option">
+                            <input type="radio" name="productType" value="handmade" checked style="display: none;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">✋</div>
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Handmade</div>
+                            <div style="font-size: 0.875rem; color: var(--text-muted);">Custom made-to-order</div>
+                        </label>
+                        
+                        <label class="product-type-option">
+                            <input type="radio" name="productType" value="digital" style="display: none;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📄</div>
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Digital</div>
+                            <div style="font-size: 0.875rem; color: var(--text-muted);">Patterns & guides</div>
+                        </label>
+                        
+                        <label class="product-type-option">
+                            <input type="radio" name="productType" value="travel_find" style="display: none;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">✈️</div>
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">Travel Find</div>
+                            <div style="font-size: 0.875rem; color: var(--text-muted);">Limited batch orders</div>
+                        </label>
+                    </div>
+                </div>
+                
+                <div style="text-align: right; padding-top: 1rem; border-top: 1px solid var(--light-beige);">
+                    <button type="button" class="btn btn-secondary" onclick="closeProductModal()" style="margin-right: 1rem;">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Listing</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
