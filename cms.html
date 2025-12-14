@@ -189,6 +189,64 @@
             background-size: cover;
             background-position: center;
         }
+        
+        /* Image Upload Styles */
+        .upload-area {
+            border: 2px dashed var(--light-beige);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        .upload-area:hover {
+            border-color: var(--terracotta);
+            background: #f5f5f5;
+        }
+        .upload-area.dragging {
+            border-color: var(--terracotta);
+            background: var(--cream);
+        }
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+        .image-preview {
+            margin-top: 1rem;
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            display: none;
+        }
+        .image-preview.show {
+            display: block;
+        }
+        .upload-progress {
+            margin-top: 1rem;
+            display: none;
+        }
+        .upload-progress.show {
+            display: block;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light-beige);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--terracotta);
+            transition: width 0.3s;
+        }
+        .upload-status {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
     </style>
 </head>
 <body>
@@ -278,6 +336,8 @@
             </div>
             <form id="postForm">
                 <input type="hidden" id="postId">
+                <input type="hidden" id="postImageUrl">
+                
                 <div class="form-group">
                     <label>Title *</label>
                     <input type="text" id="postTitle" required>
@@ -307,8 +367,18 @@
                     <textarea id="postContent" rows="15" required></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Featured Image URL</label>
-                    <input type="url" id="postImage">
+                    <label>Featured Image</label>
+                    <div class="upload-area" id="postImageUpload" onclick="document.getElementById('postImageFile').click()">
+                        <div class="upload-icon">📷</div>
+                        <p>Click to upload or drag and drop</p>
+                        <small style="color: var(--text-muted);">PNG, JPG, WebP up to 5MB</small>
+                    </div>
+                    <input type="file" id="postImageFile" accept="image/*" style="display: none;" onchange="handlePostImageUpload(event)">
+                    <img id="postImagePreview" class="image-preview">
+                    <div id="postImageProgress" class="upload-progress">
+                        <div class="progress-bar"><div class="progress-fill" id="postImageProgressFill"></div></div>
+                        <div class="upload-status" id="postImageStatus">Uploading...</div>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -344,6 +414,9 @@
             </div>
             <form id="producerForm">
                 <input type="hidden" id="producerId">
+                <input type="hidden" id="producerAvatarUrlHidden">
+                <input type="hidden" id="producerHeroUrlHidden">
+                
                 <div class="form-row">
                     <div class="form-group">
                         <label>Name *</label>
@@ -376,16 +449,28 @@
                     <label>Story</label>
                     <textarea id="producerStory" rows="5"></textarea>
                 </div>
+                
                 <div class="form-row">
                     <div class="form-group">
-                        <label>Avatar URL</label>
-                        <input type="url" id="producerAvatarUrl">
+                        <label>Avatar Image</label>
+                        <div class="upload-area" onclick="document.getElementById('producerAvatarFile').click()">
+                            <div class="upload-icon">👤</div>
+                            <p>Upload Avatar</p>
+                        </div>
+                        <input type="file" id="producerAvatarFile" accept="image/*" style="display: none;" onchange="handleProducerAvatarUpload(event)">
+                        <img id="producerAvatarPreview" class="image-preview">
                     </div>
                     <div class="form-group">
-                        <label>Hero Image URL</label>
-                        <input type="url" id="producerHeroUrl">
+                        <label>Hero Image</label>
+                        <div class="upload-area" onclick="document.getElementById('producerHeroFile').click()">
+                            <div class="upload-icon">🖼️</div>
+                            <p>Upload Hero Image</p>
+                        </div>
+                        <input type="file" id="producerHeroFile" accept="image/*" style="display: none;" onchange="handleProducerHeroUpload(event)">
+                        <img id="producerHeroPreview" class="image-preview">
                     </div>
                 </div>
+                
                 <div class="form-row">
                     <div class="form-group">
                         <label>Rating (0-5) *</label>
@@ -442,6 +527,8 @@
             </div>
             <form id="animalForm">
                 <input type="hidden" id="animalId">
+                <input type="hidden" id="animalImageUrlHidden">
+                
                 <div class="form-group">
                     <label>Producer *</label>
                     <select id="animalProducer" required>
@@ -477,8 +564,13 @@
                     <textarea id="animalPersonality" rows="3"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Image URL</label>
-                    <input type="url" id="animalImageUrl">
+                    <label>Animal Image</label>
+                    <div class="upload-area" onclick="document.getElementById('animalImageFile').click()">
+                        <div class="upload-icon">🐑</div>
+                        <p>Upload Animal Photo</p>
+                    </div>
+                    <input type="file" id="animalImageFile" accept="image/*" style="display: none;" onchange="handleAnimalImageUpload(event)">
+                    <img id="animalImagePreview" class="image-preview">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -515,6 +607,8 @@
             </div>
             <form id="imageForm">
                 <input type="hidden" id="imageId">
+                <input type="hidden" id="siteImageUrlHidden">
+                
                 <div class="form-row">
                     <div class="form-group">
                         <label>Page *</label>
@@ -537,8 +631,13 @@
                     <input type="text" id="imageDescription" placeholder="What is this image for?">
                 </div>
                 <div class="form-group">
-                    <label>Image URL *</label>
-                    <input type="url" id="imageUrl" required placeholder="https://...">
+                    <label>Upload Image *</label>
+                    <div class="upload-area" onclick="document.getElementById('siteImageFile').click()">
+                        <div class="upload-icon">🖼️</div>
+                        <p>Click to upload site image</p>
+                    </div>
+                    <input type="file" id="siteImageFile" accept="image/*" style="display: none;" onchange="handleSiteImageUpload(event)">
+                    <img id="siteImagePreview" class="image-preview">
                 </div>
                 <div class="form-group">
                     <label>Alt Text</label>
@@ -560,7 +659,10 @@
         const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log('✅ Supabase initialized:', supabase);
+        console.log('✅ Supabase initialized');
+
+        // Storage bucket name
+        const STORAGE_BUCKET = 'site-images';
 
         // Global state
         let posts = [];
@@ -572,7 +674,145 @@
         let currentAnimalEditId = null;
         let currentImageEditId = null;
 
-        // ==================== POSTS MANAGER ====================
+        // ==================== IMAGE UPLOAD FUNCTIONS ====================
+        
+        async function uploadImage(file, folder = '') {
+            try {
+                // Generate unique filename
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${folder}${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+                
+                console.log('Uploading:', fileName);
+                
+                // Upload to Supabase Storage
+                const { data, error } = await supabase.storage
+                    .from(STORAGE_BUCKET)
+                    .upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+
+                if (error) throw error;
+
+                // Get public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from(STORAGE_BUCKET)
+                    .getPublicUrl(fileName);
+
+                console.log('✅ Upload successful:', publicUrl);
+                return publicUrl;
+            } catch (error) {
+                console.error('❌ Upload error:', error);
+                alert('Error uploading image: ' + error.message + '\n\nMake sure you have created a public bucket named "site-images" in Supabase Storage!');
+                throw error;
+            }
+        }
+
+        // Post Image Upload
+        async function handlePostImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById('postImagePreview');
+            const progress = document.getElementById('postImageProgress');
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+
+            // Show progress
+            progress.classList.add('show');
+
+            try {
+                const url = await uploadImage(file, 'posts/');
+                document.getElementById('postImageUrl').value = url;
+                progress.classList.remove('show');
+            } catch (error) {
+                progress.classList.remove('show');
+            }
+        }
+
+        // Producer Avatar Upload
+        async function handleProducerAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById('producerAvatarPreview');
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+
+            try {
+                const url = await uploadImage(file, 'producers/avatars/');
+                document.getElementById('producerAvatarUrlHidden').value = url;
+            } catch (error) {}
+        }
+
+        // Producer Hero Upload
+        async function handleProducerHeroUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById('producerHeroPreview');
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+
+            try {
+                const url = await uploadImage(file, 'producers/heroes/');
+                document.getElementById('producerHeroUrlHidden').value = url;
+            } catch (error) {}
+        }
+
+        // Animal Image Upload
+        async function handleAnimalImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById('animalImagePreview');
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+
+            try {
+                const url = await uploadImage(file, 'animals/');
+                document.getElementById('animalImageUrlHidden').value = url;
+            } catch (error) {}
+        }
+
+        // Site Image Upload
+        async function handleSiteImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById('siteImagePreview');
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.classList.add('show');
+            };
+            reader.readAsDataURL(file);
+
+            try {
+                const url = await uploadImage(file, 'site/');
+                document.getElementById('siteImageUrlHidden').value = url;
+            } catch (error) {}
+        }
+
+        // ==================== POSTS MANAGER (keeping same as before) ====================
         async function loadPosts() {
             try {
                 console.log('Loading posts from Supabase...');
@@ -639,6 +879,8 @@
             document.getElementById('modalTitle').textContent = 'New Post';
             document.getElementById('postForm').reset();
             document.getElementById('postId').value = '';
+            document.getElementById('postImageUrl').value = '';
+            document.getElementById('postImagePreview').classList.remove('show');
             document.getElementById('postModal').style.display = 'block';
         }
 
@@ -654,10 +896,17 @@
             document.getElementById('postCategory').value = post.category;
             document.getElementById('postExcerpt').value = post.excerpt;
             document.getElementById('postContent').value = post.content;
-            document.getElementById('postImage').value = post.image || '';
+            document.getElementById('postImageUrl').value = post.image || '';
             document.getElementById('postAuthor').value = post.author;
             document.getElementById('postReadTime').value = post.read_time;
             document.getElementById('postStatus').value = post.status;
+            
+            // Show existing image
+            if (post.image) {
+                document.getElementById('postImagePreview').src = post.image;
+                document.getElementById('postImagePreview').classList.add('show');
+            }
+            
             document.getElementById('postModal').style.display = 'block';
         }
 
@@ -677,6 +926,7 @@
         function closePostModal() {
             document.getElementById('postModal').style.display = 'none';
             document.getElementById('postForm').reset();
+            document.getElementById('postImagePreview').classList.remove('show');
             currentPostEditId = null;
         }
 
@@ -689,7 +939,7 @@
                 category: document.getElementById('postCategory').value,
                 excerpt: document.getElementById('postExcerpt').value,
                 content: document.getElementById('postContent').value,
-                image: document.getElementById('postImage').value || null,
+                image: document.getElementById('postImageUrl').value || null,
                 author: document.getElementById('postAuthor').value,
                 read_time: parseInt(document.getElementById('postReadTime').value),
                 status: document.getElementById('postStatus').value,
@@ -797,6 +1047,10 @@
             document.getElementById('producerModalTitle').textContent = 'New Producer';
             document.getElementById('producerForm').reset();
             document.getElementById('producerId').value = '';
+            document.getElementById('producerAvatarUrlHidden').value = '';
+            document.getElementById('producerHeroUrlHidden').value = '';
+            document.getElementById('producerAvatarPreview').classList.remove('show');
+            document.getElementById('producerHeroPreview').classList.remove('show');
             document.getElementById('producerSustainable').checked = true;
             document.getElementById('producerActive').checked = true;
             document.getElementById('producerModal').style.display = 'block';
@@ -816,8 +1070,8 @@
             document.getElementById('producerCountry').value = producer.country;
             document.getElementById('producerDescription').value = producer.description;
             document.getElementById('producerStory').value = producer.story || '';
-            document.getElementById('producerAvatarUrl').value = producer.avatar_url || '';
-            document.getElementById('producerHeroUrl').value = producer.hero_image_url || '';
+            document.getElementById('producerAvatarUrlHidden').value = producer.avatar_url || '';
+            document.getElementById('producerHeroUrlHidden').value = producer.hero_image_url || '';
             document.getElementById('producerRating').value = producer.rating;
             document.getElementById('producerReviews').value = producer.review_count;
             document.getElementById('producerSustainable').checked = producer.is_sustainable;
@@ -829,6 +1083,17 @@
             document.getElementById('producerWoolType').value = producer.wool_type || '';
             document.getElementById('producerProcessing').value = producer.processing_options ? producer.processing_options.join(', ') : '';
             document.getElementById('producerActive').checked = producer.is_active;
+            
+            // Show existing images
+            if (producer.avatar_url) {
+                document.getElementById('producerAvatarPreview').src = producer.avatar_url;
+                document.getElementById('producerAvatarPreview').classList.add('show');
+            }
+            if (producer.hero_image_url) {
+                document.getElementById('producerHeroPreview').src = producer.hero_image_url;
+                document.getElementById('producerHeroPreview').classList.add('show');
+            }
+            
             document.getElementById('producerModal').style.display = 'block';
         }
 
@@ -848,6 +1113,8 @@
         function closeProducerModal() {
             document.getElementById('producerModal').style.display = 'none';
             document.getElementById('producerForm').reset();
+            document.getElementById('producerAvatarPreview').classList.remove('show');
+            document.getElementById('producerHeroPreview').classList.remove('show');
             currentProducerEditId = null;
         }
 
@@ -867,8 +1134,8 @@
                 country: document.getElementById('producerCountry').value,
                 description: document.getElementById('producerDescription').value,
                 story: document.getElementById('producerStory').value || null,
-                avatar_url: document.getElementById('producerAvatarUrl').value || null,
-                hero_image_url: document.getElementById('producerHeroUrl').value || null,
+                avatar_url: document.getElementById('producerAvatarUrlHidden').value || null,
+                hero_image_url: document.getElementById('producerHeroUrlHidden').value || null,
                 rating: parseFloat(document.getElementById('producerRating').value),
                 review_count: parseInt(document.getElementById('producerReviews').value),
                 is_sustainable: document.getElementById('producerSustainable').checked,
@@ -988,6 +1255,8 @@
             document.getElementById('animalModalTitle').textContent = 'New Animal';
             document.getElementById('animalForm').reset();
             document.getElementById('animalId').value = '';
+            document.getElementById('animalImageUrlHidden').value = '';
+            document.getElementById('animalImagePreview').classList.remove('show');
             await loadProducersDropdown();
             document.getElementById('animalAvailable').checked = true;
             document.getElementById('animalCurrency').value = 'EUR';
@@ -1028,11 +1297,18 @@
             document.getElementById('animalAge').value = animal.age || '';
             document.getElementById('animalColor').value = animal.color || '';
             document.getElementById('animalPersonality').value = animal.personality || '';
-            document.getElementById('animalImageUrl').value = animal.image_url || '';
+            document.getElementById('animalImageUrlHidden').value = animal.image_url || '';
             document.getElementById('animalPrice').value = animal.price_per_year;
             document.getElementById('animalCurrency').value = animal.currency;
             document.getElementById('animalAvailable').checked = animal.is_available;
             document.getElementById('animalFeatured').checked = animal.is_featured;
+            
+            // Show existing image
+            if (animal.image_url) {
+                document.getElementById('animalImagePreview').src = animal.image_url;
+                document.getElementById('animalImagePreview').classList.add('show');
+            }
+            
             document.getElementById('animalModal').style.display = 'block';
         }
 
@@ -1053,6 +1329,7 @@
         function closeAnimalModal() {
             document.getElementById('animalModal').style.display = 'none';
             document.getElementById('animalForm').reset();
+            document.getElementById('animalImagePreview').classList.remove('show');
             currentAnimalEditId = null;
         }
 
@@ -1067,7 +1344,7 @@
                 age: parseInt(document.getElementById('animalAge').value) || null,
                 color: document.getElementById('animalColor').value || null,
                 personality: document.getElementById('animalPersonality').value || null,
-                image_url: document.getElementById('animalImageUrl').value || null,
+                image_url: document.getElementById('animalImageUrlHidden').value || null,
                 price_per_year: parseFloat(document.getElementById('animalPrice').value),
                 currency: document.getElementById('animalCurrency').value,
                 is_available: document.getElementById('animalAvailable').checked,
@@ -1177,6 +1454,8 @@
             document.getElementById('imageModalTitle').textContent = 'New Site Image';
             document.getElementById('imageForm').reset();
             document.getElementById('imageId').value = '';
+            document.getElementById('siteImageUrlHidden').value = '';
+            document.getElementById('siteImagePreview').classList.remove('show');
             document.getElementById('imageActive').checked = true;
             document.getElementById('imageModal').style.display = 'block';
         }
@@ -1191,9 +1470,16 @@
             document.getElementById('imagePage').value = image.page;
             document.getElementById('imageSection').value = image.section;
             document.getElementById('imageDescription').value = image.description || '';
-            document.getElementById('imageUrl').value = image.image_url;
+            document.getElementById('siteImageUrlHidden').value = image.image_url;
             document.getElementById('imageAltText').value = image.alt_text || '';
             document.getElementById('imageActive').checked = image.is_active;
+            
+            // Show existing image
+            if (image.image_url) {
+                document.getElementById('siteImagePreview').src = image.image_url;
+                document.getElementById('siteImagePreview').classList.add('show');
+            }
+            
             document.getElementById('imageModal').style.display = 'block';
         }
 
@@ -1213,6 +1499,7 @@
         function closeImageModal() {
             document.getElementById('imageModal').style.display = 'none';
             document.getElementById('imageForm').reset();
+            document.getElementById('siteImagePreview').classList.remove('show');
             currentImageEditId = null;
         }
 
@@ -1223,11 +1510,16 @@
                 page: document.getElementById('imagePage').value,
                 section: document.getElementById('imageSection').value,
                 description: document.getElementById('imageDescription').value || null,
-                image_url: document.getElementById('imageUrl').value,
+                image_url: document.getElementById('siteImageUrlHidden').value,
                 alt_text: document.getElementById('imageAltText').value || null,
                 is_active: document.getElementById('imageActive').checked,
                 updated_at: new Date().toISOString()
             };
+
+            if (!imageData.image_url) {
+                alert('Please upload an image first!');
+                return;
+            }
 
             try {
                 if (currentImageEditId) {
@@ -1275,6 +1567,26 @@
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 console.log('🚀 Initializing CMS...');
+                
+                // Check if storage bucket exists
+                const { data: buckets } = await supabase.storage.listBuckets();
+                const hasBucket = buckets?.some(b => b.name === STORAGE_BUCKET);
+                
+                if (!hasBucket) {
+                    console.warn('⚠️  Storage bucket "site-images" not found!');
+                    console.log('📝 Creating bucket...');
+                    const { error } = await supabase.storage.createBucket(STORAGE_BUCKET, {
+                        public: true,
+                        fileSizeLimit: 5242880 // 5MB
+                    });
+                    if (error) {
+                        console.error('❌ Could not create bucket:', error);
+                        alert('Please create a public storage bucket named "site-images" in Supabase Storage.');
+                    } else {
+                        console.log('✅ Bucket created successfully!');
+                    }
+                }
+                
                 await loadPosts();
                 console.log('✅ CMS initialized successfully!');
             } catch (error) {
