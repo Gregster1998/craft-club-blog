@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CMS Admin | International Craft Club</title>
+    
+    <!-- Load Supabase FIRST -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         * {
             margin: 0;
@@ -26,7 +30,6 @@
             color: var(--text-dark);
         }
 
-        /* CMS Container */
         .cms-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -75,7 +78,6 @@
             color: var(--terracotta);
         }
 
-        /* Tab Content */
         .tab-content {
             display: none;
         }
@@ -187,11 +189,13 @@
             gap: 0.75rem;
             color: var(--text-muted);
             font-size: 0.9rem;
+            flex-wrap: wrap;
         }
 
         .post-actions {
             display: flex;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .post-category {
@@ -300,7 +304,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Action Bar */
         .action-bar {
             display: flex;
             justify-content: space-between;
@@ -316,11 +319,22 @@
             display: flex;
             gap: 1rem;
         }
+
+        .producer-avatar, .animal-thumb {
+            background: #e5e5e5;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .image-thumb {
+            background: #e5e5e5;
+            background-size: cover;
+            background-position: center;
+        }
     </style>
 </head>
 <body>
     <div class="cms-container">
-        <!-- Header -->
         <div class="cms-header">
             <div>
                 <h1>Content Management System</h1>
@@ -329,7 +343,6 @@
             <a href="index.html" class="btn btn-secondary">← Back to Site</a>
         </div>
 
-        <!-- Tabs -->
         <div class="tabs">
             <button class="tab active" data-tab="posts" onclick="switchTab('posts')">📝 Posts</button>
             <button class="tab" data-tab="producers" onclick="switchTab('producers')">🐑 Producers</button>
@@ -339,7 +352,6 @@
 
         <!-- POSTS TAB -->
         <div id="posts-tab" class="tab-content active">
-            <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Total Posts</h3>
@@ -354,21 +366,16 @@
                     <div class="number" id="draftPosts">0</div>
                 </div>
             </div>
-
-            <!-- Action Bar -->
             <div class="action-bar">
                 <div class="action-bar-left">
                     <button class="btn btn-primary" onclick="openNewPostModal()">+ New Post</button>
                 </div>
             </div>
-
-            <!-- Posts List -->
             <div id="postsList"></div>
         </div>
 
         <!-- PRODUCERS TAB -->
         <div id="producers-tab" class="tab-content">
-            <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Total Producers</h3>
@@ -383,21 +390,16 @@
                     <div class="number" id="totalAnimals">0</div>
                 </div>
             </div>
-
-            <!-- Action Bar -->
             <div class="action-bar">
                 <div class="action-bar-left">
                     <button class="btn btn-primary" onclick="openNewProducerModal()">+ New Producer</button>
                 </div>
             </div>
-
-            <!-- Producers List -->
             <div id="producersList"></div>
         </div>
 
         <!-- ANIMALS TAB -->
         <div id="animals-tab" class="tab-content">
-            <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Total Animals</h3>
@@ -412,21 +414,16 @@
                     <div class="number" id="adoptedAnimals">0</div>
                 </div>
             </div>
-
-            <!-- Action Bar -->
             <div class="action-bar">
                 <div class="action-bar-left">
                     <button class="btn btn-primary" onclick="openNewAnimalModal()">+ New Animal</button>
                 </div>
             </div>
-
-            <!-- Animals List -->
             <div id="animalsList"></div>
         </div>
 
         <!-- SITE IMAGES TAB -->
         <div id="images-tab" class="tab-content">
-            <!-- Stats -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <h3>Total Images</h3>
@@ -441,92 +438,12 @@
                     <div class="number" id="pagesWithImages">0</div>
                 </div>
             </div>
-
-            <!-- Action Bar -->
             <div class="action-bar">
                 <div class="action-bar-left">
                     <button class="btn btn-primary" onclick="openNewImageModal()">+ New Image</button>
                 </div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">Manage all images used across your website</p>
             </div>
-
-            <!-- Images List -->
             <div id="siteImagesList"></div>
-        </div>
-    </div>
-
-    <!-- MODALS -->
-    <!-- Post Modal -->
-    <div id="postModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">New Post</h2>
-                <button class="close-btn" onclick="closeModal()">×</button>
-            </div>
-            <form id="postForm">
-                <input type="hidden" id="postId">
-                
-                <div class="form-group">
-                    <label>Title *</label>
-                    <input type="text" id="postTitle" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Slug *</label>
-                        <input type="text" id="postSlug" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Category *</label>
-                        <select id="postCategory" required>
-                            <option value="slow-living">Slow Living</option>
-                            <option value="techniques">Techniques</option>
-                            <option value="tutorials">Tutorials</option>
-                            <option value="community">Community</option>
-                            <option value="leather-craft">Leather Craft</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Excerpt *</label>
-                    <textarea id="postExcerpt" rows="3" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Content (Markdown supported) *</label>
-                    <textarea id="postContent" rows="15" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Featured Image URL</label>
-                    <input type="url" id="postImage">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Author *</label>
-                        <input type="text" id="postAuthor" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Read Time (minutes) *</label>
-                        <input type="number" id="postReadTime" min="1" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Status *</label>
-                    <select id="postStatus" required>
-                        <option value="draft">Draft</option>
-                        <option value="published">Published</option>
-                    </select>
-                </div>
-
-                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Post</button>
-                </div>
-            </form>
         </div>
     </div>
 
@@ -591,17 +508,17 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Rating (0-5) *</label>
-                        <input type="number" id="producerRating" min="0" max="5" step="0.1" required>
+                        <input type="number" id="producerRating" min="0" max="5" step="0.1" value="5" required>
                     </div>
                     <div class="form-group">
                         <label>Review Count *</label>
-                        <input type="number" id="producerReviews" min="0" required>
+                        <input type="number" id="producerReviews" min="0" value="0" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <h4 style="margin-bottom: 1rem;">Certifications</h4>
-                    <label><input type="checkbox" id="producerSustainable"> Sustainable</label><br>
+                    <label><input type="checkbox" id="producerSustainable" checked> Sustainable</label><br>
                     <label><input type="checkbox" id="producerOrganic"> Organic Certified</label><br>
                     <label><input type="checkbox" id="producerAnimalWelfare"> Animal Welfare Approved</label><br>
                     <label><input type="checkbox" id="producerHeritage"> Heritage Breed Preservation</label>
@@ -748,7 +665,7 @@
                     </div>
                     <div class="form-group">
                         <label>Section *</label>
-                        <select id="imageSection" required>
+                        <select id="imageSection" required disabled>
                             <option value="">Select a page first...</option>
                         </select>
                     </div>
@@ -789,9 +706,17 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="supabase-client.js"></script>
-    <script src="posts-manager.js"></script>
+    <script>
+        // Initialize Supabase (already loaded from CDN)
+        const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        console.log('Supabase initialized:', supabase);
+    </script>
+
+    <!-- Load all managers AFTER Supabase is initialized -->
     <script src="producers-manager.js"></script>
     <script src="animals-manager.js"></script>
     <script src="site-images-manager.js"></script>
@@ -799,24 +724,18 @@
     <script>
         // Tab switching
         function switchTab(tabName) {
-            // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
             
-            // Remove active class from all tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // Show selected tab
             document.getElementById(tabName + '-tab').classList.add('active');
             document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
             
-            // Load data for the selected tab
-            if (tabName === 'posts') {
-                loadPosts();
-            } else if (tabName === 'producers') {
+            if (tabName === 'producers') {
                 loadProducers();
             } else if (tabName === 'animals') {
                 loadAnimals();
@@ -828,21 +747,18 @@
         // Initialize on page load
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Initialize Supabase
-                await initSupabase();
-                
-                // Load initial data
-                await loadPosts();
-                await updateStats();
+                console.log('Initializing CMS...');
+                await loadProducers();
+                await updateProducersStats();
             } catch (error) {
                 console.error('Initialization error:', error);
-                alert('Error connecting to database. Please check your Supabase configuration.');
+                alert('Error connecting to database. Check console for details.');
             }
         });
 
         // Close modals when clicking outside
         window.onclick = function(event) {
-            const modals = ['postModal', 'producerModal', 'animalModal', 'imageModal'];
+            const modals = ['producerModal', 'animalModal', 'imageModal'];
             modals.forEach(modalId => {
                 const modal = document.getElementById(modalId);
                 if (event.target === modal) {
@@ -850,6 +766,37 @@
                 }
             });
         }
+
+        // Auto-generate slug from producer name
+        document.getElementById('producerName')?.addEventListener('input', (e) => {
+            if (!currentProducerEditId) {
+                const slug = e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '');
+                document.getElementById('producerSlug').value = slug;
+            }
+        });
+
+        // Test Supabase connection
+        async function testConnection() {
+            try {
+                const { data, error } = await supabase
+                    .from('producers')
+                    .select('count');
+                
+                if (error) throw error;
+                console.log('✅ Supabase connection successful!');
+                return true;
+            } catch (error) {
+                console.error('❌ Supabase connection failed:', error);
+                alert('Database connection failed. Please check your Supabase configuration.');
+                return false;
+            }
+        }
+
+        // Run connection test
+        testConnection();
     </script>
 </body>
 </html>
