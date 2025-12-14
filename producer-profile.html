@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Highland Meadows Farm - International Craft Club</title>
+    <title>Producer Profile - International Craft Club</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Load Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --terracotta: #A0695F;
             --dark-brown: #3C2F2F;
@@ -26,20 +24,15 @@
             --sage-green: rgba(134, 168, 153, 0.15);
             --sage-green-dark: #86A899;
         }
-
         body {
             font-family: 'Inter', -apple-system, sans-serif;
             color: var(--text-dark);
             line-height: 1.6;
             background: var(--background);
         }
-
-        h1, h2, h3 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 500;
-        }
-
-        /* Header/Navigation */
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 500; }
+        
+        /* Header */
         header {
             position: fixed;
             top: 0;
@@ -49,11 +42,6 @@
             padding: 1.5rem 0;
             border-bottom: 1px solid rgba(160, 105, 95, 0.1);
         }
-
-        nav {
-            width: 100%;
-        }
-
         .nav-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -62,148 +50,93 @@
             justify-content: space-between;
             align-items: center;
         }
-
-        .logo-section {
-            display: flex;
-            flex-direction: column;
-        }
-
         .logo {
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
-            font-weight: 500;
             color: var(--text-dark);
             text-decoration: none;
-            line-height: 1.2;
         }
-
-        .tagline {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            font-style: italic;
-            font-weight: 300;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 3rem;
-            align-items: center;
-        }
-
+        .nav-links { display: flex; gap: 3rem; align-items: center; }
         .nav-links a {
             text-decoration: none;
             color: var(--text-dark);
             font-size: 1rem;
-            font-weight: 400;
             transition: color 0.3s;
         }
-
-        .nav-links a:hover {
-            color: var(--terracotta);
-        }
-
+        .nav-links a:hover { color: var(--terracotta); }
         .nav-cta {
             background: var(--terracotta);
             color: white !important;
-            padding: 0.75rem 1.75rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 8px;
-            font-weight: 500;
         }
-
-        .nav-cta:hover {
-            background: var(--dark-brown);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--terracotta);
-        }
-
-        /* Hero Section */
+        
+        /* Hero */
         .hero-banner {
-            margin-top: 80px;
-            height: 400px;
+            margin-top: 100px;
+            height: 500px;
             overflow: hidden;
         }
-
         .hero-banner img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
+        
         /* Profile Card */
         .profile-container {
             max-width: 1200px;
-            margin: -80px auto 0;
-            padding: 0 3rem 4rem;
+            margin: -100px auto 0;
+            padding: 0 3rem;
             position: relative;
             z-index: 10;
         }
-
         .profile-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 3rem;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             display: flex;
-            gap: 2rem;
-            align-items: start;
+            gap: 3rem;
         }
-
         .profile-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: var(--light-beige);
+            background: #e5e5e5;
             flex-shrink: 0;
         }
-
-        .profile-info {
-            flex: 1;
-        }
-
+        .profile-info { flex: 1; }
         .profile-header {
             display: flex;
             align-items: center;
             gap: 1rem;
             margin-bottom: 1rem;
         }
-
-        .profile-header h1 {
-            font-size: 2.5rem;
-            margin-right: 1rem;
-        }
-
+        .profile-header h1 { font-size: 2.5rem; }
         .sustainable-badge {
-            background: var(--sage-green-dark);
-            color: white;
+            background: var(--sage-green);
+            color: var(--sage-green-dark);
             padding: 0.5rem 1rem;
             border-radius: 50px;
             font-size: 0.875rem;
-            display: inline-flex;
+            font-weight: 500;
+            display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-
         .profile-meta {
             display: flex;
-            align-items: center;
             gap: 2rem;
             margin-bottom: 1.5rem;
-            color: var(--text-muted);
+            flex-wrap: wrap;
         }
-
-        .profile-meta span {
+        .producer-location {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            color: var(--text-muted);
         }
-
         .rating {
             display: flex;
             align-items: center;
@@ -211,13 +144,12 @@
             color: var(--terracotta);
             font-weight: 500;
         }
-
         .profile-description {
             color: var(--text-muted);
             font-size: 1.125rem;
             line-height: 1.8;
         }
-
+        
         /* Main Content */
         .main-content {
             max-width: 1200px;
@@ -227,30 +159,11 @@
             grid-template-columns: 1fr 380px;
             gap: 3rem;
         }
-
-        .content-left {
-            display: flex;
-            flex-direction: column;
-            gap: 4rem;
-        }
-
-        .story-section h2 {
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .story-section p {
-            color: var(--text-muted);
-            line-height: 1.8;
-            font-size: 1.05rem;
-        }
-
-        /* Animals Section */
-        .animals-section h2 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
+        .content-left { display: flex; flex-direction: column; gap: 4rem; }
+        .story-section h2, .animals-section h2 { font-size: 2rem; margin-bottom: 1.5rem; }
+        .story-section p { color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; }
+        
+        /* Animals */
         .animal-card {
             background: white;
             border-radius: 12px;
@@ -261,58 +174,37 @@
             grid-template-columns: 200px 1fr auto;
             gap: 2rem;
             align-items: start;
-            position: relative;
         }
-
         .animal-image {
             width: 200px;
             height: 200px;
             border-radius: 12px;
             overflow: hidden;
         }
-
         .animal-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
-        .animal-info h3 {
-            font-size: 1.75rem;
-            margin-bottom: 0.5rem;
-        }
-
+        .animal-info h3 { font-size: 1.75rem; margin-bottom: 0.5rem; }
         .animal-meta {
             display: flex;
             gap: 1.5rem;
             margin-bottom: 1rem;
             color: var(--text-muted);
         }
-
-        .animal-meta span {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .animal-description {
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-
+        .animal-description { color: var(--text-muted); line-height: 1.7; }
         .animal-actions {
             display: flex;
             flex-direction: column;
             align-items: end;
             gap: 1rem;
         }
-
         .animal-price {
             font-size: 1.5rem;
             font-weight: 600;
             color: var(--terracotta);
         }
-
         .adopt-btn {
             padding: 1rem 2rem;
             background: transparent;
@@ -327,12 +219,10 @@
             align-items: center;
             gap: 0.5rem;
         }
-
         .adopt-btn:hover {
             background: var(--terracotta);
             color: white;
         }
-
         .adopted-badge {
             background: var(--sage-green);
             color: var(--sage-green-dark);
@@ -341,21 +231,15 @@
             font-size: 0.875rem;
             font-weight: 500;
         }
-
+        
         /* Sidebar */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
+        .sidebar { display: flex; flex-direction: column; gap: 2rem; }
         .info-card {
             background: white;
             border-radius: 12px;
             padding: 2rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-
         .info-card h3 {
             display: flex;
             align-items: center;
@@ -363,640 +247,100 @@
             font-size: 1.25rem;
             margin-bottom: 1.5rem;
         }
-
         .info-row {
             display: flex;
             justify-content: space-between;
             padding: 0.75rem 0;
             border-bottom: 1px solid var(--light-beige);
         }
-
-        .info-row:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            color: var(--text-muted);
-        }
-
-        .info-value {
-            font-weight: 500;
-            text-align: right;
-        }
-
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: var(--text-muted); }
+        .info-value { font-weight: 500; text-align: right; }
         .processing-options {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
             margin-top: 0.5rem;
         }
-
         .processing-tag {
             background: var(--light-beige);
             padding: 0.5rem 1rem;
             border-radius: 50px;
             font-size: 0.875rem;
         }
-
         .certifications-list {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.75rem;
         }
-
         .cert-item {
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
-
         .cert-icon {
             width: 24px;
             height: 24px;
             border-radius: 50%;
             background: var(--sage-green);
-            color: var(--sage-green-dark);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.75rem;
+            flex-shrink: 0;
         }
-
-        .contact-btn {
-            width: 100%;
-            padding: 1rem 2rem;
-            background: transparent;
-            color: var(--terracotta);
-            border: 2px solid var(--terracotta);
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .contact-btn:hover {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        /* Newsletter Section */
-        .newsletter {
-            background: white;
-            padding: 4rem 3rem;
-            border-top: 1px solid var(--light-beige);
-        }
-
-        .newsletter-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 3rem;
-        }
-
-        .newsletter h2 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .newsletter p {
+        .cert-icon svg { color: var(--sage-green-dark); }
+        
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.2rem;
             color: var(--text-muted);
-        }
-
-        .newsletter-form {
-            display: flex;
-            gap: 1rem;
-            min-width: 500px;
-        }
-
-        .newsletter-form input {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            border: 1.5px solid var(--light-beige);
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .newsletter-form button {
-            padding: 1rem 2rem;
-            background: var(--terracotta);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .newsletter-form button:hover {
-            background: var(--dark-brown);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--light-beige);
-            padding: 4rem 3rem 2rem;
-        }
-
-        .footer-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr;
-            gap: 4rem;
-            margin-bottom: 3rem;
-        }
-
-        .footer-brand h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-brand p {
-            color: var(--text-muted);
-            line-height: 1.7;
-            margin-top: 1rem;
-        }
-
-        .footer-section h4 {
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-section a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-section a:hover {
-            color: var(--terracotta);
-        }
-
-        .footer-bottom {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(160, 105, 95, 0.1);
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-
-        .footer-bottom a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-left: 2rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-
-            .animal-card {
-                grid-template-columns: 1fr;
-            }
-
-            .animal-actions {
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-container {
-                padding: 0 1.5rem;
-            }
-
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                flex-direction: column;
-                padding: 1.5rem;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                gap: 1rem;
-            }
-
-            .nav-links.active {
-                display: flex;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .profile-card {
-                flex-direction: column;
-                padding: 2rem;
-            }
-
-            .profile-header h1 {
-                font-size: 2rem;
-            }
-
-            .newsletter-container {
-                flex-direction: column;
-            }
-
-            .newsletter-form {
-                min-width: auto;
-                width: 100%;
-                flex-direction: column;
-            }
-
-            .footer-container {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .footer-bottom a {
-                margin: 0.5rem 0 0 0;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
-    <nav>
-        <div class="nav-container">
-            <div class="logo-section">
+        <nav>
+            <div class="nav-container">
                 <a href="index.html" class="logo">International Craft Club</a>
-                <span class="tagline">A Home for Makers Worldwide</span>
+                <div class="nav-links">
+                    <a href="journal.html">Journal</a>
+                    <a href="fiber-producers.html">Adopt an Animal</a>
+                    <a href="about-members.html">About Members Area</a>
+                    <a href="member-area-ultimate.html" class="nav-cta">Login / Join</a>
+                </div>
             </div>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
-            <div class="nav-links" id="navLinks">
-                <a href="journal.html">Journal</a>
-                <a href="fiber-producers.html">Fiber Producers</a>
-                <a href="landing-page.html">About Members Area</a>
-                <a href="login.html" class="nav-cta">Login / Join</a>
-            </div>
-        </div>
-    </nav>
+        </nav>
     </header>
 
-    <!-- Hero Banner -->
-    <div class="hero-banner">
-        <img src="hero-background.jpg" alt="Highland Meadows Farm">
+    <div id="pageContent">
+        <div class="loading">Loading producer...</div>
     </div>
-
-    <!-- Profile Card -->
-    <div class="profile-container">
-        <div class="profile-card">
-            <div class="profile-avatar"></div>
-            <div class="profile-info">
-                <div class="profile-header">
-                    <h1>Highland Meadows Farm</h1>
-                    <div class="sustainable-badge">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        Sustainable
-                    </div>
-                </div>
-                <div class="profile-meta">
-                    <span>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        Scottish Highlands, UK
-                    </span>
-                    <div class="rating">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                        </svg>
-                        4.9 (47 reviews)
-                    </div>
-                </div>
-                <p class="profile-description">We're a third-generation family farm nestled in the Scottish Highlands, where our Shetland sheep roam freely across ancient pastures. Our commitment to traditional, ethical farming means every fleece tells a story of care, heritage, and respect for the land.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="content-left">
-            <!-- Our Story -->
-            <section class="story-section">
-                <h2>Our Story</h2>
-                <p>What started as my grandfather's small flock in 1952 has grown into a beloved family tradition. Today, we maintain a flock of 120 heritage Shetland sheep, each known by name. We believe in slow farming – no shortcuts, no compromises.</p>
-            </section>
-
-            <!-- Animals Available -->
-            <section class="animals-section">
-                <h2>Animals Available for Adoption</h2>
-
-                <div class="animal-card">
-                    <div class="animal-image">
-                        <img src="hero-background.jpg" alt="Heather">
-                    </div>
-                    <div class="animal-info">
-                        <h3>Heather</h3>
-                        <div class="animal-meta">
-                            <span>4 years</span>
-                            <span>Moorit (brown)</span>
-                        </div>
-                        <p class="animal-description">Curious and friendly, always first to greet visitors</p>
-                    </div>
-                    <div class="animal-actions">
-                        <div class="animal-price">€149/year</div>
-                        <button class="adopt-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                            Adopt Heather
-                        </button>
-                    </div>
-                </div>
-
-                <div class="animal-card">
-                    <div class="animal-image">
-                        <img src="hero-background.jpg" alt="Thistle">
-                    </div>
-                    <div class="animal-info">
-                        <h3>Thistle</h3>
-                        <div class="animal-meta">
-                            <span>2 years</span>
-                            <span>White</span>
-                        </div>
-                        <p class="animal-description">Calm and gentle, produces exceptionally soft fleece</p>
-                    </div>
-                    <div class="animal-actions">
-                        <div class="animal-price">€149/year</div>
-                        <button class="adopt-btn">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                            </svg>
-                            Adopt Thistle
-                        </button>
-                    </div>
-                </div>
-
-                <div class="animal-card">
-                    <div class="animal-image">
-                        <img src="hero-background.jpg" alt="Bramble">
-                    </div>
-                    <div class="animal-info">
-                        <h3>Bramble</h3>
-                        <div class="animal-meta">
-                            <span>5 years</span>
-                            <span>Black</span>
-                        </div>
-                        <p class="animal-description">Bold leader of the flock, stunning jet-black wool</p>
-                    </div>
-                    <div class="animal-actions">
-                        <span class="adopted-badge">Adopted</span>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="info-card">
-                <h3>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="12" y1="8" x2="12" y2="16"></line>
-                        <line x1="8" y1="12" x2="16" y2="12"></line>
-                    </svg>
-                    What You'll Receive
-                </h3>
-                <div class="info-row">
-                    <span class="info-label">Shearing</span>
-                    <span class="info-value">1x per year</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Avg. Yield</span>
-                    <span class="info-value">1.5-2 kg raw fleece</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Wool Type</span>
-                    <span class="info-value">Fine, soft, natural colors</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Processing options:</span>
-                </div>
-                <div class="processing-options">
-                    <span class="processing-tag">Raw fleece</span>
-                    <span class="processing-tag">Washed</span>
-                    <span class="processing-tag">Carded</span>
-                </div>
-            </div>
-
-            <div class="info-card">
-                <h3>Certifications</h3>
-                <div class="certifications-list">
-                    <div class="cert-item">
-                        <div class="cert-icon">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                        <span>Organic Certified</span>
-                    </div>
-                    <div class="cert-item">
-                        <div class="cert-icon">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                        <span>Animal Welfare Approved</span>
-                    </div>
-                    <div class="cert-item">
-                        <div class="cert-icon">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                        </div>
-                        <span>Heritage Breed Preservation</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="contact-btn">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                Contact Producer
-            </button>
-        </div>
-    </div>
-
-    <!-- Newsletter Section -->
-    <section class="newsletter">
-        <div class="newsletter-container">
-            <div>
-                <h2>Stay Inspired</h2>
-                <p>Get craft inspiration, project ideas, and maker stories delivered monthly.</p>
-            </div>
-            <form class="newsletter-form" onsubmit="handleNewsletter(event)">
-                <input type="email" placeholder="your@email.com" required>
-                <button type="submit">Subscribe</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-brand">
-                <h3>International<br>Craft Club</h3>
-                <p style="font-style: italic; margin-top: 0.5rem; color: var(--text-muted);">A Home for Makers Worldwide</p>
-                <p>A global community celebrating slow creativity, traditional skills, and the makers who keep them alive.</p>
-            </div>
-            
-            <div class="footer-section">
-                <h4>START HERE</h4>
-                <ul>
-                    <li><a href="about-members.html">About Members Area</a></li>
-                    <li><a href="journal.html">Journal</a></li>
-                    <li><a href="#makers">Meet the Makers</a></li>
-                    <li><a href="#meetups">Local Meetups</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h4>CRAFTS</h4>
-                <ul>
-                    <li><a href="#sewing">Sewing</a></li>
-                    <li><a href="#crochet">Crochet</a></li>
-                    <li><a href="#knitting">Knitting</a></li>
-                    <li><a href="#leather">Leather</a></li>
-                    <li><a href="#embroidery">Embroidery</a></li>
-                    <li><a href="#pottery">Pottery</a></li>
-                    <li><a href="#woodwork">Woodwork</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-section">
-                <h4>CONNECT</h4>
-                <ul>
-                    <li><a href="member-area-ultimate.html">Login / Join</a></li>
-                    <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                        @sewingdiaries
-                    </a></li>
-                    <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                        @crochetdiaries
-                    </a></li>
-                    <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-                        @leathercraft
-                    </a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>© 2024 International Craft Club. Made with care.</p>
-            <div>
-                <a href="#contact">Contact</a>
-                <a href="#terms">Terms</a>
-                <a href="#privacy">Privacy</a>
-            </div>
-        </div>
-    </footer>
 
     <script>
-        function toggleMobileMenu() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('active');
-        }
-
-        function handleNewsletter(event) {
-            event.preventDefault();
-            const email = event.target.querySelector('input[type="email"]').value;
-            alert('Thanks for subscribing! We\'ll send craft inspiration to ' + email);
-            event.target.reset();
-        }
-
-        document.addEventListener('click', function(event) {
-            const nav = document.querySelector('nav');
-            const navLinks = document.getElementById('navLinks');
-            
-            if (!nav.contains(event.target) && navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-            }
-        });
-
-        // Supabase Configuration
         const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let supabase;
-
-        // Initialize Supabase
-        async function initSupabase() {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-            
-            return new Promise((resolve, reject) => {
-                script.onload = () => {
-                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                    resolve();
-                };
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        }
-
-        // Get slug from URL
         function getProducerSlug() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('slug') || urlParams.get('id') || 'highland-meadows';
         }
 
-        // Load producer data
         async function loadProducer() {
             try {
                 const slug = getProducerSlug();
+                console.log('Loading producer:', slug);
                 
-                // Load producer
                 const { data: producer, error: producerError } = await supabase
                     .from('producers')
                     .select('*')
                     .eq('slug', slug)
-                    .eq('is_active', true)
                     .single();
 
                 if (producerError) throw producerError;
+                if (!producer) throw new Error('Producer not found');
 
-                // Load animals for this producer
                 const { data: animals, error: animalsError } = await supabase
                     .from('animals')
                     .select('*')
@@ -1005,134 +349,24 @@
 
                 if (animalsError) throw animalsError;
 
-                // Render everything
-                renderProducer(producer);
-                renderAnimals(animals);
+                renderPage(producer, animals || []);
                 
             } catch (error) {
                 console.error('Error loading producer:', error);
-                document.querySelector('.main-content').innerHTML = `
-                    <div style="text-align: center; padding: 4rem;">
-                        <h2>Producer not found</h2>
-                        <p>The producer you're looking for doesn't exist or is no longer active.</p>
-                        <a href="fiber-producers.html" class="btn-primary" style="margin-top: 2rem; display: inline-block; padding: 1rem 2rem; background: #A0695F; color: white; text-decoration: none; border-radius: 8px;">← Back to Producers</a>
+                document.getElementById('pageContent').innerHTML = `
+                    <div style="text-align: center; padding: 8rem 2rem;">
+                        <h2>Producer Not Found</h2>
+                        <p style="color: var(--text-muted); margin: 1rem 0 2rem;">The producer you're looking for doesn't exist or is no longer active.</p>
+                        <a href="fiber-producers.html" style="display: inline-block; padding: 1rem 2rem; background: var(--terracotta); color: white; text-decoration: none; border-radius: 8px;">← Back to Producers</a>
                     </div>
                 `;
             }
         }
 
-        // Render producer details
-        function renderProducer(producer) {
-            // Update hero image
-            const heroImage = document.querySelector('.hero-banner img');
-            if (heroImage && producer.hero_image_url) {
-                heroImage.src = producer.hero_image_url;
-            }
-
-            // Update avatar
-            const avatar = document.querySelector('.profile-avatar');
-            if (avatar && producer.avatar_url) {
-                avatar.style.backgroundImage = `url('${producer.avatar_url}')`;
-                avatar.style.backgroundSize = 'cover';
-            }
-
-            // Update profile info
-            document.querySelector('.profile-info h1').textContent = producer.name;
-            document.querySelector('.producer-location').innerHTML = `
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-                ${producer.location}, ${producer.country}
-            `;
-            
-            document.querySelector('.rating').innerHTML = `
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                </svg>
-                ${producer.rating} (${producer.review_count} reviews)
-            `;
-
-            document.querySelector('.profile-description').textContent = producer.description;
-
-            // Update story
-            const storySection = document.querySelector('.story-section p');
-            if (storySection && producer.story) {
-                storySection.textContent = producer.story;
-            }
-
-            // Update sustainable badge visibility
-            const sustainableBadge = document.querySelector('.sustainable-badge');
-            if (sustainableBadge && !producer.is_sustainable) {
-                sustainableBadge.style.display = 'none';
-            }
-
-            // Update "What You'll Receive" section
-            updateWhatYoullReceive(producer);
-            
-            // Update certifications
-            updateCertifications(producer);
-        }
-
-        // Update "What You'll Receive" section
-        function updateWhatYoullReceive(producer) {
-            const container = document.querySelector('.info-card');
-            if (!container) return;
-
-            const rows = container.querySelectorAll('.info-row');
-            if (rows.length >= 3) {
-                rows[0].querySelector('.info-value').textContent = producer.shearing_frequency || '1x per year';
-                rows[1].querySelector('.info-value').textContent = producer.avg_yield || 'N/A';
-                rows[2].querySelector('.info-value').textContent = producer.wool_type || 'N/A';
-            }
-
-            // Update processing options
-            const processingContainer = container.querySelector('.processing-options');
-            if (processingContainer && producer.processing_options) {
-                processingContainer.innerHTML = producer.processing_options.map(opt => 
-                    `<span class="processing-tag">${opt}</span>`
-                ).join('');
-            }
-        }
-
-        // Update certifications
-        function updateCertifications(producer) {
-            const certsList = document.querySelector('.certifications-list');
-            if (!certsList) return;
-
-            const certs = [];
-            if (producer.is_organic) certs.push('Organic Certified');
-            if (producer.is_animal_welfare_approved) certs.push('Animal Welfare Approved');
-            if (producer.is_heritage_breed) certs.push('Heritage Breed Preservation');
-
-            certsList.innerHTML = certs.map(cert => `
-                <div class="cert-item">
-                    <div class="cert-icon">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                    </div>
-                    <span>${cert}</span>
-                </div>
-            `).join('');
-        }
-
-        // Render animals
-        function renderAnimals(animals) {
-            const animalsSection = document.querySelector('.animals-section');
-            if (!animalsSection) return;
-
-            const container = animalsSection.querySelector('div');
-            if (!container) {
-                const newContainer = document.createElement('div');
-                animalsSection.appendChild(newContainer);
-            }
-
+        function renderPage(producer, animals) {
             const animalCards = animals.map(animal => {
-                const currency = animal.currency === 'EUR' ? '€' : 
-                               animal.currency === 'USD' ? '$' : 
-                               animal.currency === 'GBP' ? '£' : animal.currency;
-
+                const currency = animal.currency === 'EUR' ? '€' : animal.currency === 'USD' ? '$' : animal.currency === 'GBP' ? '£' : animal.currency;
+                
                 return `
                     <div class="animal-card">
                         <div class="animal-image">
@@ -1141,16 +375,15 @@
                         <div class="animal-info">
                             <h3>${animal.name}</h3>
                             <div class="animal-meta">
-                                <span>${animal.age ? animal.age + ' years' : ''}</span>
-                                ${animal.age && animal.color ? '<span>•</span>' : ''}
-                                <span>${animal.color || ''}</span>
+                                ${animal.age ? `<span>${animal.age} years</span>` : ''}
+                                ${animal.color ? `<span>${animal.color}</span>` : ''}
                             </div>
                             <p class="animal-description">${animal.personality || ''}</p>
                         </div>
                         <div class="animal-actions">
                             ${animal.is_available ? `
                                 <div class="animal-price">${currency}${animal.price_per_year}/year</div>
-                                <button class="adopt-btn" onclick="adoptAnimal('${animal.name}')">
+                                <button class="adopt-btn" onclick="alert('Adoption feature coming soon!')">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                                     </svg>
@@ -1164,32 +397,127 @@
                 `;
             }).join('');
 
-            // Find or create the container after the h2
-            const h2 = animalsSection.querySelector('h2');
-            let cardsContainer = h2.nextElementSibling;
-            
-            if (!cardsContainer || !cardsContainer.classList) {
-                cardsContainer = document.createElement('div');
-                h2.after(cardsContainer);
-            }
-            
-            cardsContainer.innerHTML = animalCards;
+            const certifications = [];
+            if (producer.is_organic) certifications.push('Organic Certified');
+            if (producer.is_animal_welfare_approved) certifications.push('Animal Welfare Approved');
+            if (producer.is_heritage_breed) certifications.push('Heritage Breed Preservation');
+
+            const certsHTML = certifications.map(cert => `
+                <div class="cert-item">
+                    <div class="cert-icon">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <span>${cert}</span>
+                </div>
+            `).join('');
+
+            const processingHTML = (producer.processing_options || []).map(opt => 
+                `<span class="processing-tag">${opt}</span>`
+            ).join('');
+
+            document.getElementById('pageContent').innerHTML = `
+                <div class="hero-banner">
+                    <img src="${producer.hero_image_url || 'hero-background.jpg'}" alt="${producer.name}">
+                </div>
+
+                <div class="profile-container">
+                    <div class="profile-card">
+                        <div class="profile-avatar" style="background-image: url('${producer.avatar_url || ''}'); background-size: cover; background-position: center;"></div>
+                        <div class="profile-info">
+                            <div class="profile-header">
+                                <h1>${producer.name}</h1>
+                                ${producer.is_sustainable ? `
+                                    <div class="sustainable-badge">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        Sustainable
+                                    </div>
+                                ` : ''}
+                            </div>
+                            <div class="profile-meta">
+                                <span class="producer-location">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    ${producer.location}, ${producer.country}
+                                </span>
+                                <div class="rating">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                    ${producer.rating} (${producer.review_count} reviews)
+                                </div>
+                            </div>
+                            <p class="profile-description">${producer.description}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <div class="content-left">
+                        <section class="story-section">
+                            <h2>Our Story</h2>
+                            <p>${producer.story || producer.description}</p>
+                        </section>
+
+                        <section class="animals-section">
+                            <h2>Animals Available for Adoption</h2>
+                            ${animalCards || '<p>No animals available at the moment.</p>'}
+                        </section>
+                    </div>
+
+                    <div class="sidebar">
+                        <div class="info-card">
+                            <h3>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                                </svg>
+                                What You'll Receive
+                            </h3>
+                            <div class="info-row">
+                                <span class="info-label">Shearing</span>
+                                <span class="info-value">${producer.shearing_frequency || 'N/A'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Average Yield</span>
+                                <span class="info-value">${producer.avg_yield || 'N/A'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Wool Type</span>
+                                <span class="info-value">${producer.wool_type || 'N/A'}</span>
+                            </div>
+                            ${processingHTML ? `
+                                <div class="info-row" style="flex-direction: column; align-items: flex-start;">
+                                    <span class="info-label">Processing Options</span>
+                                    <div class="processing-options">${processingHTML}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        ${certifications.length > 0 ? `
+                            <div class="info-card">
+                                <h3>Certifications</h3>
+                                <div class="certifications-list">${certsHTML}</div>
+                            </div>
+                        ` : ''}
+
+                        <div class="info-card">
+                            <button class="adopt-btn" style="width: 100%; justify-content: center;" onclick="alert('Contact feature coming soon!')">
+                                Contact Producer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
-        // Adopt animal action
-        function adoptAnimal(animalName) {
-            alert(`Thank you for your interest in adopting ${animalName}! This would normally redirect to a checkout or contact form. Coming soon!`);
-        }
-
-        // Initialize on page load
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                await initSupabase();
-                await loadProducer();
-            } catch (error) {
-                console.error('Initialization error:', error);
-            }
-        });
+        window.addEventListener('DOMContentLoaded', loadProducer);
     </script>
 </body>
 </html>
