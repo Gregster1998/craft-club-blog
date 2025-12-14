@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Producer Profile - International Craft Club</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Load Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
@@ -32,7 +28,6 @@
         }
         h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 500; }
         
-        /* Header */
         header {
             position: fixed;
             top: 0;
@@ -71,10 +66,9 @@
             border-radius: 8px;
         }
         
-        /* Hero */
         .hero-banner {
             margin-top: 100px;
-            height: 500px;
+            height: 400px;
             overflow: hidden;
         }
         .hero-banner img {
@@ -83,10 +77,9 @@
             object-fit: cover;
         }
         
-        /* Profile Card */
         .profile-container {
             max-width: 1200px;
-            margin: -100px auto 0;
+            margin: -80px auto 0;
             padding: 0 3rem;
             position: relative;
             z-index: 10;
@@ -105,6 +98,8 @@
             border-radius: 50%;
             background: #e5e5e5;
             flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
         }
         .profile-info { flex: 1; }
         .profile-header {
@@ -150,7 +145,6 @@
             line-height: 1.8;
         }
         
-        /* Main Content */
         .main-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -160,10 +154,16 @@
             gap: 3rem;
         }
         .content-left { display: flex; flex-direction: column; gap: 4rem; }
-        .story-section h2, .animals-section h2 { font-size: 2rem; margin-bottom: 1.5rem; }
-        .story-section p { color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; }
+        .story-section h2, .animals-section h2, .reviews-section h2 { 
+            font-size: 2rem; 
+            margin-bottom: 1.5rem; 
+        }
+        .story-section p { 
+            color: var(--text-muted); 
+            line-height: 1.8; 
+            font-size: 1.05rem; 
+        }
         
-        /* Animals */
         .animal-card {
             background: white;
             border-radius: 12px;
@@ -186,14 +186,20 @@
             height: 100%;
             object-fit: cover;
         }
-        .animal-info h3 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+        .animal-info h3 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+        }
         .animal-meta {
             display: flex;
             gap: 1.5rem;
             margin-bottom: 1rem;
             color: var(--text-muted);
         }
-        .animal-description { color: var(--text-muted); line-height: 1.7; }
+        .animal-description {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
         .animal-actions {
             display: flex;
             flex-direction: column;
@@ -232,7 +238,6 @@
             font-weight: 500;
         }
         
-        /* Sidebar */
         .sidebar { display: flex; flex-direction: column; gap: 2rem; }
         .info-card {
             background: white;
@@ -268,27 +273,93 @@
             border-radius: 50px;
             font-size: 0.875rem;
         }
-        .certifications-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
+        
+        /* Reviews Section */
+        .review-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .cert-item {
+        .review-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
-        .cert-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--sage-green);
+        .reviewer-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .review-rating {
+            color: var(--terracotta);
+            font-size: 1.2rem;
+        }
+        .review-date {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        .review-comment {
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-brown);
+            color: white;
+            padding: 4rem 3rem 2rem;
+            margin-top: 4rem;
+        }
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        .footer-brand h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .footer-brand p {
+            color: rgba(255,255,255,0.7);
+            line-height: 1.7;
+        }
+        .footer-section h4 {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .footer-section ul {
+            list-style: none;
+        }
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+        .footer-section a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-section a:hover {
+            color: white;
+        }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            color: rgba(255,255,255,0.5);
         }
-        .cert-icon svg { color: var(--sage-green-dark); }
         
         .loading {
             text-align: center;
@@ -317,6 +388,51 @@
         <div class="loading">Loading producer...</div>
     </div>
 
+    <footer>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>International<br>Craft Club</h3>
+                <p style="font-style: italic; margin-top: 0.5rem; color: rgba(255,255,255,0.5);">A Home for Makers Worldwide</p>
+                <p>A global community celebrating slow creativity, traditional skills, and the makers who keep them alive.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4>START HERE</h4>
+                <ul>
+                    <li><a href="about-members.html">About Members Area</a></li>
+                    <li><a href="journal.html">Journal</a></li>
+                    <li><a href="fiber-producers.html">Adopt an Animal</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>CRAFTS</h4>
+                <ul>
+                    <li><a href="#">Sewing</a></li>
+                    <li><a href="#">Crochet</a></li>
+                    <li><a href="#">Knitting</a></li>
+                    <li><a href="#">Leather</a></li>
+                    <li><a href="#">Embroidery</a></li>
+                    <li><a href="#">Pottery</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>CONNECT</h4>
+                <ul>
+                    <li><a href="member-area-ultimate.html">Login / Join</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2024 International Craft Club. Made with care.</p>
+            <a href="#" style="color: rgba(255,255,255,0.5); text-decoration: none;">Privacy Policy</a>
+        </div>
+    </footer>
+
     <script>
         const SUPABASE_URL = 'https://yzuoujjzupbbekmmymqn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl6dW91amp6dXBiYmVrbW15bXFuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwMjYwOTgsImV4cCI6MjA4MDYwMjA5OH0.Ri9ibTKIin_oA0vsHthU_zbnuNnnKQsXkmF5Es8UJWc';
@@ -330,7 +446,6 @@
         async function loadProducer() {
             try {
                 const slug = getProducerSlug();
-                console.log('Loading producer:', slug);
                 
                 const { data: producer, error: producerError } = await supabase
                     .from('producers')
@@ -349,21 +464,29 @@
 
                 if (animalsError) throw animalsError;
 
-                renderPage(producer, animals || []);
+                const { data: reviews, error: reviewsError } = await supabase
+                    .from('producer_reviews')
+                    .select('*')
+                    .eq('producer_id', producer.id)
+                    .order('created_at', { ascending: false });
+
+                if (reviewsError) throw reviewsError;
+
+                renderPage(producer, animals || [], reviews || []);
                 
             } catch (error) {
                 console.error('Error loading producer:', error);
                 document.getElementById('pageContent').innerHTML = `
                     <div style="text-align: center; padding: 8rem 2rem;">
                         <h2>Producer Not Found</h2>
-                        <p style="color: var(--text-muted); margin: 1rem 0 2rem;">The producer you're looking for doesn't exist or is no longer active.</p>
+                        <p style="color: var(--text-muted); margin: 1rem 0 2rem;">The producer you're looking for doesn't exist.</p>
                         <a href="fiber-producers.html" style="display: inline-block; padding: 1rem 2rem; background: var(--terracotta); color: white; text-decoration: none; border-radius: 8px;">← Back to Producers</a>
                     </div>
                 `;
             }
         }
 
-        function renderPage(producer, animals) {
+        function renderPage(producer, animals, reviews) {
             const animalCards = animals.map(animal => {
                 const currency = animal.currency === 'EUR' ? '€' : animal.currency === 'USD' ? '$' : animal.currency === 'GBP' ? '£' : animal.currency;
                 
@@ -397,21 +520,21 @@
                 `;
             }).join('');
 
-            const certifications = [];
-            if (producer.is_organic) certifications.push('Organic Certified');
-            if (producer.is_animal_welfare_approved) certifications.push('Animal Welfare Approved');
-            if (producer.is_heritage_breed) certifications.push('Heritage Breed Preservation');
-
-            const certsHTML = certifications.map(cert => `
-                <div class="cert-item">
-                    <div class="cert-icon">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
+            const reviewCards = reviews.map(review => {
+                const stars = '⭐'.repeat(review.rating);
+                return `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div>
+                                <div class="reviewer-name">${review.reviewer_name}</div>
+                                <div class="review-date">${new Date(review.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            </div>
+                            <div class="review-rating">${stars}</div>
+                        </div>
+                        <p class="review-comment">${review.comment}</p>
                     </div>
-                    <span>${cert}</span>
-                </div>
-            `).join('');
+                `;
+            }).join('');
 
             const processingHTML = (producer.processing_options || []).map(opt => 
                 `<span class="processing-tag">${opt}</span>`
@@ -424,7 +547,7 @@
 
                 <div class="profile-container">
                     <div class="profile-card">
-                        <div class="profile-avatar" style="background-image: url('${producer.avatar_url || ''}'); background-size: cover; background-position: center;"></div>
+                        <div class="profile-avatar" style="background-image: url('${producer.avatar_url || ''}');"></div>
                         <div class="profile-info">
                             <div class="profile-header">
                                 <h1>${producer.name}</h1>
@@ -468,6 +591,13 @@
                             <h2>Animals Available for Adoption</h2>
                             ${animalCards || '<p>No animals available at the moment.</p>'}
                         </section>
+
+                        ${reviews.length > 0 ? `
+                        <section class="reviews-section">
+                            <h2>Reviews</h2>
+                            ${reviewCards}
+                        </section>
+                        ` : ''}
                     </div>
 
                     <div class="sidebar">
@@ -499,13 +629,6 @@
                                 </div>
                             ` : ''}
                         </div>
-
-                        ${certifications.length > 0 ? `
-                            <div class="info-card">
-                                <h3>Certifications</h3>
-                                <div class="certifications-list">${certsHTML}</div>
-                            </div>
-                        ` : ''}
 
                         <div class="info-card">
                             <button class="adopt-btn" style="width: 100%; justify-content: center;" onclick="alert('Contact feature coming soon!')">

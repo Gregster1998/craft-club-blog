@@ -470,7 +470,43 @@
                     <label>Full Story</label>
                     <textarea id="producerStory" rows="6"></textarea>
                 </div>
-                
+                <!-- WHAT CUSTOMERS RECEIVE -->
+<div class="section-header">
+    <h3>📦 What Customers Will Receive</h3>
+</div>
+
+<div class="form-row">
+    <div class="form-group">
+        <label>Shearing Frequency</label>
+        <input type="text" id="producerShearing" placeholder="e.g., 1x per year, 2x per year">
+    </div>
+    <div class="form-group">
+        <label>Average Yield per Animal</label>
+        <input type="text" id="producerYield" placeholder="e.g., 1.5-2 kg raw fleece">
+    </div>
+</div>
+
+<div class="form-group">
+    <label>Wool/Fiber Type</label>
+    <input type="text" id="producerWoolType" placeholder="e.g., Fine, soft, natural colors">
+</div>
+
+<div class="form-group">
+    <label>Processing Options Available (comma-separated)</label>
+    <input type="text" id="producerProcessing" placeholder="e.g., Raw fleece, Washed, Carded, Roving">
+    <small style="display: block; margin-top: 0.5rem; color: var(--text-muted);">Separate multiple options with commas</small>
+</div>
+
+<!-- REVIEWS -->
+<div class="section-header">
+    <h3>⭐ Reviews</h3>
+</div>
+
+<div id="reviewsContainer" class="animals-list">
+    <!-- Reviews will be loaded here -->
+</div>
+
+<button type="button" class="btn btn-secondary" style="margin-top: 1rem;" onclick="addReview()">+ Add Review</button>
                 <!-- IMAGES -->
                 <div class="section-header">
                     <h3>🖼️ Images</h3>
@@ -549,6 +585,7 @@
         let currentPostEditId = null;
         let currentProducerEditId = null;
         let producerAnimals = []; // Animals for current producer being edited
+        let producerReviews = []; // Reviews for current producer being edited
         let animalIdCounter = 0; // For temporary IDs
 
         // ==================== IMAGE UPLOAD ====================
@@ -914,6 +951,8 @@
         function openNewProducerModal() {
             currentProducerEditId = null;
             producerAnimals = [];
+            producerReviews = [];
+            document.getElementById('reviewsContainer').innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No reviews yet. Click "Add Review" to add one.</p>';
             animalIdCounter = 0;
             
             document.getElementById('producerModalTitle').textContent = 'New Producer';
@@ -944,6 +983,11 @@
             document.getElementById('producerReviews').value = producer.review_count;
             document.getElementById('producerActive').checked = producer.is_active;
             document.getElementById('producerSustainable').checked = producer.is_sustainable;
+            // New fields
+            document.getElementById('producerShearing').value = producer.shearing_frequency || '';
+            document.getElementById('producerYield').value = producer.avg_yield || '';
+            document.getElementById('producerWoolType').value = producer.wool_type || '';
+            document.getElementById('producerProcessing').value = producer.processing_options ? producer.processing_options.join(', ') : '';
             
             // Show existing images
             if (producer.avatar_url) {
@@ -977,7 +1021,8 @@
                 console.error('Error loading animals:', error);
                 producerAnimals = [];
             }
-            
+            // Load reviews
+            await loadReviews(id);
             document.getElementById('producerModal').style.display = 'block';
         }
 
@@ -1136,24 +1181,31 @@
             });
         }
 
-        document.getElementById('producerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const producerData = {
-                name: document.getElementById('producerName').value,
-                slug: document.getElementById('producerSlug').value,
-                location: document.getElementById('producerLocation').value,
-                country: document.getElementById('producerCountry').value,
-                description: document.getElementById('producerDescription').value,
-                story: document.getElementById('producerStory').value || null,
-                avatar_url: document.getElementById('producerAvatarUrl').value || null,
-                hero_image_url: document.getElementById('producerHeroUrl').value || null,
-                rating: parseFloat(document.getElementById('producerRating').value),
-                review_count: parseInt(document.getElementById('producerReviews').value),
-                is_active: document.getElementById('producerActive').checked,
-                is_sustainable: document.getElementById('producerSustainable').checked,
-                updated_at: new Date().toISOString()
-            };
+document.getElementById('producerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const producerData = {
+        name: document.getElementById('producerName').value,
+        slug: document.getElementById('producerSlug').value,
+        location: document.getElementById('producerLocation').value,
+        country: document.getElementById('producerCountry').value,
+        description: document.getElementById('producerDescription').value,
+        story: document.getElementById('producerStory').value || null,
+        avatar_url: document.getElementById('producerAvatarUrl').value || null,
+        hero_image_url: document.getElementById('producerHeroUrl').value || null,
+        rating: parseFloat(document.getElementById('producerRating').value),
+        review_count: parseInt(document.getElementById('producerReviews').value),
+        is_active: document.getElementById('producerActive').checked,
+        is_sustainable: document.getElementById('producerSustainable').checked,
+        shearing_frequency: document.getElementById('producerShearing').value || null,
+        avg_yield: document.getElementById('producerYield').value || null,
+        wool_type: document.getElementById('producerWoolType').value || null,
+        processing_options: document.getElementById('producerProcessing').value
+            .split(',')
+            .map(opt => opt.trim())
+            .filter(opt => opt),
+        updated_at: new Date().toISOString()
+    };
             
             try {
                 let producerId;
@@ -1171,7 +1223,8 @@
                 
                 // Save animals
                 const animalsData = collectAnimalData();
-                
+                // Save reviews
+                await saveReviews(producerId);
                 // Delete removed animals (if editing)
                 if (currentProducerEditId) {
                     const existingAnimalIds = producerAnimals.filter(a => a.id).map(a => a.id);
@@ -1234,6 +1287,157 @@
                 if (event.target === modal) modal.style.display = 'none';
             });
         }
+        // ==================== REVIEWS MANAGEMENT ====================
+async function loadReviews(producerId) {
+    try {
+        const { data, error } = await supabase
+            .from('producer_reviews')
+            .select('*')
+            .eq('producer_id', producerId)
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        producerReviews = data || [];
+        renderReviews();
+    } catch (error) {
+        console.error('Error loading reviews:', error);
+        producerReviews = [];
+        renderReviews();
+    }
+}
+
+function renderReviews() {
+    const container = document.getElementById('reviewsContainer');
+    if (producerReviews.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">No reviews yet. Click "Add Review" to add one.</p>';
+        return;
+    }
+    
+    container.innerHTML = producerReviews.map(review => {
+        const stars = '⭐'.repeat(review.rating);
+        return `
+            <div class="animal-item">
+                <div class="animal-item-header">
+                    <div>
+                        <h4>${review.reviewer_name} ${stars}</h4>
+                        <small style="color: var(--text-muted);">${new Date(review.created_at).toLocaleDateString()}</small>
+                    </div>
+                    <button type="button" class="btn btn-small btn-danger" onclick="removeReview('${review.id || review.tempId}')">Remove</button>
+                </div>
+                <p style="margin-top: 1rem; color: var(--text-dark);">${review.comment}</p>
+            </div>
+        `;
+    }).join('');
+}
+
+function addReview() {
+    const reviewId = `tempReview${Date.now()}`;
+    producerReviews.unshift({
+        tempId: reviewId,
+        reviewer_name: '',
+        rating: 5,
+        comment: '',
+        is_new: true
+    });
+    renderReviews();
+    
+    // Replace the first review with an editable form
+    const container = document.getElementById('reviewsContainer');
+    const firstReview = container.querySelector('.animal-item');
+    firstReview.innerHTML = `
+        <div class="animal-item-header">
+            <h4>New Review</h4>
+            <button type="button" class="btn btn-small btn-danger" onclick="removeReview('${reviewId}')">Cancel</button>
+        </div>
+        <div class="form-group">
+            <label>Reviewer Name *</label>
+            <input type="text" id="reviewName${reviewId}" required>
+        </div>
+        <div class="form-group">
+            <label>Rating *</label>
+            <select id="reviewRating${reviewId}" required>
+                <option value="5">⭐⭐⭐⭐⭐ (5 stars)</option>
+                <option value="4">⭐⭐⭐⭐ (4 stars)</option>
+                <option value="3">⭐⭐⭐ (3 stars)</option>
+                <option value="2">⭐⭐ (2 stars)</option>
+                <option value="1">⭐ (1 star)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Comment *</label>
+            <textarea id="reviewComment${reviewId}" rows="3" required></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="saveNewReview('${reviewId}')">Save Review</button>
+    `;
+}
+
+function saveNewReview(reviewId) {
+    const name = document.getElementById(`reviewName${reviewId}`).value;
+    const rating = parseInt(document.getElementById(`reviewRating${reviewId}`).value);
+    const comment = document.getElementById(`reviewComment${reviewId}`).value;
+    
+    if (!name || !comment) {
+        alert('Please fill in all fields');
+        return;
+    }
+    
+    const review = producerReviews.find(r => r.tempId === reviewId);
+    if (review) {
+        review.reviewer_name = name;
+        review.rating = rating;
+        review.comment = comment;
+    }
+    
+    renderReviews();
+}
+
+function removeReview(reviewId) {
+    producerReviews = producerReviews.filter(r => r.id !== reviewId && r.tempId !== reviewId);
+    renderReviews();
+}
+
+async function saveReviews(producerId) {
+    try {
+        // Delete removed reviews
+        const existingReviewIds = producerReviews.filter(r => r.id).map(r => r.id);
+        if (currentProducerEditId && existingReviewIds.length > 0) {
+            await supabase
+                .from('producer_reviews')
+                .delete()
+                .eq('producer_id', producerId)
+                .not('id', 'in', `(${existingReviewIds.join(',')})`);
+        } else if (currentProducerEditId) {
+            // Delete all if no reviews remain
+            await supabase
+                .from('producer_reviews')
+                .delete()
+                .eq('producer_id', producerId);
+        }
+        
+        // Save new reviews
+        for (const review of producerReviews) {
+            if (review.is_new && review.reviewer_name) {
+                const reviewData = {
+                    producer_id: producerId,
+                    reviewer_name: review.reviewer_name,
+                    rating: review.rating,
+                    comment: review.comment
+                };
+                
+                const { error } = await supabase
+                    .from('producer_reviews')
+                    .insert([reviewData]);
+                
+                if (error) throw error;
+            }
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Error saving reviews:', error);
+        return false;
+    }
+}
     </script>
 </body>
 </html>
