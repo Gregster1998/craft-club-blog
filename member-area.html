@@ -887,6 +887,85 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
+        /* Filter Tabs */
+        .filter-tab {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .filter-tab:hover {
+            color: var(--text-dark);
+        }
+        
+        .filter-tab.active {
+            color: var(--terracotta);
+            border-bottom-color: var(--terracotta);
+        }
+        
+        /* Pattern Card */
+        .pattern-card {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid var(--light-beige);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .pattern-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .pattern-thumbnail {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            background: var(--light-beige);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .pattern-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .pattern-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pattern-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+        
+        .pattern-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -943,6 +1022,7 @@
                 <a class="nav-item" onclick="showSection('members')">🔍 Find Makers</a>
                 <a class="nav-item" onclick="showSection('chat')">💬 Messages</a>
                 <a class="nav-item" onclick="showSection('my-store')">🛍️ My Store</a>
+                <a class="nav-item" onclick="showSection('pattern-library')">📚 Pattern Library</a>
             </nav>
         </aside>
 
@@ -1051,6 +1131,56 @@
                             <h4 style="margin-bottom: 0.5rem;">No listings yet</h4>
                             <p>Create your first listing to start selling on the Makers' Market</p>
                             <button class="btn btn-primary" onclick="openNewProductModal()" style="margin-top: 1rem;">Create First Listing</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pattern Library Section -->
+            <section id="pattern-library" class="content-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <h1>📚 Pattern Library</h1>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Save and organize your digital patterns, tutorials, and craft files. Preview them anytime!</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openUploadPatternModal()">+ Upload Pattern</button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--terracotta);" id="totalPatterns">0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Total Patterns</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--success);" id="pdfPatterns">0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">PDF Files</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--dark-brown);" id="imagePatterns">0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Images</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--gold);" id="totalStorage">0 MB</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Storage Used</div>
+                    </div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--light-beige); padding-bottom: 0;">
+                    <button class="filter-tab active" data-filter="all" onclick="filterPatterns('all')">All Files</button>
+                    <button class="filter-tab" data-filter="sewing" onclick="filterPatterns('sewing')">Sewing</button>
+                    <button class="filter-tab" data-filter="crochet" onclick="filterPatterns('crochet')">Crochet</button>
+                    <button class="filter-tab" data-filter="knitting" onclick="filterPatterns('knitting')">Knitting</button>
+                    <button class="filter-tab" data-filter="other" onclick="filterPatterns('other')">Other</button>
+                </div>
+
+                <div class="card">
+                    <div id="patternsListContainer">
+                        <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+                            <h4 style="margin-bottom: 0.5rem;">No patterns yet</h4>
+                            <p>Upload your first pattern to start building your digital library</p>
+                            <button class="btn btn-primary" onclick="openUploadPatternModal()" style="margin-top: 1rem;">Upload First Pattern</button>
                         </div>
                     </div>
                 </div>
