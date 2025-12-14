@@ -132,9 +132,10 @@
 
         /* Hero Section */
         .hero {
+            position: relative;
             height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), 
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><rect fill="%23C4A68A"/></svg>');
+            background: linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)), 
+                        url('hero-background.jpg');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -143,7 +144,7 @@
             align-items: center;
             text-align: center;
             padding: 2rem;
-            color: white;
+            color: var(--text-dark);
         }
 
         .hero-content {
@@ -154,16 +155,18 @@
             font-size: clamp(2.5rem, 8vw, 5rem);
             margin-bottom: 1.5rem;
             line-height: 1.2;
+            color: var(--text-dark);
         }
 
         .hero h1 .accent {
             color: var(--terracotta);
+            font-style: italic;
         }
 
         .hero p {
+            color: var(--text-muted);
             font-size: clamp(1rem, 2vw, 1.25rem);
             margin-bottom: 2.5rem;
-            opacity: 0.95;
             line-height: 1.8;
         }
 
@@ -175,14 +178,18 @@
         }
 
         .btn {
-            padding: 0.875rem 2rem;
+            padding: 1rem 2rem;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 1rem;
             border: none;
             cursor: pointer;
             transition: all 0.3s;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 8px;
+            font-weight: 500;
         }
 
         .btn-primary {
@@ -196,14 +203,211 @@
         }
 
         .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--terracotta);
+            border: 2px solid var(--terracotta);
         }
 
         .btn-secondary:hover {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .btn-tertiary {
+            background: rgba(134, 168, 153, 0.8);
+            color: white;
+        }
+
+        .btn-tertiary:hover {
+            background: rgba(134, 168, 153, 1);
+            transform: translateY(-2px);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: var(--text-muted);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 6rem 3rem;
             background: white;
-            color: var(--text-dark);
+        }
+
+        .steps-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-icon-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+        }
+
+        .step-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--terracotta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--terracotta);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: var(--terracotta);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Georgia', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .step h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .step p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        /* Beginners Section */
+        .beginners-section {
+            padding: 6rem 3rem;
+            background: var(--light-beige);
+        }
+
+        .beginners-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .beginners-content h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+            font-weight: 500;
+        }
+
+        .beginners-content h2 .italic-accent {
+            font-style: italic;
+            color: var(--terracotta);
+        }
+
+        .beginners-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .beginners-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .beginners-buttons .btn {
+            padding: 1rem 2rem;
+        }
+
+        .beginners-buttons .btn-primary {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .beginners-buttons .btn-secondary {
+            background: transparent;
+            color: var(--terracotta);
+            border: 2px solid var(--terracotta);
+        }
+
+        .beginners-buttons .btn-secondary:hover {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .beginners-features {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .feature-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(160, 105, 95, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .feature-text p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
         }
 
         /* Section Styles */
@@ -523,6 +727,19 @@
                 padding: 4rem 1.5rem;
             }
 
+            .steps-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .beginners-container {
+                grid-template-columns: 1fr;
+            }
+
+            .beginners-content h2 {
+                font-size: 2rem;
+            }
+
             .email-form {
                 flex-direction: column;
             }
@@ -573,8 +790,9 @@
 
             <div class="nav-links" id="navLinks">
                 <a href="journal.html">Journal</a>
-                <a href="about-members.html">About Members Area</a>
-                <a href="member-area-ultimate.html" class="nav-cta">Login / Join</a>
+                <a href="#adopt-animal">Adopt an Animal</a>
+                <a href="landing-page.html">About Members Area</a>
+                <a href="login.html" class="nav-cta">Login / Join</a>
             </div>
         </div>
     </nav>
@@ -588,10 +806,89 @@
                 Learn. Create.<br>
                 <span class="accent">Connect.</span>
             </h1>
-            <p>Rediscover the joy of slow creativity. Join a global community celebrating traditional crafts, authentic skills, and the makers who keep them alive.</p>
+            <p>A global community where makers share projects, track their learning journeys, and discover crafts from around the world.</p>
             <div class="hero-buttons">
-                <a href="#join" class="btn btn-primary">Join the Club</a>
-                <a href="#about" class="btn btn-secondary">Our Story</a>
+                <a href="#diaries" class="btn btn-primary">🎨 Explore Projects</a>
+                <a href="member-area-ultimate.html" class="btn btn-secondary">👥 Join the Community</a>
+                <a href="member-area-ultimate.html" class="btn btn-tertiary">📖 Start a Learning Diary</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M19 12l-7 7-7-7"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="section-header">
+            <h2>How International Craft Club <span class="italic">Works</span></h2>
+        </div>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-icon-wrapper">
+                    <div class="step-circle">👥</div>
+                    <div class="step-number">1</div>
+                </div>
+                <h3>Join for free</h3>
+                <p>Create a maker profile and become part of our global community.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon-wrapper">
+                    <div class="step-circle">📷</div>
+                    <div class="step-number">2</div>
+                </div>
+                <h3>Share your projects</h3>
+                <p>Post updates, photos, and materials used as you create.</p>
+            </div>
+            <div class="step">
+                <div class="step-icon-wrapper">
+                    <div class="step-circle">🤝</div>
+                    <div class="step-number">3</div>
+                </div>
+                <h3>Follow maker journeys</h3>
+                <p>Explore learning diaries and connect with other creators.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Start Your Journey Section -->
+    <section class="beginners-section">
+        <div class="beginners-container">
+            <div class="beginners-content">
+                <p class="section-label">NEW TO CRAFTING?</p>
+                <h2>Start Your Journey<br><span class="italic-accent">Here</span></h2>
+                <p>
+                    Everyone starts somewhere. Whether you've never picked up a needle or you're rediscovering a childhood hobby, our community welcomes you with open arms and helpful hands.
+                </p>
+                <div class="beginners-buttons">
+                    <a href="member-area-ultimate.html" class="btn btn-primary">Browse Tutorials</a>
+                    <a href="member-area-ultimate.html" class="btn btn-secondary">Meet Fellow Beginners</a>
+                </div>
+            </div>
+            <div class="beginners-features">
+                <div class="feature-item">
+                    <div class="feature-icon">📖</div>
+                    <div class="feature-text">
+                        <h3>Step-by-Step Guides</h3>
+                        <p>Clear tutorials written for complete beginners, with photos at every step.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <h3>Find Your Craft</h3>
+                        <p>Not sure where to start? Explore different crafts and discover what calls to you.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">❤️</div>
+                    <div class="feature-text">
+                        <h3>Supportive Community</h3>
+                        <p>Ask questions without judgment. We all remember our first project.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
