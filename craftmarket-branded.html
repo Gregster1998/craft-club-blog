@@ -766,16 +766,43 @@
         // Load products
         async function loadProducts() {
             try {
-                const { data: products, error } = await supabase
+                // First get products
+                const { data: products, error: productsError } = await supabase
                     .from('products')
                     .select('*')
                     .eq('is_active', true)
                     .order('created_at', { ascending: false });
 
-                if (error) {
-                    console.error('Supabase error:', error);
-                    throw error;
+                if (productsError) {
+                    console.error('Supabase error:', productsError);
+                    throw productsError;
                 }
+
+                // Get unique seller IDs
+                const sellerIds = [...new Set(products.map(p => p.seller_id))];
+                
+                // Fetch seller profiles
+                const { data: sellers, error: sellersError } = await supabase
+                    .from('profiles')
+                    .select('id, username, display_name, full_name')
+                    .in('id', sellerIds);
+
+                if (sellersError) {
+                    console.error('Error fetching sellers:', sellersError);
+                }
+
+                // Map sellers to products
+                const sellersMap = {};
+                if (sellers) {
+                    sellers.forEach(seller => {
+                        sellersMap[seller.id] = seller;
+                    });
+                }
+
+                // Add seller info to products
+                products.forEach(product => {
+                    product.seller = sellersMap[product.seller_id] || null;
+                });
 
                 console.log('Loaded products:', products);
                 console.log('Product categories:', products.map(p => p.category));
@@ -844,6 +871,11 @@
                 const image = product.thumbnail_url || (product.images && product.images.length > 0 ? product.images[0] : '') || '/api/placeholder/400/300';
                 const isAvailable = product.is_available && product.stock_status !== 'deadline_passed';
                 
+                // Seller name
+                const sellerName = product.seller 
+                    ? (product.seller.display_name || product.seller.full_name || product.seller.username || 'Independent Maker')
+                    : 'Independent Maker';
+                
                 // Product type badge
                 let typeBadge = '';
                 if (product.is_digital) {
@@ -903,7 +935,7 @@
                 }
                 
                 return `
-                    <div class="product-card" data-category="${product.category}">
+                    <div class="product-card" data-category="${product.category}" onclick="window.location.href='product-detail.html?id=${product.id}'" style="cursor: pointer;">
                         <div class="product-image">
                             ${!isAvailable ? `
                                 <div class="not-available-overlay">
@@ -919,12 +951,13 @@
                                 ${mtoABadge}
                             </div>
                             <h3 class="product-title">${product.title}</h3>
+                            <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.5rem;">by <strong>${sellerName}</strong></p>
                             <p class="product-description">${product.description ? (product.description.length > 120 ? product.description.substring(0, 120) + '...' : product.description) : ''}</p>
                             ${travelFindInfo}
                             <div class="product-meta">
                                 <div class="product-price">${price}</div>
                             </div>
-                            <div class="product-actions">
+                            <div class="product-actions" onclick="event.stopPropagation();">
                                 ${actionButton}
                             </div>
                         </div>
@@ -975,6 +1008,10 @@
             const product = allProducts.find(p => p.id === productId);
             if (!product) return;
             
+            const sellerName = product.seller 
+                ? (product.seller.display_name || product.seller.full_name || product.seller.username || 'Independent Maker')
+                : 'Independent Maker';
+            
             const existingItem = cart.find(item => item.id === productId);
             if (existingItem) {
                 existingItem.quantity++;
@@ -985,7 +1022,7 @@
                     price: product.price,
                     currency: product.currency,
                     image: product.thumbnail_url || (product.images && product.images[0]),
-                    seller: product.seller?.display_name || product.seller?.username,
+                    seller: sellerName,
                     quantity: 1
                 });
             }
@@ -1028,13 +1065,14 @@
             itemsContainer.innerHTML = cart.map((item, index) => {
                 const itemTotal = item.price * item.quantity;
                 total += itemTotal;
+                const sellerDisplay = item.seller || 'Independent Maker';
                 
                 return `
                     <div class="cart-item">
                         <img src="${item.image || 'placeholder.jpg'}" alt="${item.title}" class="cart-item-image">
                         <div class="cart-item-info">
                             <div class="cart-item-title">${item.title}</div>
-                            <div class="cart-item-seller">by ${item.seller}</div>
+                            <div class="cart-item-seller">by ${sellerDisplay}</div>
                             <div class="cart-item-price">${formatPrice(item.price, item.currency)} × ${item.quantity}</div>
                             <button class="cart-item-remove" onclick="removeFromCart(${index})">Remove</button>
                         </div>
@@ -1075,6 +1113,8 @@
         window.addEventListener('DOMContentLoaded', () => {
             loadProducts();
         });
-    </script>
+    </script>git add .
+git commit -m "Add product detail page and fix creator names"
+git push origin main
 </body>
 </html>
