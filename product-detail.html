@@ -919,6 +919,18 @@
                 }
 
                 currentProduct = product;
+                
+                // DEBUG: Log product data to console
+                console.log('=== PRODUCT DATA FROM DATABASE ===');
+                console.log('Product ID:', product.id);
+                console.log('Title:', product.title);
+                console.log('product_details:', product.product_details);
+                console.log('shipping_info:', product.shipping_info);
+                console.log('has_sizes:', product.has_sizes);
+                console.log('available_sizes:', product.available_sizes);
+                console.log('Full product object:', product);
+                console.log('=====================================');
+                
                 renderProduct(product);
                 renderSeller(product.seller);
                 loadReviews(productId);
@@ -960,7 +972,15 @@
             if (product.is_made_to_order) badges += '<span class="badge badge-mto">📦 Made to Order</span>';
 
             let sizeSelector = '';
-            if (product.has_sizes && product.available_sizes && product.available_sizes.length > 0) {
+            
+            // DEBUG: Check size data
+            console.log('Size check:');
+            console.log('  has_sizes =', product.has_sizes);
+            console.log('  available_sizes =', product.available_sizes);
+            console.log('  Show selector?', product.has_sizes && product.available_sizes && product.available_sizes.length > 0);
+            
+            if (product.has_sizes === true && product.available_sizes && Array.isArray(product.available_sizes) && product.available_sizes.length > 0) {
+                console.log('  ✅ Showing size selector with sizes:', product.available_sizes);
                 sizeSelector = `
                     <div class="size-selector">
                         <span class="size-label">Select Size:</span>
@@ -1019,7 +1039,7 @@
                             <span class="info-toggle" id="toggle-details">+</span>
                         </div>
                         <div class="info-content" id="content-details">
-                            <p>${product.product_details || 'Handcrafted with premium materials and traditional techniques.'}</p>
+                            <p>${product.product_details && product.product_details.trim() ? product.product_details : 'Handcrafted with premium materials and traditional techniques.'}</p>
                         </div>
                     </div>
 
@@ -1029,7 +1049,7 @@
                             <span class="info-toggle" id="toggle-shipping">+</span>
                         </div>
                         <div class="info-content" id="content-shipping">
-                            <p>${product.shipping_info || 'Ships within 3-5 business days. Returns accepted within 14 days.'}</p>
+                            <p>${product.shipping_info && product.shipping_info.trim() ? product.shipping_info : 'Ships within 3-5 business days. Returns accepted within 14 days.'}</p>
                         </div>
                     </div>
                 </div>
