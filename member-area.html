@@ -974,6 +974,11 @@
                                 <div class="stat-value" id="stat-streak">0</div>
                                 <div class="stat-label">Day Streak</div>
                             </div>
+                            <div class="stat-box">
+                                <div class="stat-icon">🛍️</div>
+                                <div class="stat-value" id="stat-store">0</div>
+                                <div class="stat-label">Active Products</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1816,6 +1821,16 @@
             document.getElementById('stat-likes').textContent = userProfile.total_likes_received || 0;
             document.getElementById('stat-friends').textContent = friendsCount;
             document.getElementById('stat-streak').textContent = userProfile.streak_days || 0;
+            
+            // Get active products count
+            const { data: products, error: productsError } = await supabase
+                .from('products')
+                .select('id', { count: 'exact', head: true })
+                .eq('seller_id', currentUser.id)
+                .eq('is_active', true);
+            
+            const activeProductsCount = productsError ? 0 : (products || 0);
+            document.getElementById('stat-store').textContent = activeProductsCount;
         }
 
         async function loadMyProjects() {
@@ -4207,10 +4222,10 @@
             
             if (sectionId === 'chat' && !currentChatUser) {
                 loadConversations();
+            }
             
             if (sectionId === 'my-store') {
                 loadUserProducts();
-            }
             }
         }
 
