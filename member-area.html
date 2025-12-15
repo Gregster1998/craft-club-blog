@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Area - International Craft Club</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <title>Craft Club | Your Creative Space</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
@@ -15,166 +14,439 @@
 
         :root {
             --terracotta: #A0695F;
-            --terracotta-dark: #8B5850;
             --dark-brown: #3C2F2F;
             --cream: #F5F1E8;
             --light-beige: #EDE8DC;
             --text-dark: #3C2F2F;
             --text-muted: #8B7E74;
-            --white: #FFFFFF;
-            --success: #6B9F7F;
-            --love: #C97C7C;
             --gold: #D4AF37;
+            --success: #5C8B5A;
+            --highlight: #E8C5B5;
+            --love: #E74C3C;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
-            background: var(--cream);
+            font-family: 'Georgia', serif;
             color: var(--text-dark);
             line-height: 1.6;
+            background: var(--cream);
         }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        h1 { font-size: 2.5rem; }
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.5rem; }
-
-        /* Layout */
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 260px;
-            background: var(--white);
-            border-right: 1px solid var(--light-beige);
-            padding: 2rem 0;
+        header {
             position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        .sidebar-header {
-            padding: 0 1.5rem 2rem;
-            border-bottom: 1px solid var(--light-beige);
-        }
-
-        .sidebar-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--terracotta);
-            text-decoration: none;
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-
-        .sidebar-subtitle {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        .sidebar-nav {
-            padding: 2rem 0;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1.5rem;
-            color: var(--text-dark);
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9375rem;
-            position: relative;
-        }
-
-        .nav-item:hover {
-            background: var(--cream);
-            color: var(--terracotta);
-        }
-
-        .nav-item.active {
-            background: var(--cream);
-            color: var(--terracotta);
-            font-weight: 500;
-        }
-
-        .nav-item .icon {
-            font-size: 1.25rem;
-            width: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-badge {
-            background: var(--terracotta);
-            color: white;
-            border-radius: 12px;
-            padding: 0.125rem 0.5rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: auto;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 260px;
-            min-height: 100vh;
-        }
-
-        /* Header */
-        .main-header {
-            background: var(--white);
-            border-bottom: 1px solid var(--light-beige);
-            padding: 1.5rem 3rem;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
-        .page-title {
-            font-size: 2rem;
-            font-family: 'Playfair Display', serif;
-            color: var(--text-dark);
+        .logo {
+            font-size: 1.125rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            color: var(--dark-brown);
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .icon-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--cream);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .icon-btn:hover {
+            background: var(--highlight);
+            transform: scale(1.1);
+        }
+
+        .badge-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--love);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, sans-serif;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
+            cursor: pointer;
+            position: relative;
         }
 
-        .user-info {
-            text-align: right;
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            min-width: 320px;
+            max-width: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
         }
 
-        .user-name {
+        .dropdown.show { display: block; }
+
+        .dropdown-header {
+            padding: 1.25rem;
+            border-bottom: 2px solid var(--light-beige);
+            font-family: -apple-system, sans-serif;
             font-weight: 600;
-            font-size: 0.9375rem;
-            color: var(--text-dark);
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .user-level {
-            font-size: 0.8125rem;
+        .dropdown-item {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--light-beige);
+            cursor: pointer;
+            transition: background 0.3s;
+            font-family: -apple-system, sans-serif;
+        }
+
+        .dropdown-item:hover {
+            background: var(--cream);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-content {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .notif-time {
+            font-size: 0.75rem;
             color: var(--text-muted);
         }
 
-        .user-avatar {
+        .notif-unread {
+            background: #E8F5E9;
+        }
+
+        .main-container {
+            margin-top: 80px;
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            padding: 2rem 1.5rem;
+            border-right: 1px solid rgba(0,0,0,0.05);
+            position: fixed;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--light-beige);
+            color: var(--terracotta);
+        }
+
+        .content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2rem 3rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .card h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-brown);
+            font-size: 1.25rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: var(--cream);
+            border-radius: 8px;
+            transition: transform 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: var(--terracotta);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: -apple-system, sans-serif;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--light-beige), var(--highlight));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .like-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .like-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .like-btn.liked {
+            animation: heartBeat 0.5s;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.3); }
+            50% { transform: scale(1.1); }
+        }
+
+        .follow-btn-small {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 0.4rem 0.8rem;
+            background: white;
+            border: 1px solid var(--terracotta);
+            color: var(--terracotta);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: -apple-system, sans-serif;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .follow-btn-small:hover {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .follow-btn-small.following {
+            background: var(--terracotta);
+            color: white;
+        }
+
+        .project-info {
+            padding: 1.25rem;
+        }
+
+        .project-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-brown);
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: -apple-system, sans-serif;
+        }
+
+        .user-mini {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .user-mini-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .user-mini-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .feed-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .feed-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .feed-avatar {
             width: 48px;
             height: 48px;
             border-radius: 50%;
@@ -183,100 +455,48 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            font-size: 1.125rem;
+            font-weight: bold;
             cursor: pointer;
         }
 
-        .user-avatar img {
+        .feed-avatar img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
         }
 
-        /* Content Area */
-        .content-section {
-            padding: 3rem;
-            display: none;
+        .feed-content {
+            font-family: -apple-system, sans-serif;
+            line-height: 1.6;
         }
 
-        .content-section.active {
-            display: block;
-        }
-
-        .section-subtitle {
+        .feed-time {
+            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-bottom: 2rem;
-            font-size: 0.9375rem;
+            margin-top: 0.5rem;
         }
 
-        .section-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid var(--light-beige);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            border: 1px solid var(--light-beige);
-        }
-
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
+        .mention {
+            color: var(--terracotta);
             font-weight: 600;
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-value.terracotta { color: var(--terracotta); }
-        .stat-value.success { color: var(--success); }
-        .stat-value.dark { color: var(--dark-brown); }
-        .stat-value.gold { color: var(--gold); }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            border: none;
             cursor: pointer;
-            font-weight: 500;
-            font-size: 0.9375rem;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
+        }
+
+        .mention:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
         }
 
         .btn-primary {
@@ -285,992 +505,92 @@
         }
 
         .btn-primary:hover {
-            background: var(--terracotta-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(160, 105, 95, 0.3);
+            background: var(--dark-brown);
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
-            background: transparent;
-            color: var(--text-dark);
-            border: 1px solid var(--light-beige);
+            background: var(--light-beige);
+            color: var(--dark-brown);
         }
 
-        .btn-secondary:hover {
-            border-color: var(--terracotta);
-            color: var(--terracotta);
-        }
-
-        /* Welcome Banner */
-        .welcome-banner {
-            background: linear-gradient(135deg, var(--light-beige) 0%, var(--cream) 100%);
-            border-radius: 16px;
-            padding: 3rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .welcome-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--terracotta);
+        .btn-danger {
+            background: #C75B5B;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: 600;
-            flex-shrink: 0;
         }
 
-        .welcome-content {
-            flex: 1;
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
         }
 
-        .welcome-title {
-            font-size: 2rem;
-            font-family: 'Playfair Display', serif;
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.9rem;
+            color: var(--dark-brown);
             margin-bottom: 0.5rem;
+            font-weight: 500;
         }
 
-        .welcome-level {
+        input, textarea, select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--light-beige);
+            border-radius: 8px;
+            font-family: -apple-system, sans-serif;
             font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-
-        .xp-progress {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .xp-text {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        .progress-bar {
-            flex: 1;
-            height: 8px;
-            background: var(--light-beige);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--terracotta) 0%, var(--terracotta-dark) 100%);
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-
-        /* Activity Feed */
-        .activity-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .activity-item:hover {
-            background: var(--cream);
-        }
-
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--light-beige);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-text {
-            font-size: 0.9375rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .activity-time {
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        /* Projects Grid */
-        .filter-tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--light-beige);
-            padding-bottom: 0;
-        }
-
-        .filter-tab {
-            background: none;
-            border: none;
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 0.9375rem;
-            font-weight: 500;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            position: relative;
-            bottom: -1px;
-        }
-
-        .filter-tab:hover {
-            color: var(--text-dark);
-        }
-
-        .filter-tab.active {
-            color: var(--terracotta);
-            border-bottom-color: var(--terracotta);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .project-card {
-            background: var(--white);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--light-beige);
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .project-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
-
-        .project-image {
-            width: 100%;
-            height: 280px;
-            background: var(--light-beige);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .project-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .project-status {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            padding: 0.375rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8125rem;
-            font-weight: 500;
-            background: white;
-        }
-
-        .project-status.completed {
-            color: var(--success);
-            background: rgba(107, 159, 127, 0.1);
-        }
-
-        .project-status.in-progress {
-            color: #6B8DA0;
-            background: rgba(107, 141, 160, 0.1);
-        }
-
-        .project-status.paused {
-            color: #D4AF37;
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        .project-content {
-            padding: 1.5rem;
-        }
-
-        .project-title {
-            font-size: 1.25rem;
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 0.5rem;
-        }
-
-        .project-category {
-            font-size: 0.875rem;
-            color: var(--terracotta);
-            margin-bottom: 1rem;
-        }
-
-        .project-stats {
-            display: flex;
-            gap: 1.5rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        .project-stat {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        /* Community Feed */
-        .feed-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .feed-filters {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .feed-post {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--light-beige);
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .post-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .post-author-info {
-            flex: 1;
-        }
-
-        .post-author {
-            font-weight: 600;
-            font-size: 0.9375rem;
-        }
-
-        .post-meta {
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-        }
-
-        .post-content {
-            margin-bottom: 1.5rem;
-            font-size: 0.9375rem;
-            line-height: 1.6;
-        }
-
-        .post-image {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--light-beige);
-        }
-
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            padding-top: 1rem;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid var(--light-beige);
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-size: 0.9375rem;
-            transition: all 0.2s;
-        }
-
-        .action-btn:hover {
-            border-color: var(--terracotta);
-            color: var(--terracotta);
-        }
-
-        /* Friends Grid */
-        .friends-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
-        .friend-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            border: 1px solid var(--light-beige);
             transition: all 0.3s;
         }
 
-        .friend-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
-
-        .friend-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin: 0 auto 1rem;
-        }
-
-        .friend-name {
-            font-size: 1.25rem;
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 0.25rem;
-        }
-
-        .friend-location {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .friend-role {
-            font-size: 0.875rem;
-            color: var(--terracotta);
-            margin-bottom: 0.5rem;
-        }
-
-        .friend-projects {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-        }
-
-        /* Find Makers */
-        .search-bar {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            border: 1px solid var(--light-beige);
-            border-radius: 8px;
-            font-size: 0.9375rem;
-            margin-bottom: 1.5rem;
-            background: white url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%238B7E74" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat 1rem center;
-        }
-
-        .interest-filters {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-
-        .interest-chip {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            background: white;
-            border: 1px solid var(--light-beige);
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .interest-chip:hover, .interest-chip.active {
-            background: var(--terracotta);
-            color: white;
+        input:focus, textarea:focus, select:focus {
+            outline: none;
             border-color: var(--terracotta);
         }
 
-        .makers-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+        textarea {
+            min-height: 120px;
+            resize: vertical;
         }
 
-        .maker-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            border: 1px solid var(--light-beige);
-            transition: all 0.3s;
-        }
-
-        .maker-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
-
-        .maker-header {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .maker-avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .maker-info {
-            flex: 1;
-        }
-
-        .maker-name {
-            font-weight: 600;
-            font-size: 1.125rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .maker-location {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .maker-bio {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .maker-interests {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-
-        .interest-tag {
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            background: var(--success);
-            color: white;
-            font-size: 0.75rem;
-        }
-
-        /* Messages */
-        .messages-container {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 0;
-            height: calc(100vh - 150px);
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--light-beige);
-        }
-
-        .conversations-list {
-            border-right: 1px solid var(--light-beige);
-            overflow-y: auto;
-        }
-
-        .conversations-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--light-beige);
-            font-weight: 600;
-            font-size: 1.125rem;
-        }
-
-        .conversation-item {
-            padding: 1rem 1.5rem;
-            cursor: pointer;
-            border-bottom: 1px solid var(--light-beige);
-            transition: background 0.2s;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .conversation-item:hover {
-            background: var(--cream);
-        }
-
-        .conversation-item.active {
-            background: var(--cream);
-        }
-
-        .conversation-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .conversation-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .conversation-name {
-            font-weight: 600;
-            font-size: 0.9375rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .conversation-preview {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .conversation-time {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            align-self: flex-start;
-        }
-
-        .chat-area {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--light-beige);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .chat-user-name {
-            font-weight: 600;
-            font-size: 1.125rem;
-        }
-
-        .chat-user-status {
-            font-size: 0.8125rem;
-            color: var(--success);
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .message {
-            display: flex;
-            gap: 1rem;
-            max-width: 70%;
-        }
-
-        .message.sent {
-            margin-left: auto;
-            flex-direction: row-reverse;
-        }
-
-        .message-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.875rem;
-            flex-shrink: 0;
-        }
-
-        .message-content {
-            flex: 1;
-        }
-
-        .message-bubble {
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            font-size: 0.9375rem;
-            line-height: 1.5;
-        }
-
-        .message.received .message-bubble {
-            background: var(--cream);
-        }
-
-        .message.sent .message-bubble {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .message-time {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
-            padding: 0 0.5rem;
-        }
-
-        .chat-input-area {
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--light-beige);
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--light-beige);
-            border-radius: 8px;
-            font-size: 0.9375rem;
-            resize: none;
-        }
-
-        .send-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 8px;
-            background: var(--terracotta);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            transition: all 0.2s;
-        }
-
-        .send-btn:hover {
-            background: var(--terracotta-dark);
-        }
-
-        /* My Store */
-        .listings-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .listing-item {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--light-beige);
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            transition: all 0.3s;
-        }
-
-        .listing-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .listing-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            background: var(--light-beige);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .listing-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .listing-info {
-            flex: 1;
-        }
-
-        .listing-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .listing-type {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-        }
-
-        .listing-price {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--terracotta);
-            font-family: 'Playfair Display', serif;
-        }
-
-        .listing-stats {
-            display: flex;
-            gap: 1.5rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        .listing-stat {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        .listing-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            align-items: flex-end;
-        }
-
-        .listing-status {
-            padding: 0.375rem 0.875rem;
-            border-radius: 16px;
-            font-size: 0.8125rem;
-            font-weight: 500;
-        }
-
-        .listing-status.active {
-            background: rgba(107, 159, 127, 0.1);
-            color: var(--success);
-        }
-
-        .listing-status.paused {
-            background: rgba(212, 175, 55, 0.1);
-            color: #D4AF37;
-        }
-
-        .more-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            padding: 0.5rem;
-        }
-
-        /* Pattern Library */
-        .patterns-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .pattern-item {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--light-beige);
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        .pattern-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 8px;
-            background: var(--light-beige);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            flex-shrink: 0;
-        }
-
-        .pattern-info {
-            flex: 1;
-        }
-
-        .pattern-name {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .pattern-meta {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .pattern-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        .pattern-tags {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .pattern-tag {
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            background: var(--light-beige);
-            color: var(--text-dark);
-            font-size: 0.75rem;
-        }
-
-        .pattern-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .pattern-action-btn {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--light-beige);
-            background: white;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-            transition: all 0.2s;
-        }
-
-        .pattern-action-btn:hover {
-            border-color: var(--terracotta);
-            color: var(--terracotta);
-        }
-
-        .delete-btn {
-            color: var(--love);
-        }
-
-        .delete-btn:hover {
-            border-color: var(--love);
-        }
-
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
+            z-index: 2000;
             justify-content: center;
+            align-items: center;
             padding: 2rem;
+            overflow-y: auto;
         }
 
-        .modal.show {
-            display: flex;
-        }
+        .modal.show { display: flex; }
 
         .modal-content {
             background: white;
             border-radius: 16px;
+            max-width: 700px;
             width: 100%;
-            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
+            padding: 2rem;
         }
 
         .modal-header {
-            padding: 2rem;
-            border-bottom: 1px solid var(--light-beige);
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-family: 'Playfair Display', serif;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light-beige);
         }
 
         .modal-close {
@@ -1279,429 +599,538 @@
             font-size: 2rem;
             cursor: pointer;
             color: var(--text-muted);
-            line-height: 1;
-            padding: 0;
-            width: 32px;
-            height: 32px;
         }
 
-        .modal-body {
-            padding: 2rem;
+        .profile-picture-upload {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            font-size: 0.9375rem;
-        }
-
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="number"],
-        .form-group input[type="date"],
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--light-beige);
-            border-radius: 8px;
-            font-size: 0.9375rem;
-            font-family: inherit;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin-right: 0.5rem;
-        }
-
-        .modal-footer {
-            padding: 2rem;
-            border-top: 1px solid var(--light-beige);
+        .profile-picture-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: var(--terracotta);
             display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            overflow: hidden;
         }
 
-        /* Empty State */
+        .profile-picture-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .craft-specific-fields {
+            display: none;
+        }
+
         .empty-state {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 3rem 2rem;
             color: var(--text-muted);
         }
 
-        .empty-icon {
+        .empty-state-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
+            opacity: 0.5;
         }
 
-        .empty-title {
-            font-size: 1.25rem;
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--light-beige);
+            border-top-color: var(--terracotta);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Floating Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 380px;
+            max-height: 600px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 2001;
+            overflow: hidden;
+        }
+
+        .chat-widget.show {
+            display: flex;
+        }
+
+        .chat-widget-header {
+            background: var(--terracotta);
+            color: white;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: move;
+        }
+
+        .chat-widget-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            color: var(--terracotta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .chat-widget-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .chat-widget-info {
+            flex: 1;
+        }
+
+        .chat-widget-name {
             font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .chat-widget-status {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .chat-widget-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .chat-widget-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .chat-widget-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background: var(--cream);
+            max-height: 400px;
+        }
+
+        .chat-widget-input-area {
+            padding: 1rem;
+            border-top: 2px solid var(--light-beige);
+            background: white;
+        }
+
+        .chat-widget-input-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-widget-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-beige);
+            border-radius: 24px;
+            font-family: -apple-system, sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .chat-widget-send {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .chat-widget-send:hover {
+            background: var(--dark-brown);
+            transform: scale(1.05);
+        }
+
+        .chat-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            word-wrap: break-word;
+            animation: slideIn 0.3s ease;
+        }
+
+        .chat-bubble-sent {
+            align-self: flex-end;
+            background: var(--terracotta);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-bubble-received {
+            align-self: flex-start;
+            background: white;
             color: var(--text-dark);
-            margin-bottom: 0.5rem;
+            border-bottom-left-radius: 4px;
         }
 
-        .empty-text {
-            margin-bottom: 1.5rem;
+        .chat-bubble-time {
+            font-size: 0.7rem;
+            margin-top: 0.25rem;
+            opacity: 0.7;
         }
 
-        /* Responsive */
-        @media (max-width: 1400px) {
-            .projects-grid,
-            .friends-grid,
-            .makers-grid {
-                grid-template-columns: repeat(2, 1fr);
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
         @media (max-width: 768px) {
             .sidebar {
-                display: none;
+                position: static;
+                width: 100%;
+                height: auto;
             }
 
-            .main-content {
+            .content {
                 margin-left: 0;
-            }
-
-            .main-header {
-                padding: 1rem;
-            }
-
-            .content-section {
                 padding: 1.5rem;
             }
 
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .projects-grid,
-            .friends-grid,
-            .makers-grid {
+            .dashboard-grid, .project-grid {
                 grid-template-columns: 1fr;
             }
 
-            .messages-container {
-                grid-template-columns: 1fr;
+            .chat-widget {
+                width: calc(100vw - 20px);
+                right: 10px;
+                bottom: 10px;
+                max-height: 500px;
             }
+        }
 
-            .conversations-list {
-                display: none;
-            }
+        /* ========== MY STORE STYLES ========== */
+        .product-item {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--cream);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        .product-item-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--light-beige);
+        }
+
+        .product-type-option {
+            transition: all 0.3s ease;
+        }
+
+        .product-type-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        /* Filter Tabs */
+        .filter-tab {
+            background: none;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .filter-tab:hover {
+            color: var(--text-dark);
+        }
+        
+        .filter-tab.active {
+            color: var(--terracotta);
+            border-bottom-color: var(--terracotta);
+        }
+        
+        /* Pattern Card */
+        .pattern-card {
+            display: grid;
+            grid-template-columns: 120px 1fr auto;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid var(--light-beige);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .pattern-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .pattern-thumbnail {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            background: var(--light-beige);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .pattern-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .pattern-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pattern-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+        
+        .pattern-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <a href="#" class="sidebar-logo">International Craft Club</a>
-                <div class="sidebar-subtitle">Members Area</div>
+    <header>
+        <a href="index.html" style="text-decoration: none;">
+            <div class="logo">🎨 Craft Club</div>
+        </a>
+        <div class="user-nav">
+            <button class="icon-btn" onclick="toggleNotifications()">
+                🔔
+                <span class="badge-count" id="notif-count" style="display: none;">0</span>
+            </button>
+            <button class="icon-btn" onclick="toggleMessages()">
+                💬
+                <span class="badge-count" id="message-count" style="display: none;">0</span>
+            </button>
+            <div class="user-profile" onclick="toggleUserMenu()">
+                <div class="avatar" id="header-avatar">...</div>
             </div>
-            
-            <nav class="sidebar-nav">
-                <a class="nav-item active" onclick="showSection('dashboard')">
-                    <span class="icon">🏠</span>
-                    Dashboard
-                </a>
-                <a class="nav-item" onclick="showSection('my-projects')">
-                    <span class="icon">🎨</span>
-                    My Projects
-                </a>
-                <a class="nav-item" onclick="showSection('community')">
-                    <span class="icon">🌊</span>
-                    Community Feed
-                </a>
-                <a class="nav-item" onclick="showSection('friends')">
-                    <span class="icon">💫</span>
-                    Friends
-                </a>
-                <a class="nav-item" onclick="showSection('find-makers')">
-                    <span class="icon">🔍</span>
-                    Find Makers
-                </a>
-                <a class="nav-item" onclick="showSection('messages')">
-                    <span class="icon">💬</span>
-                    Messages
-                    <span class="nav-badge" id="messageBadge" style="display: none;">0</span>
-                </a>
-                <a class="nav-item" onclick="showSection('my-store')">
-                    <span class="icon">🛍️</span>
-                    My Store
-                </a>
-                <a class="nav-item" onclick="showSection('pattern-library')">
-                    <span class="icon">📚</span>
-                    Pattern Library
-                </a>
+
+            <div class="dropdown" id="notifications-dropdown">
+                <div class="dropdown-header">
+                    Notifications
+                    <button onclick="markAllRead()" style="background: none; border: none; color: var(--terracotta); cursor: pointer; font-size: 0.85rem;">Mark all read</button>
+                </div>
+                <div id="notifications-list">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+
+            <div class="dropdown" id="messages-dropdown">
+                <div class="dropdown-header">Messages</div>
+                <div id="conversations-list">
+                    <div class="loading"><div class="spinner"></div></div>
+                </div>
+            </div>
+
+            <div class="dropdown" id="user-menu" style="min-width: 200px;">
+                <div class="dropdown-item" onclick="showSection('dashboard'); hideAllDropdowns();">👤 Dashboard</div>
+                <div class="dropdown-item" onclick="showEditProfile()">✏️ Edit Profile</div>
+                <div class="dropdown-item" onclick="showSettings()">⚙️ Settings</div>
+                <div class="dropdown-item" onclick="handleLogout()">🚪 Logout</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <nav>
+                <a class="nav-item active" onclick="showSection('dashboard')">🏠 Dashboard</a>
+                <a class="nav-item" onclick="showSection('my-projects')">🎨 My Projects</a>
+                <a class="nav-item" onclick="showSection('community')">🌊 Community Feed</a>
+                <a class="nav-item" onclick="showSection('friends')">💫 Friends</a>
+                <a class="nav-item" onclick="showSection('members')">🔍 Find Makers</a>
+                <a class="nav-item" onclick="showSection('chat')">💬 Messages</a>
+                <a class="nav-item" onclick="showSection('my-store')">🛍️ My Store</a>
+                <a class="nav-item" onclick="showSection('pattern-library')">📚 Pattern Library</a>
             </nav>
         </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Header -->
-            <header class="main-header">
-                <h1 class="page-title" id="pageTitle">Dashboard</h1>
-                <div class="user-profile">
-                    <div class="user-info">
-                        <div class="user-name" id="headerUserName">Loading...</div>
-                        <div class="user-level" id="headerUserLevel">Level 1 · 0 XP</div>
-                    </div>
-                    <div class="user-avatar" id="headerUserAvatar">
-                        <span id="headerAvatarInitials">?</span>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Dashboard Section -->
+        <main class="content">
             <section id="dashboard" class="content-section active">
-                <div class="welcome-banner">
-                    <div class="welcome-avatar" id="welcomeAvatar">
-                        <span id="welcomeAvatarInitials">?</span>
-                    </div>
-                    <div class="welcome-content">
-                        <h2 class="welcome-title">Welcome back, <span id="welcomeUserName">User</span>! 👋</h2>
-                        <p class="welcome-level" id="welcomeLevel">Level 5 - Experienced Maker</p>
-                        <div class="xp-progress">
-                            <span class="xp-text"><span id="currentXP">0</span> XP</span>
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="xpProgressBar" style="width: 0%"></div>
-                            </div>
-                            <span class="xp-text"><span id="nextLevelXP">100</span> XP to Level <span id="nextLevel">2</span></span>
-                        </div>
-                    </div>
-                </div>
+                <h1 style="margin-bottom: 2rem;" id="welcome-text">Welcome! 👋</h1>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">⭐</div>
-                        <div class="stat-value terracotta" id="dashboardXP">0</div>
-                        <div class="stat-label">XP</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🎨</div>
-                        <div class="stat-value success" id="dashboardProjects">0</div>
-                        <div class="stat-label">Projects</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">👥</div>
-                        <div class="stat-value dark" id="dashboardFriends">0</div>
-                        <div class="stat-label">Friends</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🏆</div>
-                        <div class="stat-value gold" id="dashboardBadges">0</div>
-                        <div class="stat-label">Badges</div>
-                    </div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                <div class="dashboard-grid">
                     <div class="card">
-                        <h3 style="margin-bottom: 1.5rem;">Recent Activity</h3>
-                        <div class="activity-feed" id="activityFeed">
-                            <div class="empty-state">
-                                <div class="empty-icon">📭</div>
-                                <p>No recent activity yet</p>
+                        <h3>📊 Your Stats</h3>
+                        <div class="quick-stats">
+                            <div class="stat-box">
+                                <div class="stat-icon">🎨</div>
+                                <div class="stat-value" id="stat-projects">0</div>
+                                <div class="stat-label">Projects</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-icon">❤️</div>
+                                <div class="stat-value" id="stat-likes">0</div>
+                                <div class="stat-label">Total Likes</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-icon">👥</div>
+                                <div class="stat-value" id="stat-friends">0</div>
+                                <div class="stat-label">Friends</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-icon">🔥</div>
+                                <div class="stat-value" id="stat-streak">0</div>
+                                <div class="stat-label">Day Streak</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-icon">🛍️</div>
+                                <div class="stat-value" id="stat-store">0</div>
+                                <div class="stat-label">Active Products</div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="card">
-                        <h3 style="margin-bottom: 1.5rem;">Quick Actions</h3>
-                        <div class="quick-actions">
-                            <button class="btn btn-primary" onclick="showSection('my-projects'); openNewProjectModal();">
-                                + New Project
-                            </button>
-                            <button class="btn btn-secondary" onclick="showSection('pattern-library'); openUploadPatternModal();">
-                                📤 Upload Pattern
-                            </button>
-                            <button class="btn btn-secondary" onclick="showSection('community')">
-                                🌊 Browse Community
-                            </button>
-                        </div>
-                    </div>
                 </div>
+
+                <button class="btn btn-primary" onclick="showAddProject()">+ Add New Project</button>
             </section>
 
-            <!-- My Projects Section -->
             <section id="my-projects" class="content-section">
-                <div class="section-header-row">
-                    <div>
-                        <p class="section-subtitle">Your creative journey, documented</p>
-                    </div>
-                    <button class="btn btn-primary" onclick="openNewProjectModal()">+ Create New Project</button>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+                    <h1>🎨 My Projects</h1>
+                    <button class="btn btn-primary" onclick="showAddProject()">+ New Project</button>
                 </div>
-
-                <div class="filter-tabs">
-                    <button class="filter-tab active" onclick="filterProjects('all')">All (<span id="allCount">0</span>)</button>
-                    <button class="filter-tab" onclick="filterProjects('in_progress')">In Progress (<span id="progressCount">0</span>)</button>
-                    <button class="filter-tab" onclick="filterProjects('completed')">Completed (<span id="completedCount">0</span>)</button>
-                    <button class="filter-tab" onclick="filterProjects('paused')">Paused (<span id="pausedCount">0</span>)</button>
-                </div>
-
-                <div class="projects-grid" id="projectsGrid">
-                    <div class="empty-state">
-                        <div class="empty-icon">🎨</div>
-                        <div class="empty-title">No projects yet</div>
-                        <p class="empty-text">Create your first project to start building your portfolio</p>
-                        <button class="btn btn-primary" onclick="openNewProjectModal()">Create First Project</button>
-                    </div>
-                </div>
+                <div id="my-projects-container"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
-            <!-- Community Feed Section -->
             <section id="community" class="content-section">
-                <div class="section-subtitle">See what makers around the world are creating</div>
-
-                <div class="feed-controls">
-                    <div class="feed-filters filter-tabs">
-                        <button class="filter-tab active">All</button>
-                        <button class="filter-tab">Friends</button>
-                        <button class="filter-tab">Following</button>
-                    </div>
-                    <select style="padding: 0.5rem 1rem; border: 1px solid var(--light-beige); border-radius: 8px; font-size: 0.9375rem;">
-                        <option>Latest</option>
-                        <option>Popular</option>
-                        <option>Following</option>
-                    </select>
-                </div>
-
-                <div id="communityFeed">
-                    <div class="empty-state">
-                        <div class="empty-icon">🌊</div>
-                        <div class="empty-title">No posts yet</div>
-                        <p>Be the first to share your work!</p>
-                    </div>
-                </div>
+                <h1 style="margin-bottom: 2rem;">🌊 Community Feed</h1>
+                <div id="community-feed"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
-            <!-- Friends Section -->
             <section id="friends" class="content-section">
-                <div class="section-header-row">
-                    <div>
-                        <p class="section-subtitle">Connect with fellow makers</p>
-                    </div>
-                    <button class="btn btn-secondary" onclick="showSection('find-makers')">🔍 Find Makers</button>
-                </div>
-
-                <div class="filter-tabs">
-                    <button class="filter-tab active">My Friends (<span id="friendsCount">0</span>)</button>
-                    <button class="filter-tab">Pending (<span id="pendingCount">0</span>)</button>
-                    <button class="filter-tab">Suggestions (<span id="suggestionsCount">0</span>)</button>
-                </div>
-
-                <div class="friends-grid" id="friendsGrid">
-                    <div class="empty-state">
-                        <div class="empty-icon">💫</div>
-                        <div class="empty-title">No friends yet</div>
-                        <p>Find and connect with other makers</p>
-                        <button class="btn btn-primary" onclick="showSection('find-makers')">Find Makers</button>
-                    </div>
-                </div>
+                <h1 style="margin-bottom: 2rem;">💫 Your Friends</h1>
+                <div id="friends-container"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
-            <!-- Find Makers Section -->
-            <section id="find-makers" class="content-section">
-                <p class="section-subtitle">Discover talented makers around the world</p>
-
-                <input type="text" class="search-bar" placeholder="Search by name or location..." id="makerSearch">
-
-                <div class="interest-filters">
-                    <button class="interest-chip active">Sewing</button>
-                    <button class="interest-chip">Knitting</button>
-                    <button class="interest-chip">Crochet</button>
-                    <button class="interest-chip">Quilting</button>
-                    <button class="interest-chip">Embroidery</button>
-                    <button class="interest-chip">Leather</button>
-                    <button class="interest-chip">Ceramics</button>
-                    <button class="interest-chip">Woodworking</button>
-                </div>
-
-                <div class="makers-grid" id="makersGrid">
-                    <div class="empty-state">
-                        <div class="empty-icon">🔍</div>
-                        <div class="empty-title">No makers found</div>
-                        <p>Try adjusting your search filters</p>
-                    </div>
-                </div>
+            <section id="members" class="content-section">
+                <h1 style="margin-bottom: 2rem;">🔍 Find Makers</h1>
+                <input type="text" id="member-search" placeholder="Search by name or username..." style="margin-bottom: 2rem;" oninput="searchMembers()">
+                <div id="members-container"><div class="loading"><div class="spinner"></div></div></div>
             </section>
 
-            <!-- Messages Section -->
-            <section id="messages" class="content-section">
-                <div class="messages-container">
-                    <div class="conversations-list">
-                        <div class="conversations-header">Messages</div>
-                        <div id="conversationsList">
-                            <div class="empty-state" style="padding: 2rem;">
-                                <div class="empty-icon" style="font-size: 2rem;">💬</div>
-                                <p style="font-size: 0.875rem;">No messages yet</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="chat-area">
-                        <div id="chatPlaceholder" class="empty-state" style="flex: 1; display: flex; align-items: center; justify-content: center;">
-                            <div>
-                                <div class="empty-icon">💬</div>
-                                <div class="empty-title">Select a conversation</div>
-                                <p>Choose a friend to start messaging</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <section id="chat" class="content-section">
+                <h1 style="margin-bottom: 2rem;">💬 Messages</h1>
+                <div id="chat-area"></div>
             </section>
 
-            <!-- My Store Section -->
             <section id="my-store" class="content-section">
-                <div class="section-header-row">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <div>
-                        <p class="section-subtitle">Share your craft with the world</p>
+                        <h1>🛍️ Your Store</h1>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Share your craft with the world. Create listings for handmade items, digital patterns, or special travel finds.</p>
                     </div>
                     <button class="btn btn-primary" onclick="openNewProductModal()">+ Create New Listing</button>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">📦</div>
-                        <div class="stat-value terracotta" id="totalProducts">0</div>
-                        <div class="stat-label">Total Listings</div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--terracotta);" id="totalProducts">0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Total Listings</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🛍️</div>
-                        <div class="stat-value success" id="activeProducts">0</div>
-                        <div class="stat-label">Active</div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--success);" id="activeProducts">0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Active</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">💰</div>
-                        <div class="stat-value dark" id="totalOrders">0</div>
-                        <div class="stat-label">Orders</div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--dark-brown);" id="totalOrders">0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Orders</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">💵</div>
-                        <div class="stat-value gold" id="totalRevenue">€0</div>
-                        <div class="stat-label">Revenue</div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--gold);" id="totalRevenue">€0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Revenue</div>
                     </div>
                 </div>
 
                 <div class="card">
                     <h3 style="margin-bottom: 1.5rem;">Your Listings</h3>
-                    <div class="listings-list" id="productsListContainer">
-                        <div class="empty-state">
-                            <div class="empty-icon">🛍️</div>
-                            <div class="empty-title">No listings yet</div>
-                            <p class="empty-text">Create your first listing to start selling</p>
-                            <button class="btn btn-primary" onclick="openNewProductModal()">Create First Listing</button>
+                    <div id="productsListContainer">
+                        <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🛍️</div>
+                            <h4 style="margin-bottom: 0.5rem;">No listings yet</h4>
+                            <p>Create your first listing to start selling on the Makers' Market</p>
+                            <button class="btn btn-primary" onclick="openNewProductModal()" style="margin-top: 1rem;">Create First Listing</button>
                         </div>
                     </div>
                 </div>
@@ -1709,52 +1138,49 @@
 
             <!-- Pattern Library Section -->
             <section id="pattern-library" class="content-section">
-                <div class="section-header-row">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                     <div>
-                        <p class="section-subtitle">Save and organize your digital patterns</p>
+                        <h1>📚 Pattern Library</h1>
+                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Save and organize your digital patterns, tutorials, and craft files. Preview them anytime!</p>
                     </div>
                     <button class="btn btn-primary" onclick="openUploadPatternModal()">+ Upload Pattern</button>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">📄</div>
-                        <div class="stat-value terracotta" id="totalPatterns">0</div>
-                        <div class="stat-label">Total</div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--terracotta);" id="totalPatterns">0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Total Patterns</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📕</div>
-                        <div class="stat-value success" id="pdfPatterns">0</div>
-                        <div class="stat-label">PDFs</div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--success);" id="pdfPatterns">0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">PDF Files</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🖼️</div>
-                        <div class="stat-value dark" id="imagePatterns">0</div>
-                        <div class="stat-label">Images</div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--dark-brown);" id="imagePatterns">0</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Images</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">💾</div>
-                        <div class="stat-value gold" id="totalStorage">0 MB</div>
-                        <div class="stat-label">Storage</div>
+                    <div class="card" style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 600; color: var(--gold);" id="totalStorage">0 MB</div>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Storage Used</div>
                     </div>
                 </div>
 
-                <div class="filter-tabs">
-                    <button class="filter-tab active" onclick="filterPatterns('all')">All Files</button>
-                    <button class="filter-tab" onclick="filterPatterns('sewing')">Sewing</button>
-                    <button class="filter-tab" onclick="filterPatterns('crochet')">Crochet</button>
-                    <button class="filter-tab" onclick="filterPatterns('knitting')">Knitting</button>
-                    <button class="filter-tab" onclick="filterPatterns('embroidery')">Embroidery</button>
+                <!-- Filter Tabs -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--light-beige); padding-bottom: 0;">
+                    <button class="filter-tab active" data-filter="all" onclick="filterPatterns('all')">All Files</button>
+                    <button class="filter-tab" data-filter="sewing" onclick="filterPatterns('sewing')">Sewing</button>
+                    <button class="filter-tab" data-filter="crochet" onclick="filterPatterns('crochet')">Crochet</button>
+                    <button class="filter-tab" data-filter="knitting" onclick="filterPatterns('knitting')">Knitting</button>
+                    <button class="filter-tab" data-filter="other" onclick="filterPatterns('other')">Other</button>
                 </div>
 
                 <div class="card">
-                    <h3 style="margin-bottom: 1.5rem;">Your Patterns</h3>
-                    <div class="patterns-list" id="patternsListContainer">
-                        <div class="empty-state">
-                            <div class="empty-icon">📚</div>
-                            <div class="empty-title">No patterns yet</div>
-                            <p class="empty-text">Upload your first pattern to start building your library</p>
-                            <button class="btn btn-primary" onclick="openUploadPatternModal()">Upload First Pattern</button>
+                    <div id="patternsListContainer">
+                        <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+                            <h4 style="margin-bottom: 0.5rem;">No patterns yet</h4>
+                            <p>Upload your first pattern to start building your digital library</p>
+                            <button class="btn btn-primary" onclick="openUploadPatternModal()" style="margin-top: 1rem;">Upload First Pattern</button>
                         </div>
                     </div>
                 </div>
@@ -1762,7 +1188,6 @@
         </main>
     </div>
 
-    
     <!-- Edit Profile Modal -->
     <div class="modal" id="edit-profile-modal">
         <div class="modal-content">
