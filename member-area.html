@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Craft Club | Your Creative Space</title>
+    <title>Member Area - International Craft Club</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
@@ -18,9 +19,8 @@
             --dark-brown: #3C2F2F;
             --cream: #F5F1E8;
             --light-beige: #EDE8DC;
-            --text-dark: #3C2F2F;
-            --text-muted: #8B7E74;
             --white: #FFFFFF;
+            --text-muted: #8B7E74;
             --success: #6B9F7F;
             --love: #C97C7C;
             --gold: #D4AF37;
@@ -29,22 +29,17 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
             background: var(--cream);
-            color: var(--text-dark);
+            color: var(--dark-brown);
             line-height: 1.6;
         }
 
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Playfair Display', serif;
             font-weight: 600;
-            line-height: 1.3;
         }
 
-        h1 { font-size: 2.5rem; }
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.5rem; }
-
         /* Layout */
-        .app-container {
+        .member-area-container {
             display: flex;
             min-height: 100vh;
         }
@@ -58,11 +53,13 @@
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            z-index: 100;
         }
 
         .sidebar-header {
             padding: 0 1.5rem 2rem;
             border-bottom: 1px solid var(--light-beige);
+            margin-bottom: 2rem;
         }
 
         .sidebar-logo {
@@ -80,20 +77,20 @@
             color: var(--text-muted);
         }
 
-        .sidebar-nav {
-            padding: 2rem 0;
-        }
-
         .nav-item {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             padding: 0.75rem 1.5rem;
-            color: var(--text-dark);
+            color: var(--dark-brown);
             text-decoration: none;
             cursor: pointer;
             transition: all 0.2s;
             font-size: 0.9375rem;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
             position: relative;
         }
 
@@ -105,15 +102,11 @@
         .nav-item.active {
             background: var(--cream);
             color: var(--terracotta);
-            font-weight: 500;
         }
 
         .nav-item .icon {
             font-size: 1.25rem;
             width: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .nav-badge {
@@ -126,11 +119,10 @@
             margin-left: auto;
         }
 
-        /* Main Content */
+        /* Main Content Area */
         .main-content {
             flex: 1;
             margin-left: 260px;
-            min-height: 100vh;
         }
 
         /* Header */
@@ -143,16 +135,15 @@
             align-items: center;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 50;
         }
 
         .page-title {
             font-size: 2rem;
             font-family: 'Playfair Display', serif;
-            color: var(--text-dark);
         }
 
-        .user-profile {
+        .user-profile-header {
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -165,7 +156,6 @@
         .user-name {
             font-weight: 600;
             font-size: 0.9375rem;
-            color: var(--text-dark);
         }
 
         .user-level {
@@ -184,17 +174,9 @@
             justify-content: center;
             font-weight: 600;
             font-size: 1.125rem;
-            cursor: pointer;
         }
 
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        /* Content Area */
+        /* Content Sections */
         .content-section {
             padding: 3rem;
             display: none;
@@ -202,102 +184,6 @@
 
         .content-section.active {
             display: block;
-        }
-
-        .section-subtitle {
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-            font-size: 0.9375rem;
-        }
-
-        .section-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 2rem;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border: 1px solid var(--light-beige);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            border: 1px solid var(--light-beige);
-        }
-
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 600;
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-value.terracotta { color: var(--terracotta); }
-        .stat-value.success { color: var(--success); }
-        .stat-value.dark { color: var(--dark-brown); }
-        .stat-value.gold { color: var(--gold); }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 0.9375rem;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--terracotta-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(160, 105, 95, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text-dark);
-            border: 1px solid var(--light-beige);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--terracotta);
-            color: var(--terracotta);
         }
 
         /* Welcome Banner */
@@ -350,36 +236,81 @@
         .xp-text {
             font-size: 0.875rem;
             color: var(--text-muted);
+            white-space: nowrap;
         }
 
         .progress-bar {
             flex: 1;
             height: 8px;
-            background: var(--light-beige);
+            background: rgba(160, 105, 95, 0.2);
             border-radius: 4px;
             overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--terracotta) 0%, var(--terracotta-dark) 100%);
+            background: var(--terracotta);
             border-radius: 4px;
             transition: width 0.3s;
         }
 
-        /* Activity Feed */
-        .activity-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
+        .stat-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--light-beige);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 0.5rem;
+            color: var(--dark-brown);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--light-beige);
+        }
+
+        /* Two Column Layout */
+        .two-column-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Activity Feed */
         .activity-item {
             display: flex;
-            align-items: center;
+            align-items: start;
             gap: 1rem;
             padding: 1rem;
             border-radius: 8px;
+            margin-bottom: 0.5rem;
             transition: background 0.2s;
         }
 
@@ -413,7 +344,46 @@
             color: var(--text-muted);
         }
 
-        /* Quick Actions */
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9375rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--terracotta);
+            color: white;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: var(--terracotta-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--dark-brown);
+            border: 1px solid var(--light-beige);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--terracotta);
+            color: var(--terracotta);
+        }
+
         .quick-actions {
             display: flex;
             flex-direction: column;
@@ -421,37 +391,6 @@
         }
 
         /* Projects Grid */
-        .filter-tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--light-beige);
-            padding-bottom: 0;
-        }
-
-        .filter-tab {
-            background: none;
-            border: none;
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 0.9375rem;
-            font-weight: 500;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            position: relative;
-            bottom: -1px;
-        }
-
-        .filter-tab:hover {
-            color: var(--text-dark);
-        }
-
-        .filter-tab.active {
-            color: var(--terracotta);
-            border-bottom-color: var(--terracotta);
-        }
-
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -497,21 +436,6 @@
             background: white;
         }
 
-        .project-status.completed {
-            color: var(--success);
-            background: rgba(107, 159, 127, 0.1);
-        }
-
-        .project-status.in-progress {
-            color: #6B8DA0;
-            background: rgba(107, 141, 160, 0.1);
-        }
-
-        .project-status.paused {
-            color: #D4AF37;
-            background: rgba(212, 175, 55, 0.1);
-        }
-
         .project-content {
             padding: 1.5rem;
         }
@@ -535,1081 +459,303 @@
             color: var(--text-muted);
         }
 
-        .project-stat {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        /* Community Feed */
-        .feed-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .feed-filters {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .feed-post {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--light-beige);
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .post-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .post-author-info {
-            flex: 1;
-        }
-
-        .post-author {
-            font-weight: 600;
-            font-size: 0.9375rem;
-        }
-
-        .post-meta {
-            font-size: 0.8125rem;
-            color: var(--text-muted);
-        }
-
-        .post-content {
-            margin-bottom: 1.5rem;
-            font-size: 0.9375rem;
-            line-height: 1.6;
-        }
-
-        .post-image {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
-
-        .post-actions {
-            display: flex;
-            gap: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--light-beige);
-        }
-
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            padding-top: 1rem;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid var(--light-beige);
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-size: 0.9375rem;
-            transition: all 0.2s;
-        }
-
-        .action-btn:hover {
-            border-color: var(--terracotta);
-            color: var(--terracotta);
-        }
-
-        /* Friends Grid */
-        .friends-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
-        .friend-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            border: 1px solid var(--light-beige);
-            transition: all 0.3s;
-        }
-
-        .friend-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
-
-        .friend-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin: 0 auto 1rem;
-        }
-
-        .friend-name {
-            font-size: 1.25rem;
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 0.25rem;
-        }
-
-        .friend-location {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .friend-role {
-            font-size: 0.875rem;
-            color: var(--terracotta);
-            margin-bottom: 0.5rem;
-        }
-
-        .friend-projects {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-        }
-
-        /* Find Makers */
-        .search-bar {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            border: 1px solid var(--light-beige);
-            border-radius: 8px;
-            font-size: 0.9375rem;
-            margin-bottom: 1.5rem;
-            background: white url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%238B7E74" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat 1rem center;
-        }
-
-        .interest-filters {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-
-        .interest-chip {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            background: white;
-            border: 1px solid var(--light-beige);
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .interest-chip:hover, .interest-chip.active {
-            background: var(--terracotta);
-            color: white;
-            border-color: var(--terracotta);
-        }
-
-        .makers-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
-        .maker-card {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 2rem;
-            border: 1px solid var(--light-beige);
-            transition: all 0.3s;
-        }
-
-        .maker-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-        }
-
-        .maker-header {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .maker-avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .maker-info {
-            flex: 1;
-        }
-
-        .maker-name {
-            font-weight: 600;
-            font-size: 1.125rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .maker-location {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .maker-bio {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .maker-interests {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-
-        .interest-tag {
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            background: var(--success);
-            color: white;
-            font-size: 0.75rem;
-        }
-
-        /* Messages */
-        .messages-container {
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            gap: 0;
-            height: calc(100vh - 150px);
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--light-beige);
-        }
-
-        .conversations-list {
-            border-right: 1px solid var(--light-beige);
-            overflow-y: auto;
-        }
-
-        .conversations-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--light-beige);
-            font-weight: 600;
-            font-size: 1.125rem;
-        }
-
-        .conversation-item {
-            padding: 1rem 1.5rem;
-            cursor: pointer;
-            border-bottom: 1px solid var(--light-beige);
-            transition: background 0.2s;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .conversation-item:hover {
-            background: var(--cream);
-        }
-
-        .conversation-item.active {
-            background: var(--cream);
-        }
-
-        .conversation-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .conversation-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .conversation-name {
-            font-weight: 600;
-            font-size: 0.9375rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .conversation-preview {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .conversation-time {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            align-self: flex-start;
-        }
-
-        .chat-area {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--light-beige);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .chat-user-name {
-            font-weight: 600;
-            font-size: 1.125rem;
-        }
-
-        .chat-user-status {
-            font-size: 0.8125rem;
-            color: var(--success);
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .message {
-            display: flex;
-            gap: 1rem;
-            max-width: 70%;
-        }
-
-        .message.sent {
-            margin-left: auto;
-            flex-direction: row-reverse;
-        }
-
-        .message-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--terracotta);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.875rem;
-            flex-shrink: 0;
-        }
-
-        .message-content {
-            flex: 1;
-        }
-
-        .message-bubble {
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
-            font-size: 0.9375rem;
-            line-height: 1.5;
-        }
-
-        .message.received .message-bubble {
-            background: var(--cream);
-        }
-
-        .message.sent .message-bubble {
-            background: var(--terracotta);
-            color: white;
-        }
-
-        .message-time {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
-            padding: 0 0.5rem;
-        }
-
-        .chat-input-area {
-            padding: 1.5rem 2rem;
-            border-top: 1px solid var(--light-beige);
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--light-beige);
-            border-radius: 8px;
-            font-size: 0.9375rem;
-            resize: none;
-        }
-
-        .send-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 8px;
-            background: var(--terracotta);
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            transition: all 0.2s;
-        }
-
-        .send-btn:hover {
-            background: var(--terracotta-dark);
-        }
-
-        /* My Store */
-        .listings-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .listing-item {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--light-beige);
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            transition: all 0.3s;
-        }
-
-        .listing-item:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .listing-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 8px;
-            background: var(--light-beige);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .listing-image img {
+        /* Image protection */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .project-image img,
+        .listing-image img,
+        .post-image img,
+        .feed-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .listing-info {
-            flex: 1;
-        }
-
-        .listing-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .listing-type {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-        }
-
-        .listing-price {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--terracotta);
-            font-family: 'Playfair Display', serif;
-        }
-
-        .listing-stats {
+        /* Filter Tabs */
+        .filter-tabs {
             display: flex;
-            gap: 1.5rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--light-beige);
         }
 
-        .listing-stat {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        .listing-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            align-items: flex-end;
-        }
-
-        .listing-status {
-            padding: 0.375rem 0.875rem;
-            border-radius: 16px;
-            font-size: 0.8125rem;
-            font-weight: 500;
-        }
-
-        .listing-status.active {
-            background: rgba(107, 159, 127, 0.1);
-            color: var(--success);
-        }
-
-        .listing-status.paused {
-            background: rgba(212, 175, 55, 0.1);
-            color: #D4AF37;
-        }
-
-        .more-btn {
+        .filter-tab {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            padding: 0.75rem 1rem;
             cursor: pointer;
             color: var(--text-muted);
-            padding: 0.5rem;
-        }
-
-        /* Pattern Library */
-        .patterns-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .pattern-item {
-            background: var(--white);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid var(--light-beige);
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        .pattern-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 8px;
-            background: var(--light-beige);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-            flex-shrink: 0;
-        }
-
-        .pattern-info {
-            flex: 1;
-        }
-
-        .pattern-name {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .pattern-meta {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .pattern-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        .pattern-tags {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .pattern-tag {
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            background: var(--light-beige);
-            color: var(--text-dark);
-            font-size: 0.75rem;
-        }
-
-        .pattern-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .pattern-action-btn {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--light-beige);
-            background: white;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
+            font-size: 0.9375rem;
+            border-bottom: 2px solid transparent;
             transition: all 0.2s;
+            position: relative;
+            bottom: -1px;
         }
 
-        .pattern-action-btn:hover {
-            border-color: var(--terracotta);
+        .filter-tab:hover {
+            color: var(--dark-brown);
+        }
+
+        .filter-tab.active {
             color: var(--terracotta);
+            border-bottom-color: var(--terracotta);
         }
 
-        .delete-btn {
-            color: var(--love);
-        }
-
-        .delete-btn:hover {
-            border-color: var(--love);
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            padding: 2rem;
-            border-bottom: 1px solid var(--light-beige);
+        .section-header-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            margin-bottom: 2rem;
         }
 
-        .modal-title {
-            font-size: 1.5rem;
-            font-family: 'Playfair Display', serif;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
+        .section-subtitle {
             color: var(--text-muted);
-            line-height: 1;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-        }
-
-        .modal-body {
-            padding: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
             font-size: 0.9375rem;
         }
 
-        .form-group input[type="text"],
-        .form-group input[type="email"],
-        .form-group input[type="number"],
-        .form-group input[type="date"],
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--light-beige);
-            border-radius: 8px;
-            font-size: 0.9375rem;
-            font-family: inherit;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-group input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            margin-right: 0.5rem;
-        }
-
-        .modal-footer {
-            padding: 2rem;
-            border-top: 1px solid var(--light-beige);
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-muted);
-        }
-
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .empty-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .empty-text {
-            margin-bottom: 1.5rem;
+        /* Hide/show sections */
+        .hidden {
+            display: none !important;
         }
 
         /* Responsive */
-        @media (max-width: 1400px) {
-            .projects-grid,
-            .friends-grid,
-            .makers-grid {
+        @media (max-width: 1200px) {
+            .projects-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
             .sidebar {
-                display: none;
+                transform: translateX(-100%);
             }
-
+            
             .main-content {
                 margin-left: 0;
-            }
-
-            .main-header {
-                padding: 1rem;
-            }
-
-            .content-section {
-                padding: 1.5rem;
             }
 
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .projects-grid,
-            .friends-grid,
-            .makers-grid {
+            .projects-grid {
                 grid-template-columns: 1fr;
             }
 
-            .messages-container {
+            .two-column-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .conversations-list {
-                display: none;
             }
         }
-    
-    /* Additional Image Fixes */
-    .project-image img,
-    .listing-image img,
-    .post-image img,
-    .feed-post img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        max-width: 100%;
-        max-height: 100%;
-    }
-    
-    .project-image {
-        width: 100%;
-        height: 280px;
-        overflow: hidden;
-        position: relative;
-    }
-    
-    .listing-image {
-        width: 100px;
-        height: 100px;
-        overflow: hidden;
-        flex-shrink: 0;
-    }
-    
-    .post-image {
-        width: 100%;
-        max-height: 600px;
-        overflow: hidden;
-        border-radius: 8px;
-    }
-    
-    /* Ensure cards don't blow up */
-    .project-card,
-    .listing-item,
-    .feed-post {
-        overflow: hidden;
-    }
-
     </style>
 </head>
 <body>
-    <header>
-        <a href="index.html" style="text-decoration: none;">
-            <div class="logo">🎨 Craft Club</div>
-        </a>
-        <div class="user-nav">
-            <button class="icon-btn" onclick="toggleNotifications()">
-                🔔
-                <span class="badge-count" id="notif-count" style="display: none;">0</span>
-            </button>
-            <button class="icon-btn" onclick="toggleMessages()">
-                💬
-                <span class="badge-count" id="message-count" style="display: none;">0</span>
-            </button>
-            <div class="user-profile" onclick="toggleUserMenu()">
-                <div class="avatar" id="header-avatar">...</div>
-            </div>
-
-            <div class="dropdown" id="notifications-dropdown">
-                <div class="dropdown-header">
-                    Notifications
-                    <button onclick="markAllRead()" style="background: none; border: none; color: var(--terracotta); cursor: pointer; font-size: 0.85rem;">Mark all read</button>
-                </div>
-                <div id="notifications-list">
-                    <div class="loading"><div class="spinner"></div></div>
-                </div>
-            </div>
-
-            <div class="dropdown" id="messages-dropdown">
-                <div class="dropdown-header">Messages</div>
-                <div id="conversations-list">
-                    <div class="loading"><div class="spinner"></div></div>
-                </div>
-            </div>
-
-            <div class="dropdown" id="user-menu" style="min-width: 200px;">
-                <div class="dropdown-item" onclick="showSection('dashboard'); hideAllDropdowns();">👤 Dashboard</div>
-                <div class="dropdown-item" onclick="showEditProfile()">✏️ Edit Profile</div>
-                <div class="dropdown-item" onclick="showSettings()">⚙️ Settings</div>
-                <div class="dropdown-item" onclick="handleLogout()">🚪 Logout</div>
-            </div>
-        </div>
-    </header>
-
-    <div class="main-container">
+    <div class="member-area-container">
+        <!-- Sidebar -->
         <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo">International Craft Club</a>
+                <div class="sidebar-subtitle">Members Area</div>
+            </div>
+            
             <nav>
-                <a class="nav-item active" onclick="showSection('dashboard')">🏠 Dashboard</a>
-                <a class="nav-item" onclick="showSection('my-projects')">🎨 My Projects</a>
-                <a class="nav-item" onclick="showSection('community')">🌊 Community Feed</a>
-                <a class="nav-item" onclick="showSection('friends')">💫 Friends</a>
-                <a class="nav-item" onclick="showSection('members')">🔍 Find Makers</a>
-                <a class="nav-item" onclick="showSection('chat')">💬 Messages</a>
-                <a class="nav-item" onclick="showSection('my-store')">🛍️ My Store</a>
+                <button class="nav-item active" onclick="showSection('dashboard')">
+                    <span class="icon">🏠</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" onclick="showSection('my-projects')">
+                    <span class="icon">🎨</span>
+                    <span>My Projects</span>
+                </button>
+                <button class="nav-item" onclick="showSection('community')">
+                    <span class="icon">🌊</span>
+                    <span>Community Feed</span>
+                </button>
+                <button class="nav-item" onclick="showSection('friends')">
+                    <span class="icon">💫</span>
+                    <span>Friends</span>
+                </button>
+                <button class="nav-item" onclick="showSection('find-makers')">
+                    <span class="icon">🔍</span>
+                    <span>Find Makers</span>
+                </button>
+                <button class="nav-item" onclick="showSection('messages')">
+                    <span class="icon">💬</span>
+                    <span>Messages</span>
+                    <span class="nav-badge" id="messageBadge" style="display: none;">0</span>
+                </button>
+                <button class="nav-item" onclick="showSection('my-store')">
+                    <span class="icon">🛍️</span>
+                    <span>My Store</span>
+                </button>
+                <button class="nav-item" onclick="showSection('pattern-library')">
+                    <span class="icon">📚</span>
+                    <span>Pattern Library</span>
+                </button>
             </nav>
         </aside>
 
-        <main class="content">
-            <section id="dashboard" class="content-section active">
-                <h1 style="margin-bottom: 2rem;" id="welcome-text">Welcome! 👋</h1>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                <div class="user-profile-header">
+                    <div class="user-info">
+                        <div class="user-name" id="headerUserName">Loading...</div>
+                        <div class="user-level" id="headerUserLevel">Level 1 · 0 XP</div>
+                    </div>
+                    <div class="user-avatar" id="headerUserAvatar">
+                        <span id="headerAvatarInitials">?</span>
+                    </div>
+                </div>
+            </header>
 
-                <div class="dashboard-grid">
-                    <div class="card">
-                        <h3>📊 Your Stats</h3>
-                        <div class="quick-stats">
-                            <div class="stat-box">
-                                <div class="stat-icon">🎨</div>
-                                <div class="stat-value" id="stat-projects">0</div>
-                                <div class="stat-label">Projects</div>
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+                <div class="welcome-banner">
+                    <div class="welcome-avatar">
+                        <span id="welcomeAvatarInitials">?</span>
+                    </div>
+                    <div class="welcome-content">
+                        <h2 class="welcome-title">Welcome back, <span id="welcomeUserName">User</span>! 👋</h2>
+                        <p class="welcome-level" id="welcomeLevel">Level 5 - Experienced Maker</p>
+                        <div class="xp-progress">
+                            <span class="xp-text"><span id="currentXP">0</span> XP</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="xpProgressBar" style="width: 0%"></div>
                             </div>
-                            <div class="stat-box">
-                                <div class="stat-icon">❤️</div>
-                                <div class="stat-value" id="stat-likes">0</div>
-                                <div class="stat-label">Total Likes</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-icon">👥</div>
-                                <div class="stat-value" id="stat-friends">0</div>
-                                <div class="stat-label">Friends</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-icon">🔥</div>
-                                <div class="stat-value" id="stat-streak">0</div>
-                                <div class="stat-label">Day Streak</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-icon">🛍️</div>
-                                <div class="stat-value" id="stat-store">0</div>
-                                <div class="stat-label">Active Products</div>
-                            </div>
+                            <span class="xp-text"><span id="nextLevelXP">100</span> XP to Level <span id="nextLevel">2</span></span>
                         </div>
                     </div>
                 </div>
 
-                <button class="btn btn-primary" onclick="showAddProject()">+ Add New Project</button>
-            </section>
-
-            <section id="my-projects" class="content-section">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
-                    <h1>🎨 My Projects</h1>
-                    <button class="btn btn-primary" onclick="showAddProject()">+ New Project</button>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value" id="dashboardXP">0</div>
+                        <div class="stat-label">XP</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎨</div>
+                        <div class="stat-value" id="dashboardProjects">0</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="dashboardFriends">0</div>
+                        <div class="stat-label">Friends</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏆</div>
+                        <div class="stat-value" id="dashboardBadges">0</div>
+                        <div class="stat-label">Badges</div>
+                    </div>
                 </div>
-                <div id="my-projects-container"><div class="loading"><div class="spinner"></div></div></div>
+
+                <div class="two-column-grid">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem;">Recent Activity</h3>
+                        <div id="activityFeed">
+                            <div class="activity-item">
+                                <div class="activity-icon">❤️</div>
+                                <div class="activity-content">
+                                    <div class="activity-text">Sarah liked your project "Summer Dress"</div>
+                                    <div class="activity-time">2h ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">💬</div>
+                                <div class="activity-content">
+                                    <div class="activity-text">New message from Emma</div>
+                                    <div class="activity-time">5h ago</div>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">✅</div>
+                                <div class="activity-content">
+                                    <div class="activity-text">You completed "Crochet Blanket" +50 XP</div>
+                                    <div class="activity-time">1d ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem;">Quick Actions</h3>
+                        <div class="quick-actions">
+                            <button class="btn btn-primary" onclick="showSection('my-projects')">
+                                + New Project
+                            </button>
+                            <button class="btn btn-secondary" onclick="showSection('pattern-library')">
+                                📤 Upload Pattern
+                            </button>
+                            <button class="btn btn-secondary" onclick="showSection('community')">
+                                🌊 Browse Community
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </section>
 
+            <!-- My Projects Section -->
+            <section id="my-projects" class="content-section">
+                <div class="section-header-row">
+                    <div>
+                        <p class="section-subtitle">Your creative journey, documented</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="document.getElementById('add-project-modal').classList.add('show')">
+                        + Create New Project
+                    </button>
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterProjectStatus('all')">All (<span id="allProjectsCount">0</span>)</button>
+                    <button class="filter-tab" onclick="filterProjectStatus('in_progress')">In Progress (<span id="inProgressCount">0</span>)</button>
+                    <button class="filter-tab" onclick="filterProjectStatus('completed')">Completed (<span id="completedCount">0</span>)</button>
+                    <button class="filter-tab" onclick="filterProjectStatus('paused')">Paused (<span id="pausedCount">0</span>)</button>
+                </div>
+
+                <div class="projects-grid" id="myProjectsGrid">
+                    <!-- Projects will load here -->
+                </div>
+            </section>
+
+            <!-- Other sections placeholder -->
             <section id="community" class="content-section">
-                <h1 style="margin-bottom: 2rem;">🌊 Community Feed</h1>
-                <div id="community-feed"><div class="loading"><div class="spinner"></div></div></div>
+                <h2>Community Feed</h2>
+                <p>Community feed will load here...</p>
             </section>
 
             <section id="friends" class="content-section">
-                <h1 style="margin-bottom: 2rem;">💫 Your Friends</h1>
-                <div id="friends-container"><div class="loading"><div class="spinner"></div></div></div>
+                <h2>Friends</h2>
+                <p>Friends will load here...</p>
             </section>
 
-            <section id="members" class="content-section">
-                <h1 style="margin-bottom: 2rem;">🔍 Find Makers</h1>
-                <input type="text" id="member-search" placeholder="Search by name or username..." style="margin-bottom: 2rem;" oninput="searchMembers()">
-                <div id="members-container"><div class="loading"><div class="spinner"></div></div></div>
+            <section id="find-makers" class="content-section">
+                <h2>Find Makers</h2>
+                <p>Find makers will load here...</p>
             </section>
 
-            <section id="chat" class="content-section">
-                <h1 style="margin-bottom: 2rem;">💬 Messages</h1>
-                <div id="chat-area"></div>
+            <section id="messages" class="content-section">
+                <h2>Messages</h2>
+                <p>Messages will load here...</p>
             </section>
 
             <section id="my-store" class="content-section">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                    <div>
-                        <h1>🛍️ Your Store</h1>
-                        <p style="color: var(--text-muted); margin-top: 0.5rem;">Share your craft with the world. Create listings for handmade items, digital patterns, or special travel finds.</p>
-                    </div>
-                    <button class="btn btn-primary" onclick="openNewProductModal()">+ Create New Listing</button>
-                </div>
+                <h2>My Store</h2>
+                <p>Store will load here...</p>
+            </section>
 
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
-                    <div class="card" style="text-align: center;">
-                        <div style="font-size: 2rem; font-weight: 600; color: var(--terracotta);" id="totalProducts">0</div>
-                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Total Listings</div>
-                    </div>
-                    <div class="card" style="text-align: center;">
-                        <div style="font-size: 2rem; font-weight: 600; color: var(--success);" id="activeProducts">0</div>
-                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Active</div>
-                    </div>
-                    <div class="card" style="text-align: center;">
-                        <div style="font-size: 2rem; font-weight: 600; color: var(--dark-brown);" id="totalOrders">0</div>
-                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Orders</div>
-                    </div>
-                    <div class="card" style="text-align: center;">
-                        <div style="font-size: 2rem; font-weight: 600; color: var(--gold);" id="totalRevenue">€0</div>
-                        <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.5rem;">Revenue</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 style="margin-bottom: 1.5rem;">Your Listings</h3>
-                    <div id="productsListContainer">
-                        <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
-                            <div style="font-size: 3rem; margin-bottom: 1rem;">🛍️</div>
-                            <h4 style="margin-bottom: 0.5rem;">No listings yet</h4>
-                            <p>Create your first listing to start selling on the Makers' Market</p>
-                            <button class="btn btn-primary" onclick="openNewProductModal()" style="margin-top: 1rem;">Create First Listing</button>
-                        </div>
-                    </div>
-                </div>
+            <section id="pattern-library" class="content-section">
+                <h2>Pattern Library</h2>
+                <p>Pattern library will load here...</p>
             </section>
         </main>
     </div>
+
 
     <!-- Edit Profile Modal -->
     <div class="modal" id="edit-profile-modal">
@@ -4857,147 +4003,6 @@
         });
 
         checkAuth();
-    
-        // Wrapper functions for opening modals from buttons
-        function openNewProjectModal() {
-            document.getElementById('add-project-modal').classList.add('show');
-        }
-        
-        function openEditProjectModal(projectId) {
-            // TODO: Load project data
-            document.getElementById('edit-project-modal').classList.add('show');
-        }
-        
-        function openUploadPatternModal() {
-            // Pattern library doesn't have a modal in the original
-            // Create products instead, or show alert
-            alert('Pattern upload functionality will be added. For now, use My Store to add digital products.');
-        }
-        
-        function previewPattern(id) {
-            alert('Pattern preview will open the file in a new tab');
-            // TODO: Implement pattern preview
-        }
-        
-        function downloadPattern(id) {
-            alert('Pattern download will be implemented');
-            // TODO: Implement pattern download
-        }
-        
-        async function deletePattern(id) {
-            if (!confirm('Delete this pattern?')) return;
-            alert('Pattern delete will be implemented');
-            // TODO: Implement pattern delete
-        }
-        
-        // Initialize app and load all data
-        async function initializeApp() {
-            console.log('🚀 Initializing app...');
-            
-            try {
-                // Check auth
-                const { data: { user } } = await supabase.auth.getUser();
-                
-                if (!user) {
-                    window.location.href = 'login.html';
-                    return;
-                }
-                
-                currentUser = user;
-                console.log('✅ User authenticated:', user.email);
-                
-                // Load user profile
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single();
-                
-                if (profile) {
-                    console.log('✅ Profile loaded');
-                    updateUserDisplay(profile);
-                } else {
-                    console.log('⚠️ No profile found');
-                }
-                
-                // Load all data
-                console.log('📊 Loading data...');
-                await Promise.all([
-                    loadMyProjects(),
-                    loadUserProducts(),
-                    loadCommunityFeed(),
-                    loadFriends(),
-                    loadMessages()
-                ]);
-                console.log('✅ All data loaded');
-                
-            } catch (error) {
-                console.error('❌ Initialization error:', error);
-            }
-        }
-        
-        function updateUserDisplay(profile) {
-            console.log('👤 Updating user display');
-            const displayName = profile.display_name || profile.full_name || profile.username || 'User';
-            const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-            
-            // Update all user display elements
-            const elements = {
-                'headerUserName': displayName,
-                'headerUserLevel': `Level ${calculateLevel(profile.xp || 0)} · ${profile.xp || 0} XP`,
-                'headerAvatarInitials': initials,
-                'welcomeUserName': displayName.split(' ')[0],
-                'welcomeAvatarInitials': initials,
-                'welcomeLevel': `Level ${calculateLevel(profile.xp || 0)} - ${getLevelName(calculateLevel(profile.xp || 0))}`,
-                'currentXP': profile.xp || 0,
-                'dashboardXP': profile.xp || 0
-            };
-            
-            for (const [id, value] of Object.entries(elements)) {
-                const el = document.getElementById(id);
-                if (el) el.textContent = value;
-            }
-            
-            // Update XP progress
-            updateXPProgress(profile.xp || 0);
-        }
-        
-        function updateXPProgress(xp) {
-            const level = calculateLevel(xp);
-            const nextLevel = level + 1;
-            const currentLevelXP = getLevelXP(level);
-            const nextLevelXP = getLevelXP(nextLevel);
-            const progress = ((xp - currentLevelXP) / (nextLevelXP - currentLevelXP)) * 100;
-            
-            const progressBar = document.getElementById('xpProgressBar');
-            if (progressBar) progressBar.style.width = progress + '%';
-            
-            const nextLevelEl = document.getElementById('nextLevel');
-            if (nextLevelEl) nextLevelEl.textContent = nextLevel;
-            
-            const nextLevelXPEl = document.getElementById('nextLevelXP');
-            if (nextLevelXPEl) nextLevelXPEl.textContent = nextLevelXP;
-        }
-        
-        async function loadCommunityFeed() {
-            console.log('📰 Loading community feed...');
-            // TODO: Implement
-        }
-        
-        async function loadFriends() {
-            console.log('👥 Loading friends...');
-            // TODO: Implement
-        }
-        
-        async function loadMessages() {
-            console.log('💬 Loading messages...');
-            // TODO: Implement
-        }
-
-
-        // Initialize the app when page loads
-        window.addEventListener('DOMContentLoaded', initializeApp);
-
     </script>
 
     <!-- Product Modal -->
